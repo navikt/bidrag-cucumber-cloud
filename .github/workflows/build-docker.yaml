@@ -1,0 +1,79 @@
+name: build docker image
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/bidrag-cucumber-nais:${{ github.sha }}
+
+jobs:
+  build:
+    name: Build with maven and docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: navikt/bidrag-docker/exists@v1
+        id: dockerimage
+        with:
+          image_name: bidrag-cucumber-nais
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo NOT_FOUND=${{ steps.dockerimage.outputs.not_found }} >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+        if: env.NOT_FOUND == 'true'
+      - uses: actions/setup-java@v1
+        if: env.NOT_FOUND == 'true'
+        with:
+          java-version: '15'
+      - uses: actions/cache@v1
+        if: env.NOT_FOUND == 'true'
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - uses: navikt/bidrag-maven/setup@v4
+        if: env.NOT_FOUND == 'true'
+        with:
+          repositories: maven-central=https://repo.maven.apache.org/maven2,github-packages=https://maven.pkg.github.com/navikt/maven-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: navikt/bidrag-maven/verify-dependencies@v1
+        if: env.NOT_FOUND == 'true'
+      - run: mvn install -B -e
+        if: env.NOT_FOUND == 'true'
+      - name: Build and publish Docker image
+        if: env.NOT_FOUND == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker build --tag ${IMAGE} .
+          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker push ${IMAGE}
+
+  bump_dev_version:
+    runs-on: ubuntu-latest
+    name: Bump SNAPSHOT version
+    if: github.ref == 'refs/heads/main'
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - run: mvn release:update-versions
+      - run: |
+          BUMPED_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo ::set-output name=version::${BUMPED_VERSION}
+        id: snapshot
+      - uses: navikt/bidrag-git/commit@v3
+        with:
+          commit_message: "Bumped to new version: ${{ steps.snapshot.outputs.version }}"
+          pattern: "pom.xml"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
