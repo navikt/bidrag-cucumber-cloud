@@ -14,7 +14,7 @@
   <properties>
     <!-- dependency management -->
     <assertj.version>3.18.1</assertj.version>
-    <bidrag-commons.version>0.4.2</bidrag-commons.version>
+    <bidrag-commons.version>0.4.3</bidrag-commons.version>
     <cucumber.version>6.9.1</cucumber.version>
     <junit.version>5.7.0</junit.version>
     <logback.version>1.2.3</logback.version>
@@ -23,6 +23,7 @@
     <!-- build -->
     <build-helper-maven.version>3.1.0</build-helper-maven.version>
     <kotlin.version>1.4.21</kotlin.version>
+    <maven-assembly.version>3.3.0</maven-assembly.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -171,6 +172,31 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>${maven-assembly.version}</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <finalName>${project.artifactId}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+          <archive>
+            <manifest>
+              <mainClass>no.nav.bidrag.cucumber.nais.IntegrationTestsKt</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-my-jar-with-dependenciess</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
