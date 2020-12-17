@@ -178,7 +178,6 @@
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
           <finalName>${project.artifactId}</finalName>
-          <appendAssemblyId>false</appendAssemblyId>
           <archive>
             <manifest>
               <mainClass>no.nav.bidrag.cucumber.nais.IntegrationTestsKt</mainClass>
