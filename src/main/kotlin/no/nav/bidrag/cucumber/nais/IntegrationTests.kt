@@ -7,7 +7,7 @@ fun main() {
     val result = Main.run(
         "-g", "no.nav.bidrag",
         "-p", "pretty",
-        "--tags", "not @ignored",
+        "--tags", "not @ignored ",
     )
 
     if (result.toInt() != 0) {
