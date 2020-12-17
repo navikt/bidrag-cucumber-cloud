@@ -5,10 +5,8 @@ import org.opentest4j.AssertionFailedError
 
 fun main() {
     val result = Main.run(
-        "src/main/resources",
-        "-g", "no.nav.medlemskap",
+        "-g", "no.nav.bidrag",
         "-p", "pretty",
-        "classpath:features",
         "--tags", "not @ignored",
     )
 
