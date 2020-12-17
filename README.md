@@ -2,7 +2,8 @@
 Integrasjonstester for nais mikrotjenester i bidrag
 
 ## workflow
-![](https://github.com/navikt/bidrag-cucumber-nais/workflows/continuous%20integration/badge.svg)
+![build docker image](https://github.com/navikt/bidrag-cucumber-nais/workflows/build%20docker%20image/badge.svg)
+![test on pull request](https://github.com/navikt/bidrag-cucumber-nais/workflows/test%20build%20on%20pull%20request/badge.svg)
 
 ## beskrivelse
 
