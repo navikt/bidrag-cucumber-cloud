@@ -11,6 +11,6 @@ fun main() {
     )
 
     if (result.toInt() != 0) {
-        throw AssertionFailedError("Forventet resultatet av kjøringen til å være 0 men var $result")
+        throw AssertionFailedError("Forventet resultatet av kjøringen til å være 0, men var $result")
     }
 }
