@@ -15,6 +15,7 @@
     <assertj.version>3.18.1</assertj.version>
     <bidrag-commons.version>0.4.3</bidrag-commons.version>
     <cucumber.version>6.9.1</cucumber.version>
+    <junit.version>4.13.1</junit.version>
     <junit-jupiter.version>5.7.0</junit-jupiter.version>
     <junit-vintage.version>5.6.3</junit-vintage.version>
     <logback.version>1.2.3</logback.version>
@@ -65,6 +66,11 @@
 
     <!-- other third party dependencies -->
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${junit-jupiter.version}</version>
@@ -108,19 +114,20 @@
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <version>${junit-jupiter.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire.version}</version>
-            <dependencies>
-              <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit-jupiter.version}</version>
-              </dependency>
-            </dependencies>
           </plugin>
         </plugins>
       </build>
@@ -134,22 +141,14 @@
           <value>cuke</value>
         </property>
       </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${maven-surefire.version}</version>
-            <dependencies>
-              <dependency>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-                <version>${junit-vintage.version}</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+          <version>${junit-vintage.version}</version>
+          <scope>runtime</scope>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 
