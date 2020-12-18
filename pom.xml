@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>no.nav.bidrag.cucumber</groupId>
@@ -14,7 +15,8 @@
     <assertj.version>3.18.1</assertj.version>
     <bidrag-commons.version>0.4.3</bidrag-commons.version>
     <cucumber.version>6.9.1</cucumber.version>
-    <junit.version>5.7.0</junit.version>
+    <junit-jupiter.version>5.7.0</junit-jupiter.version>
+    <junit-vintage.version>5.6.3</junit-vintage.version>
     <logback.version>1.2.3</logback.version>
     <slf4j.version>1.7.30</slf4j.version>
 
@@ -22,6 +24,7 @@
     <build-helper-maven.version>3.1.0</build-helper-maven.version>
     <kotlin.version>1.4.21</kotlin.version>
     <maven-assembly.version>3.3.0</maven-assembly.version>
+    <maven-surefire.version>3.0.0-M4</maven-surefire.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -64,7 +67,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>${junit.version}</version>
+      <version>${junit-jupiter.version}</version>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
@@ -98,6 +101,57 @@
       <version>${logback.version}</version>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit-jupiter.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>cucumber</id>
+      <activation>
+        <property>
+          <name>test</name>
+          <value>cuke</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit-vintage.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <build>
     <plugins>
