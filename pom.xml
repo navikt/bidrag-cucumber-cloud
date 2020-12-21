@@ -135,10 +135,7 @@
     <profile>
       <id>cucumber</id>
       <activation>
-        <property>
-          <name>test</name>
-          <value>cuke</value>
-        </property>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <dependencies>
         <dependency>
@@ -152,6 +149,9 @@
   </profiles>
 
   <build>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+
     <plugins>
 
       <plugin>
