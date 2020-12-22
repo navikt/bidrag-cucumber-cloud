@@ -1,0 +1,129 @@
+{
+  "beregnDatoFra": "2020-08-01",
+  "beregnDatoTil": "2020-09-01",
+  "soknadsbarnGrunnlag": {
+    "inntektPeriodeListe": [
+      {
+        "inntektDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "inntektBelop": 0,
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER"
+      }
+    ],
+    "soknadsbarnFodselsdato": "2006-02-01",
+    "soknadsbarnPersonId": 1
+  },
+  "inntektBPBMGrunnlag": {
+    "inntektBMPeriodeListe": [
+      {
+        "inntektDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "deltFordel": false,
+        "inntektBelop": 300000,
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "skatteklasse2": false
+      },
+      {
+        "inntektDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "deltFordel": false,
+        "inntektBelop": 12688,
+        "inntektType": "UTVIDET_BARNETRYGD",
+        "skatteklasse2": false
+      }
+    ],
+    "inntektBPPeriodeListe": [
+      {
+        "inntektDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "inntektBelop": 500000,
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER"
+      }
+    ]
+  },
+  "beregnBPBidragsevneGrunnlag": {
+    "antallBarnIEgetHusholdPeriodeListe": [
+      {
+        "antallBarnIEgetHusholdDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "antallBarn": 0
+      }
+    ],
+    "bostatusPeriodeListe": [
+      {
+        "bostatusDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "bostatusKode": "ALENE"
+      }
+    ],
+    "saerfradragPeriodeListe": [
+      {
+        "saerfradragDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "saerfradragKode": "INGEN"
+      }
+    ],
+    "skatteklassePeriodeListe": [
+      {
+        "skatteklasseDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "skatteklasseId": 1
+      }
+    ]
+  },
+  "beregnBPAndelSaertilskuddGrunnlag": {
+    "nettoSaertilskuddPeriodeListe": [
+      {
+        "nettoSaertilskuddDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "nettoSaertilskuddBelop": 7000
+      }
+    ]
+  },
+  "beregnBPSamvaersfradragGrunnlag": {
+    "samvaersklassePeriodeListe": [
+      {
+        "samvaersklasseDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "samvaersklasseBarnFodselsdato": "2006-02-01",
+        "samvaersklasseBarnPersonId": 1,
+        "samvaersklasseId": "01"
+      }
+    ]
+  },
+  "beregnSaertilskuddGrunnlag": {
+    "lopendeBidragBPPeriodeListe": [
+      {
+        "lopendeBidragDatoFraTil": {
+          "periodeDatoFra": "2020-08-01",
+          "periodeDatoTil": "2020-09-01"
+        },
+        "lopendeBidragBarnPersonId": 1,
+        "lopendeBidragBelop": 2500,
+        "opprinneligBPAndelUnderholdskostnadBelop": 2957,
+        "opprinneligBidragBelop": 2500,
+        "opprinneligSamvaersfradragBelop": 457
+      }
+    ]
+  }
+}
