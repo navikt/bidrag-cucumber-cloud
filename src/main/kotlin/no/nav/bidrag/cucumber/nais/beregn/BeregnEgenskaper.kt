@@ -26,6 +26,11 @@ class BeregnEgenskaper : No {
             assertThat(resultatBelop).isEqualTo(belop)
         }
 
-        Og("responsen skal inneholde resultatkoden {string} under stien {string}") { resultatkode: String, sti: String -> }
+        Og("responsen skal inneholde resultatkoden {string} under stien {string}") { resultatkode: String, sti: String ->
+            val documentContext = JsonPath.parse(FellesEgenskaper.restTjeneste.hentResponse())
+            val kode = documentContext.read<Any>(sti).toString()
+
+            assertThat(kode).isEqualTo(resultatkode)
+        }
     }
 }
