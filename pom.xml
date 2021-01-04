@@ -13,7 +13,6 @@
   <properties>
     <!-- dependency management -->
     <apache-httpcomponenents.version>4.5.13</apache-httpcomponenents.version>
-    <assertj.version>3.18.1</assertj.version>
     <bidrag-commons.version>0.4.3</bidrag-commons.version>
     <cucumber.version>6.9.1</cucumber.version>
     <json-path.version>2.5.0</json-path.version>
