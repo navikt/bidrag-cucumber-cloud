@@ -15,7 +15,6 @@ class BeregnEgenskaper : No {
         private val PROJECT_PATH = File("").absolutePath
     }
 
-
     init {
         Når("jeg bruker endpoint {string} med json fra {string}") { endpoint: String, jsonFilePath: String ->
             LOGGER.info("Leser $PROJECT_PATH/$BEREGN_RESOURCES/$jsonFilePath")
