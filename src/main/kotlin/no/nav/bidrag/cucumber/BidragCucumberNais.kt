@@ -30,16 +30,21 @@ internal const val X_ENHET_HEADER = "X-Enhet"
 internal const val X_OPENAM_PASSW_HEADER = "X-OpenAM-Password"
 internal const val X_OPENAM_USER_HEADER = "X-OpenAM-Username"
 
+private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
+
 open class BidragCucumberNais {
+
     companion object {
-        internal var useScenarioForLogging = true
-        private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
         private var scenario: Scenario? = null
-        private var correlationIdForScenario: String? = null
+        private var correlationIdForScenario: String = createCorrelationIdValue()
 
         fun use(scenario: Scenario) {
             this.scenario = scenario
-            correlationIdForScenario = Environment.createCorrelationIdValue()
+            correlationIdForScenario = createCorrelationIdValue()
+        }
+
+        private fun createCorrelationIdValue(): String {
+            return "cucumber-nais-${java.lang.Long.toHexString(System.currentTimeMillis())}"
         }
 
         fun log(message: String) {
@@ -47,7 +52,7 @@ open class BidragCucumberNais {
         }
 
         fun log(messageTitle: String?, message: String) {
-            if (scenario != null && useScenarioForLogging) {
+            if (scenario != null) {
                 val title = if (messageTitle != null) "<h5>$messageTitle</h5>" else ""
                 scenario!!.log("$title<p>\n$message\n</p>")
             } else {

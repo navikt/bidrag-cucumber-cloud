@@ -19,11 +19,8 @@ internal class Environment {
 
         private var namespaceForEnvironment: Map<String, String> = mapOf(Pair(ENVIRONMENT_MAIN, "q0"), Pair(ENVIRONMENT_FEATURE, "q1"))
 
-        private fun fetchEnvironment(environment: String, errorMessage: String) = System.getenv()[environment] ?: throw IllegalStateException(errorMessage)
-
-        internal fun createCorrelationIdValue(): String {
-            return "cucumber-nais-${java.lang.Long.toHexString(System.currentTimeMillis())}"
-        }
+        private fun fetchEnvironment(environment: String, errorMessage: String) =
+            System.getenv()[environment] ?: System.getProperty(environment) ?: throw IllegalStateException(errorMessage)
 
         private fun fetchNamespace(): String {
             val namespaceForMain = namespaceForEnvironment.getValue(ENVIRONMENT_MAIN)
