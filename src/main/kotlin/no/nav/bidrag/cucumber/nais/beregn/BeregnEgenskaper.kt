@@ -11,17 +11,21 @@ private const val BEREGN_RESOURCES = "src/main/resources/no/nav/bidrag/cucumber/
 private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
 
 class BeregnEgenskaper : No {
+    companion object {
+        private val PROJECT_PATH = File("").absolutePath
+    }
+
 
     init {
         Når("jeg bruker endpoint {string} med json fra {string}") { endpoint: String, jsonFilePath: String ->
+            LOGGER.info("Leser $PROJECT_PATH/$BEREGN_RESOURCES/$jsonFilePath")
             val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
-            LOGGER.info("Leser $jsonFilePath")
             val json = jsonFile.readText(Charsets.UTF_8)
 
             BidragScenario.restTjeneste.exchangePost(endpoint, json)
         }
 
-        Og("responsen skal inneholde heltallsbeløpet {string} under stien {string}") { belop: String, sti: String ->
+        Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
             val documentContext = JsonPath.parse(BidragScenario.restTjeneste.hentResponse())
             val resultatBelop = documentContext.read<Any>(sti).toString()
 
