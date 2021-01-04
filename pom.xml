@@ -24,7 +24,7 @@
     <kotlin.version>1.4.21</kotlin.version>
     <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-    <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
