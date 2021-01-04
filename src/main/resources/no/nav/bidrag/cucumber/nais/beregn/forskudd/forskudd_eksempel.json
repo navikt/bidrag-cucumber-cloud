@@ -1,0 +1,41 @@
+{
+  "beregnDatoFra": "2017-01-01",
+  "beregnDatoTil": "2019-01-01",
+  "bidragMottakerBarnPeriodeListe": [
+    {
+      "periodeDatoFra": "2017-01-01",
+      "periodeDatoTil": "2019-01-01"
+    }
+  ],
+  "bidragMottakerInntektPeriodeListe": [
+    {
+      "inntektBelop": 0,
+      "inntektType": "OVERGANGSSTONAD",
+      "inntektDatoFraTil": {
+        "periodeDatoFra": "2017-01-01",
+        "periodeDatoTil": "2019-01-01"
+      }
+    }
+  ],
+  "bidragMottakerSivilstandPeriodeListe": [
+    {
+      "sivilstandDatoFraTil": {
+        "periodeDatoFra": "2017-01-01",
+        "periodeDatoTil": "2019-01-01"
+      },
+      "sivilstandKode": "GIFT"
+    }
+  ],
+  "soknadBarn": {
+    "soknadBarnBostatusPeriodeListe": [
+      {
+        "bostatusKode": "MED_FORELDRE",
+        "bostatusDatoFraTil": {
+          "periodeDatoFra": "2017-01-01",
+          "periodeDatoTil": "2019-01-01"
+        }
+      }
+    ],
+    "soknadBarnFodselsdato": "2006-08-01"
+  }
+}
