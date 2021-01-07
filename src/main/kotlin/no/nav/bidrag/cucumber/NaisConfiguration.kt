@@ -8,14 +8,14 @@ import java.io.File
 import java.io.FileReader
 
 private val LOGGER = LoggerFactory.getLogger(NaisConfiguration::class.java)
-private val JSON_FILE_PER_APPLICATION: MutableMap<String, String> = HashMap()
+private val JSON_FILE_FOR_APPLICATION: MutableMap<String, String> = HashMap()
 
 internal class NaisConfiguration {
 
-    fun read(applicationName: String): SecurityToken {
+    fun read(applicationName: String): Security {
         val applfolder = File("${Environment.naisProjectFolder}/$applicationName")
         val naisFolder = File("${Environment.naisProjectFolder}/$applicationName/nais")
-        val jsonFile = fetchJsonByEnvironmentOrNamespace(applicationName)
+        val jsonFile = fetchJsonByEnvironment(applicationName)
 
         LOGGER.info("> applFolder exists: ${applfolder.exists()}, path: $applfolder")
         LOGGER.info("> naisFolder exists: ${naisFolder.exists()}, path: $naisFolder")
@@ -24,25 +24,25 @@ internal class NaisConfiguration {
         val canReadNaisJson = applfolder.exists() && naisFolder.exists() && jsonFile.exists()
 
         if (canReadNaisJson) {
-            JSON_FILE_PER_APPLICATION[applicationName] = jsonFile.absolutePath
+            JSON_FILE_FOR_APPLICATION[applicationName] = jsonFile.absolutePath
         } else {
             throw IllegalStateException("Unable to read json configuration for $applicationName")
         }
 
-        return hentAzureSomSecurityToken(jsonFile.parent) ?: SecurityToken.NONE
+        return hentAzureSomSecurityToken(jsonFile.parent) ?: Security.NONE
     }
 
-    private fun hentAzureSomSecurityToken(naisFolder: String): SecurityToken? {
+    private fun hentAzureSomSecurityToken(naisFolder: String): Security? {
         val naisYamlReader = File(naisFolder, "nais.yaml").bufferedReader()
         val pureYaml = mutableListOf<String>()
         naisYamlReader.useLines { lines -> lines.forEach { if (!it.contains("{{")) pureYaml.add(it) } }
         val yamlMap = Yaml().load<Map<String, Any>>(pureYaml.joinToString("\n"))
 
-        return if (isEnabled(yamlMap, mutableListOf("spec", "azure", "application", "enabled"))) SecurityToken.AZURE else null
+        return if (isEnabled(yamlMap, mutableListOf("spec", "azure", "application", "enabled"))) Security.AZURE else null
     }
 
     private fun isEnabled(map: Map<String, Any>, keys: MutableList<String>): Boolean {
-        println("${keys[0]}=${map[keys[0]]}")
+        LOGGER.info("${keys[0]}=${map[keys[0]]}")
 
         if (map.containsKey(keys[0])) {
             if (keys.size == 1) return map.getValue(keys[0]) as Boolean
@@ -57,7 +57,7 @@ internal class NaisConfiguration {
         return false
     }
 
-    private fun fetchJsonByEnvironmentOrNamespace(applicationName: String): File {
+    private fun fetchJsonByEnvironment(applicationName: String): File {
         val miljoJson = File("${Environment.naisProjectFolder}/$applicationName/nais/${Environment.miljo}.json")
 
         if (miljoJson.exists()) {
@@ -68,13 +68,13 @@ internal class NaisConfiguration {
     }
 
     internal fun hentApplicationHostUrl(naisApplication: String): String {
-        val nameSpaceJsonFile = JSON_FILE_PER_APPLICATION[naisApplication]
-            ?: throw IllegalStateException("no path for $naisApplication in $JSON_FILE_PER_APPLICATION")
+        val jsonFile = JSON_FILE_FOR_APPLICATION[naisApplication]
+            ?: throw IllegalStateException("no path for $naisApplication in $JSON_FILE_FOR_APPLICATION")
 
-        val jsonFileAsMap = readWithGson(nameSpaceJsonFile)
+        val jsonFileAsMap = readWithGson(jsonFile)
 
         for (json in jsonFileAsMap) {
-            println(json)
+            LOGGER.info("$json")
         }
 
         @Suppress("UNCHECKED_CAST") val ingresses = jsonFileAsMap["ingresses"] as List<String>

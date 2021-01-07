@@ -18,8 +18,7 @@ private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
 @Suppress("UNCHECKED_CAST")
 open class RestTjeneste(
     private val applicationName: String,
-    private val rest: RestTemplateMedBaseUrl,
-    private val sikkerhet: Sikkerhet = Sikkerhet()
+    private val rest: RestTemplateMedBaseUrl
 ) {
 
     private lateinit var debugFullUrl: String
@@ -35,17 +34,9 @@ open class RestTjeneste(
     fun hentResponseSomMap() = ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any>
 
     fun exchangeGet(endpointUrl: String): ResponseEntity<String> {
-        return exchangeGet(endpointUrl, null, "na")
-    }
-
-    fun exchangeGet(endpointUrl: String, username: String?, password: String): ResponseEntity<String> {
         debugFullUrl = rest.baseUrl + endpointUrl
 
         val header = initHttpHeadersWithCorrelationIdAndEnhet()
-
-        if (username != null) {
-            header.add(HttpHeaders.AUTHORIZATION, "Basic " + sikkerhet.base64EncodeCredentials(username, password))
-        }
 
         BidragCucumberNais.log("GET ${this.debugFullUrl}")
 

@@ -1,16 +1,14 @@
 package no.nav.bidrag.cucumber
 
 import org.slf4j.LoggerFactory
-import java.nio.charset.StandardCharsets
 
 private val LOGGER = LoggerFactory.getLogger(Sikkerhet::class.java)
 
-class Sikkerhet {
+object Sikkerhet {
 
-    companion object {
-        private lateinit var onlineToken: String
-        private val finalValueCache: MutableMap<String, Any> = HashMap()
-    }
+    internal val SECURITY_FOR_APPLICATION: MutableMap<String, Security> = HashMap()
+    private lateinit var onlineToken: String
+    private val finalValueCache: MutableMap<String, Any> = HashMap()
 
     internal fun fetchIdToken(): String {
         try {
@@ -23,11 +21,7 @@ class Sikkerhet {
         }
     }
 
-    private fun fetchOnlineIdToken(): String {
-        return fetchOnlineIdToken(Environment.namespace)
-    }
-
-    fun fetchOnlineIdToken(namespace: String): String {
+    fun fetchOnlineIdToken(): String {
 //        finalValueCache[OPEN_ID_FASIT] = finalValueCache[OPEN_ID_FASIT] ?: hentOpenIdConnectFasitRessurs(namespace)
 //        finalValueCache[OPEN_AM_PASSWORD] = finalValueCache[OPEN_AM_PASSWORD] ?: hentOpenAmPwd(finalValueCache[OPEN_ID_FASIT] as Fasit.FasitRessurs)
 //        finalValueCache[TEST_USER_AUTH_TOKEN] = finalValueCache[TEST_USER_AUTH_TOKEN] ?: hentTokenIdForTestbruker()
@@ -35,18 +29,10 @@ class Sikkerhet {
 //
 //        LOGGER.info("Fetched id token for ${Environment.testUser()}")
 
-        return "Bearer todo:token for $namespace"
-    }
-
-    internal fun base64EncodeCredentials(username: String, password: String): String {
-        val credentials = "$username:$password"
-
-        val encodedCredentials: ByteArray = java.util.Base64.getEncoder().encode(credentials.toByteArray())
-
-        return String(encodedCredentials, StandardCharsets.UTF_8)
+        return "Bearer todo:token"
     }
 }
 
-enum class SecurityToken {
+enum class Security {
     AZURE, NONE
 }
