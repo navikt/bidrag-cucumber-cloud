@@ -62,11 +62,9 @@ internal class NaisConfiguration {
 
         if (miljoJson.exists()) {
             return miljoJson
-        } else {
-            LOGGER.warn("Unable to find ${Environment.miljo}.json, using ${Environment.namespace}.json")
         }
 
-        return File("${Environment.naisProjectFolder}/$applicationName/nais/${Environment.namespace}.json")
+        throw IllegalStateException("Unable to find ${Environment.miljo}.json in folder ${Environment.naisProjectFolder}/$applicationName/nais")
     }
 
     internal fun hentApplicationHostUrl(naisApplication: String): String {

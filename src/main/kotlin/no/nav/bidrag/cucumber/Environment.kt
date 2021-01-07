@@ -23,7 +23,7 @@ internal class Environment {
         internal val naisProjectFolder: String by lazy { fetchEnvironment(PROJECT_NAIS_FOLDER, "Det er ikke oppgitt ei mappe for nais prosjekt") }
 
         private fun fetchEnvironment(environment: String, errorMessage: String) =
-            System.getenv()[environment] ?: System.getProperty(environment) ?: throw IllegalStateException(errorMessage)
+            System.getProperty(environment) ?: System.getenv()[environment] ?: throw IllegalStateException(errorMessage)
 
         private fun fetchNamespace(): String {
             val namespaceForMain = NAMESPACE_FOR_ENVIRONMENT.getValue(ENVIRONMENT_MAIN)
