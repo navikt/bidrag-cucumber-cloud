@@ -46,3 +46,7 @@ class Sikkerhet {
         return String(encodedCredentials, StandardCharsets.UTF_8)
     }
 }
+
+enum class SecurityToken {
+    AZURE, NONE
+}

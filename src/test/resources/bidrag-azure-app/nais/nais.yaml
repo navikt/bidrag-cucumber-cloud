@@ -1,0 +1,52 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: {{ name }}
+  namespace: bidrag
+  labels:
+    team: bidrag
+spec:
+  azure:
+    application:
+      enabled: true
+  image: {{ image }}
+  kafka:
+    pool: nav-dev
+  liveness:
+    path: actuator/health
+    initialDelay: 35
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: actuator/health
+    initialDelay: 30
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: actuator/prometheus
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}
+  env:
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
+  vault:
+    enabled: true
+    paths:
+      - kvPath: /serviceuser/data/dev/srvbisys
+        mountPath: /var/run/secrets/nais.io/srvbisys-dev
+      - kvPath: /serviceuser/data/prod/srvbisys
+        mountPath: /var/run/secrets/nais.io/srvbisys-prod
+      - kvPath: /kv/preprod/fss/{{ name }}/bidrag
+        mountPath: /var/run/secrets/nais.io/vault

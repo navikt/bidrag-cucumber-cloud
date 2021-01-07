@@ -6,9 +6,14 @@ import org.springframework.web.util.UriTemplateHandler
 import java.io.File
 import java.net.URI
 
-private const val ENVIRONMENT_FEATURE = "feature"
-private const val ENVIRONMENT_MAIN = "main"
+internal const val ENVIRONMENT_FEATURE = "feature"
+internal const val ENVIRONMENT_MAIN = "main"
 private val LOGGER = LoggerFactory.getLogger(Environment::class.java)
+
+private var NAMESPACE_FOR_ENVIRONMENT: Map<String, String> = mapOf(
+    Pair(ENVIRONMENT_MAIN, "q0"),
+    Pair(ENVIRONMENT_FEATURE, "q1")
+)
 
 internal class Environment {
 
@@ -17,14 +22,12 @@ internal class Environment {
         internal val miljo by lazy { fetchEnvironment(ENVIRONMENT, "Fant ikke miljø for kjøring") }
         internal val naisProjectFolder: String by lazy { fetchEnvironment(PROJECT_NAIS_FOLDER, "Det er ikke oppgitt ei mappe for nais prosjekt") }
 
-        private var namespaceForEnvironment: Map<String, String> = mapOf(Pair(ENVIRONMENT_MAIN, "q0"), Pair(ENVIRONMENT_FEATURE, "q1"))
-
         private fun fetchEnvironment(environment: String, errorMessage: String) =
             System.getenv()[environment] ?: System.getProperty(environment) ?: throw IllegalStateException(errorMessage)
 
         private fun fetchNamespace(): String {
-            val namespaceForMain = namespaceForEnvironment.getValue(ENVIRONMENT_MAIN)
-            val wantedNamespace = namespaceForEnvironment[miljo]
+            val namespaceForMain = NAMESPACE_FOR_ENVIRONMENT.getValue(ENVIRONMENT_MAIN)
+            val wantedNamespace = NAMESPACE_FOR_ENVIRONMENT[miljo]
 
             if (wantedNamespace != null) {
                 LOGGER.info("Using namespace '$wantedNamespace' for environment '$miljo'")
