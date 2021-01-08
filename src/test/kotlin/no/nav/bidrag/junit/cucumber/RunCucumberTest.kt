@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber.nais
+package no.nav.bidrag.junit.cucumber
 
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions
