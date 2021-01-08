@@ -4,11 +4,10 @@ import org.slf4j.LoggerFactory
 
 private val LOGGER = LoggerFactory.getLogger(Sikkerhet::class.java)
 
-object Sikkerhet {
+internal object Sikkerhet {
 
     internal val SECURITY_FOR_APPLICATION: MutableMap<String, Security> = HashMap()
     private lateinit var onlineToken: String
-    private val finalValueCache: MutableMap<String, Any> = HashMap()
 
     internal fun fetchIdToken(): String {
         try {
@@ -22,6 +21,7 @@ object Sikkerhet {
     }
 
     fun fetchOnlineIdToken(): String {
+// TODO: fetch token for azure
 //        finalValueCache[OPEN_ID_FASIT] = finalValueCache[OPEN_ID_FASIT] ?: hentOpenIdConnectFasitRessurs(namespace)
 //        finalValueCache[OPEN_AM_PASSWORD] = finalValueCache[OPEN_AM_PASSWORD] ?: hentOpenAmPwd(finalValueCache[OPEN_ID_FASIT] as Fasit.FasitRessurs)
 //        finalValueCache[TEST_USER_AUTH_TOKEN] = finalValueCache[TEST_USER_AUTH_TOKEN] ?: hentTokenIdForTestbruker()
