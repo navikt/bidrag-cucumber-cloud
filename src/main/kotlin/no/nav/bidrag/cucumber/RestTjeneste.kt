@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
 import no.nav.bidrag.commons.CorrelationId
+import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -156,6 +157,27 @@ open class RestTjeneste(
         properties.forEach { if (!objects.containsKey(it)) manglendeProps.add(it) }
 
         return manglendeProps
+    }
+
+    fun removeHeaderGenerator(headerName: String) {
+        val restTjeneste = rest.template
+
+        if (restTjeneste is HttpHeaderRestTemplate) {
+            restTjeneste.removeHeaderGenerator(headerName)
+        } else {
+            throw IllegalStateException("Ukjent implementasjon for bidrag")
+        }
+    }
+
+    fun addHeaderGenerator(headerName: String, headerGenedrator: () -> String) {
+        val restTjeneste = rest.template
+
+        if (restTjeneste is HttpHeaderRestTemplate) {
+            restTjeneste.removeHeaderGenerator(headerName)
+            restTjeneste.addHeaderGenerator(headerName, headerGenedrator)
+        } else {
+            throw IllegalStateException("Ukjent implementasjon for bidrag")
+        }
     }
 
     class ResttjenesteMedBaseUrl(val template: RestTemplate, val httpClient: HttpClient? = null, val baseUrl: String)
