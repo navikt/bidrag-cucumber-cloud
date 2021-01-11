@@ -26,7 +26,11 @@ class BeregnEgenskaper : No {
 
         Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
             val documentContext = JsonPath.parse(BidragScenario.restTjeneste.hentResponse())
-            val resultatBelop = documentContext.read<Any>(sti).toString()
+            var resultatBelop = documentContext.read<Any>(sti).toString()
+
+            if (resultatBelop.endsWith(".0")) {
+                resultatBelop = resultatBelop.removeSuffix(".0")
+            }
 
             assertThat(resultatBelop).isEqualTo(belop)
         }
