@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-// constants for input via System.geteenv()
+// constants for input via System.getProperty()/System.geteenv()
 internal const val CREDENTIALS_TEST_USER = "TEST_USER"
 internal const val CREDENTIALS_TEST_USER_AUTH = "TEST_AUTH"
 internal const val CREDENTIALS_USERNAME = "USERNAME"
@@ -15,20 +15,9 @@ internal const val PROJECT_NAIS_FOLDER = "PROJECT_NAIS_FOLDER"
 
 // constants for code
 internal const val ALIAS_BIDRAG_UI = "bidrag-ui"
-internal const val ALIAS_OIDC = "$ALIAS_BIDRAG_UI-oidc"
-internal const val OPEN_AM_PASSWORD = "OPEN AM PASSWORD"
-internal const val TEST_USER_AUTH_TOKEN = "TEST TOKEN AUTH TOKEN"
-
-// Urls
-internal const val URL_ISSO = "https://isso-q.adeo.no:443/isso/json/authenticate?authIndexType=service&authIndexValue=ldapservice" // todo: skift ut
-internal const val URL_ISSO_AUTHORIZE = "https://isso-q.adeo.no/isso/oauth2/authorize" // todo: skift ut
-internal const val URL_ISSO_ACCESS_TOKEN = "https://isso-q.adeo.no:443/isso/oauth2/access_token" // todo: skift ut
-internal const val URL_ISSO_REDIRECT = "https://$ALIAS_BIDRAG_UI.nais.preprod.local/isso" // todo: skift ut
 
 // Headers
 internal const val X_ENHET_HEADER = "X-Enhet"
-internal const val X_OPENAM_PASSW_HEADER = "X-OpenAM-Password"
-internal const val X_OPENAM_USER_HEADER = "X-OpenAM-Username"
 
 private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
 

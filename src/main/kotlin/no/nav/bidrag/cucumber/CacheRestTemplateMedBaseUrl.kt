@@ -14,7 +14,6 @@ private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.
 internal class CacheRestTemplateMedBaseUrl {
     companion object {
         private val restTjenesteTilApplikasjon: MutableMap<String, RestTjeneste.RestTemplateMedBaseUrl> = HashMap()
-        private val environment = Environment()
         private val naisConfiguration = NaisConfiguration()
     }
 
@@ -31,7 +30,7 @@ internal class CacheRestTemplateMedBaseUrl {
         if (!applicationHostUrl.endsWith('/') && !applicationName.startsWith('/')) {
             applicationUrl = "$applicationHostUrl/$applicationName/"
         } else {
-            applicationUrl =  "$applicationHostUrl$applicationName/"
+            applicationUrl = "$applicationHostUrl$applicationName/"
         }
 
         return hentEllerKonfigurerApplikasjonForUrl(applicationName, applicationUrl)
@@ -40,11 +39,12 @@ internal class CacheRestTemplateMedBaseUrl {
     private fun hentEllerKonfigurerApplikasjonForUrl(applicationName: String, applicationUrl: String): RestTjeneste.RestTemplateMedBaseUrl {
 
         val httpComponentsClientHttpRequestFactory = hentHttpRequestFactorySomIgnorererHttps()
-        val httpHeaderRestTemplate = environment.setBaseUrlPa(HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory), applicationUrl)
+        val httpHeaderRestTemplate = Environment.setBaseUrlPa(HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory), applicationUrl)
 
-        httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet().fetchIdToken() }
-
-        LOGGER.info("Header '${HttpHeaders.AUTHORIZATION}' blir brukt på kall $applicationUrl til $applicationName")
+        when (Sikkerhet.SECURITY_FOR_APPLICATION[applicationName]) {
+            Security.AZURE -> httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchIdToken() }
+            Security.NONE -> LOGGER.info("No security needed when accessing $applicationName")
+        }
 
         restTjenesteTilApplikasjon[applicationName] = RestTjeneste.RestTemplateMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
 
@@ -54,14 +54,14 @@ internal class CacheRestTemplateMedBaseUrl {
     private fun hentHttpRequestFactorySomIgnorererHttps(): HttpComponentsClientHttpRequestFactory {
         val acceptingTrustStrategy = { _: Array<X509Certificate>, _: String -> true }
         val sslContext = SSLContexts.custom()
-                .loadTrustMaterial(null, acceptingTrustStrategy)
-                .build()
+            .loadTrustMaterial(null, acceptingTrustStrategy)
+            .build()
 
         val csf = SSLConnectionSocketFactory(sslContext)
 
         val httpClient = HttpClients.custom()
-                .setSSLSocketFactory(csf)
-                .build()
+            .setSSLSocketFactory(csf)
+            .build()
 
         val requestFactory = HttpComponentsClientHttpRequestFactory()
 
