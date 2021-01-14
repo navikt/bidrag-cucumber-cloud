@@ -1,8 +1,12 @@
 package no.nav.bidrag.cucumber.azure
 
-import io.ktor.client.request.*
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
 import org.slf4j.LoggerFactory
 
 class BidragSakClient(

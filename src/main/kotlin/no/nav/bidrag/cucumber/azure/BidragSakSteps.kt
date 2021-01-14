@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.azure
 
 import io.cucumber.java8.No
-import io.ktor.client.statement.*
+import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 
@@ -28,7 +28,7 @@ class BidragSakSteps() : No {
             resultat = henteSak(saksnummer)
         }
 
-        Så("skal resultatet være {int}") { svar: Integer ->
+        Så("skal resultatet være {int}") { svar: Int ->
             Assert.assertEquals(svar, resultat.status.value)
         }
     }

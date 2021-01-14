@@ -1,6 +1,11 @@
 package no.nav.bidrag.cucumber.azure
 
-import com.natpryce.konfig.*
+import com.natpryce.konfig.ConfigurationMap
+import com.natpryce.konfig.ConfigurationProperties
+import com.natpryce.konfig.EnvironmentVariables
+import com.natpryce.konfig.Key
+import com.natpryce.konfig.overriding
+import com.natpryce.konfig.stringType
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileNotFoundException
