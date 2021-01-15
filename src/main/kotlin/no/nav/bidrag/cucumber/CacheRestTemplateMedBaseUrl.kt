@@ -11,11 +11,9 @@ import java.security.cert.X509Certificate
 
 private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.java)
 
-internal class CacheRestTemplateMedBaseUrl {
-    companion object {
-        private val restTjenesteTilApplikasjon: MutableMap<String, RestTjeneste.RestTemplateMedBaseUrl> = HashMap()
-        private val naisConfiguration = NaisConfiguration()
-    }
+internal object CacheRestTemplateMedBaseUrl {
+    private val restTjenesteTilApplikasjon: MutableMap<String, RestTjeneste.RestTemplateMedBaseUrl> = HashMap()
+    private val naisConfiguration = NaisConfiguration()
 
     fun hentEllerKonfigurer(applicationName: String): RestTjeneste.RestTemplateMedBaseUrl {
 
