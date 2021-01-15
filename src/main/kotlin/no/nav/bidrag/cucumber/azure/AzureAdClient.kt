@@ -1,27 +1,32 @@
 package no.nav.bidrag.cucumber.azure
 
-import io.ktor.client.request.post
-import io.ktor.client.request.url
-import io.ktor.content.TextContent
-import io.ktor.http.ContentType
-import io.ktor.http.formUrlEncode
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
+import org.springframework.web.client.RestTemplate
 
 class AzureAdClient(private val configuration: Configuration.AzureAd) {
 
-    suspend fun hentToken(): Token {
+    fun hentToken(): Token {
         val azureAdUrl = "${configuration.authorityEndpoint}/${configuration.tenant}/oauth2/v2.0/token"
-        val formUrlEncode = listOf(
-            "client_id" to configuration.clientId,
-            "scope" to "openid ${configuration.clientId}/.default",
-            "client_secret" to configuration.clientSecret,
-            "username" to configuration.username,
-            "password" to configuration.password,
-            "grant_type" to "password"
-        ).formUrlEncode()
+        val restTemplate = RestTemplate()
+        val httpHeaders = HttpHeaders()
 
-        return apacheHttpClient.post {
-            url(azureAdUrl)
-            body = TextContent(formUrlEncode, ContentType.Application.FormUrlEncoded)
-        }
+        httpHeaders.contentType = MediaType.APPLICATION_FORM_URLENCODED
+
+        val map: MultiValueMap<String, String> = LinkedMultiValueMap()
+        map.add("client_id", configuration.clientId)
+        map.add("scope", "openid ${configuration.clientId}/.default")
+        map.add("client_secret", configuration.clientSecret)
+        map.add("username", configuration.username)
+        map.add("password", configuration.password)
+        map.add("grant_type", "password")
+
+        val request = HttpEntity(map, httpHeaders)
+
+        return restTemplate.postForEntity(azureAdUrl, request, Token::class.java).body
+            ?: throw IllegalStateException("Klarte ikke å hente token fra $azureAdUrl")
     }
 }
