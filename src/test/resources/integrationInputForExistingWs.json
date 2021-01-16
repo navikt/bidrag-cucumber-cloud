@@ -1,0 +1,10 @@
+{
+  "azureAppNames":["bidrag-azure-app"],
+  "environment":"main",
+  "naisProjectFolder": "..",
+  "taggedTest":"bidrag-azure-app",
+  "userNav":"j104364",
+  "userNavAuth":"svada",
+  "userTest":"z104364",
+  "userTestAuth":"lada"
+}

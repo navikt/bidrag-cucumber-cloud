@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test
 internal class EnvironmentTest {
 
     @Test
-    fun `skal hente ENVIRONMENT_MAIN`() {
-        System.setProperty(ENVIRONMENT, ENVIRONMENT_MAIN)
-        val miljo = Environment.miljo
+    fun `skal hente environment`() {
+        System.setProperty(INTEGRATION_INPUT, "src/test/resources/integrationInput.json")
+        val miljo = Environment.fetchIntegrationInput().environment
 
-        assertThat(miljo).isEqualTo(ENVIRONMENT_MAIN)
+        assertThat(miljo).isEqualTo("main")
     }
 }
