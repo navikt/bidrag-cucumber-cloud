@@ -1,11 +1,10 @@
-package no.nav.bidrag.cucumber.config
+package no.nav.bidrag.cucumber
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.cucumber.INTEGRATION_INPUT
 import java.io.File
 
 class IntegrationInput(
-    var azureAppNames: List<String> = emptyList(),
+    var azureInputs: List<AzureInput> = emptyList(),
     var environment: String = "not added",
     var naisProjectFolder: String = "not added",
     var taggedTest: String? = null,
@@ -32,8 +31,25 @@ class IntegrationInput(
             return ObjectMapper().readValue(json, IntegrationInput::class.java)
         }
     }
+
+    fun fetchAzureInput(applicationName: String): AzureInput {
+        return azureInputs.find { it.name == applicationName } ?: throw IllegalStateException("Fant ikke azureInputs for $applicationName")
+    }
+
+    fun fetchTenantUsername(): String {
+        val testUserUpperCase = userTest.toUpperCase()
+        return "F_$testUserUpperCase.E_$testUserUpperCase@trydeetaten.no"
+    }
 }
 
-enum class Provider {
+class AzureInput(
+    var authorityEndpoint: String = "https://login.microsoftonline.com",
+    var clientId: String = "not added",
+    var clientSecret: String = "not added",
+    var name: String = "not added",
+    var tenant: String = "not added"
+)
+
+internal enum class Provider {
     FILE, INSTANCE
 }

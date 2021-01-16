@@ -1,5 +1,10 @@
 {
-  "azureAppNames":["bidrag-azure-app"],
+  "azureInputs":[{
+    "name": "bidrag-azure-app",
+    "clientId": "klient id",
+    "clientSecret": "klient hemmelighet",
+    "tenant": "leietaker"
+  }],
   "environment":"main",
   "naisProjectFolder": "src/test/resources",
   "taggedTest":"bidrag-azure-app",

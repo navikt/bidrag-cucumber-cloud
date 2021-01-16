@@ -1,7 +1,6 @@
 package no.nav.bidrag.cucumber
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.ktor.client.HttpClient
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import org.slf4j.LoggerFactory
@@ -180,5 +179,5 @@ open class RestTjeneste(
         }
     }
 
-    class ResttjenesteMedBaseUrl(val template: RestTemplate, val httpClient: HttpClient? = null, val baseUrl: String)
+    class ResttjenesteMedBaseUrl(val template: RestTemplate, val baseUrl: String)
 }

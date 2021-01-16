@@ -11,11 +11,9 @@ import org.springframework.web.util.UriTemplateHandler
 import java.net.URI
 import java.security.cert.X509Certificate
 
-private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.java)
-
 internal object CacheRestTemplateMedBaseUrl {
+    private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.java)
     private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
-    private val naisConfiguration = NaisConfiguration()
 
     fun hentEllerKonfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
@@ -23,14 +21,18 @@ internal object CacheRestTemplateMedBaseUrl {
             return REST_TJENESTE_TIL_APPLIKASJON.getValue(applicationName)
         }
 
-        naisConfiguration.read(applicationName)
-        val applicationHostUrl = naisConfiguration.hentApplicationHostUrl(applicationName)
-        val applicationUrl: String
+        NaisConfiguration.read(applicationName)
 
-        if (!applicationHostUrl.endsWith('/') && !applicationName.startsWith('/')) {
-            applicationUrl = "$applicationHostUrl/$applicationName/"
+        val applicationHostUrl = NaisConfiguration.hentApplicationHostUrl(applicationName)
+        val configuration = NaisConfiguration.CONFIG_FOR_APPLICATION[applicationName]
+            ?: throw IllegalStateException("Ikke lest konfigurasjon for $applicationName")
+
+        configuration.applicationHostUrl = applicationHostUrl
+
+        val applicationUrl = if (!applicationHostUrl.endsWith('/') && !applicationName.startsWith('/')) {
+            "$applicationHostUrl/$applicationName/"
         } else {
-            applicationUrl = "$applicationHostUrl$applicationName/"
+            "$applicationHostUrl$applicationName/"
         }
 
         return hentEllerKonfigurerApplikasjonForUrl(applicationName, applicationUrl)
@@ -43,11 +45,11 @@ internal object CacheRestTemplateMedBaseUrl {
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         when (Sikkerhet.SECURITY_FOR_APPLICATION[applicationName]) {
-            Security.AZURE -> httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchIdToken() }
+            Security.AZURE -> httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureToken(applicationName) }
             Security.NONE -> LOGGER.info("No security needed when accessing $applicationName")
         }
 
-        REST_TJENESTE_TIL_APPLIKASJON[applicationName] = RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, baseUrl = applicationUrl)
+        REST_TJENESTE_TIL_APPLIKASJON[applicationName] = RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
 
         return REST_TJENESTE_TIL_APPLIKASJON[applicationName]!!
     }
