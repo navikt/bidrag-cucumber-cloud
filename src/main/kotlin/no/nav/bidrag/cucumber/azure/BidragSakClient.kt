@@ -17,7 +17,7 @@ class BidragSakClient(
     private val LOGGER = LoggerFactory.getLogger(BidragSakClient::class.java)
 
     suspend fun henteSakMedGyldigToken(saksnr: String): HttpResponse {
-        val token = azureAdClient.hentToken();
+        val token = azureAdClient.hentToken()
         return henteSak(saksnr, token.token)
     }
 
@@ -32,5 +32,3 @@ class BidragSakClient(
         }
     }
 }
-
-

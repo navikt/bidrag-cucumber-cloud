@@ -7,18 +7,20 @@ import org.apache.http.ssl.SSLContexts
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+import org.springframework.web.util.UriTemplateHandler
+import java.net.URI
 import java.security.cert.X509Certificate
 
 private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.java)
 
 internal object CacheRestTemplateMedBaseUrl {
-    private val restTjenesteTilApplikasjon: MutableMap<String, RestTjeneste.RestTemplateMedBaseUrl> = HashMap()
+    private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
     private val naisConfiguration = NaisConfiguration()
 
-    fun hentEllerKonfigurer(applicationName: String): RestTjeneste.RestTemplateMedBaseUrl {
+    fun hentEllerKonfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
-        if (restTjenesteTilApplikasjon.containsKey(applicationName)) {
-            return restTjenesteTilApplikasjon.getValue(applicationName)
+        if (REST_TJENESTE_TIL_APPLIKASJON.containsKey(applicationName)) {
+            return REST_TJENESTE_TIL_APPLIKASJON.getValue(applicationName)
         }
 
         naisConfiguration.read(applicationName)
@@ -34,19 +36,20 @@ internal object CacheRestTemplateMedBaseUrl {
         return hentEllerKonfigurerApplikasjonForUrl(applicationName, applicationUrl)
     }
 
-    private fun hentEllerKonfigurerApplikasjonForUrl(applicationName: String, applicationUrl: String): RestTjeneste.RestTemplateMedBaseUrl {
+    private fun hentEllerKonfigurerApplikasjonForUrl(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
         val httpComponentsClientHttpRequestFactory = hentHttpRequestFactorySomIgnorererHttps()
-        val httpHeaderRestTemplate = Environment.setBaseUrlPa(HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory), applicationUrl)
+        val httpHeaderRestTemplate = HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
+        httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         when (Sikkerhet.SECURITY_FOR_APPLICATION[applicationName]) {
             Security.AZURE -> httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchIdToken() }
             Security.NONE -> LOGGER.info("No security needed when accessing $applicationName")
         }
 
-        restTjenesteTilApplikasjon[applicationName] = RestTjeneste.RestTemplateMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
+        REST_TJENESTE_TIL_APPLIKASJON[applicationName] = RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, baseUrl = applicationUrl)
 
-        return restTjenesteTilApplikasjon[applicationName]!!
+        return REST_TJENESTE_TIL_APPLIKASJON[applicationName]!!
     }
 
     private fun hentHttpRequestFactorySomIgnorererHttps(): HttpComponentsClientHttpRequestFactory {
@@ -66,5 +69,35 @@ internal object CacheRestTemplateMedBaseUrl {
         requestFactory.httpClient = httpClient
 
         return requestFactory
+    }
+}
+
+private class BaseUrlTemplateHandler(val baseUrl: String) : UriTemplateHandler {
+    override fun expand(uriTemplate: String, uriVariables: MutableMap<String, *>): URI {
+        if (uriVariables.isNotEmpty()) {
+            val queryString = StringBuilder()
+            uriVariables.forEach { if (queryString.length == 1) queryString.append("$it") else queryString.append("?$it") }
+
+            return URI.create(baseUrl + uriTemplate + queryString)
+        }
+
+        return URI.create(baseUrl + uriTemplate)
+    }
+
+    override fun expand(uriTemplate: String, vararg uriVariables: Any?): URI {
+        if (uriVariables.isNotEmpty() && (uriVariables.size != 1 && uriVariables.first() != null)) {
+            val queryString = StringBuilder("&")
+            uriVariables.forEach {
+                if (it != null && queryString.length == 1) {
+                    queryString.append("$it")
+                } else if (it != null) {
+                    queryString.append("?$it")
+                }
+            }
+
+            return URI.create(baseUrl + uriTemplate + queryString)
+        }
+
+        return URI.create(baseUrl + uriTemplate)
     }
 }

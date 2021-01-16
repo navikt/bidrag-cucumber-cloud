@@ -6,15 +6,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 // constants for input via System.getProperty()/System.geteenv()
-internal const val CREDENTIALS_TEST_USER = "TEST_USER"
-internal const val CREDENTIALS_TEST_USER_AUTH = "TEST_AUTH"
-internal const val CREDENTIALS_USERNAME = "USERNAME"
-internal const val CREDENTIALS_USER_AUTH = "USER_AUTH"
-internal const val ENVIRONMENT = "ENVIRONMENT"
-internal const val PROJECT_NAIS_FOLDER = "PROJECT_NAIS_FOLDER"
-
-// constants for code
-internal const val ALIAS_BIDRAG_UI = "bidrag-ui"
+internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
 
 // Headers
 internal const val X_ENHET_HEADER = "X-Enhet"
@@ -41,7 +33,7 @@ object BidragCucumberNais {
 
     fun log(messageTitle: String?, message: String) {
         if (scenario != null) {
-            val title = if (messageTitle != null) "<h5>$messageTitle</h5>" else ""
+            val title = if (messageTitle != null) "<h5>$messageTitle</h5>\n" else ""
             scenario!!.log("$title<p>\n$message\n</p>")
         } else {
             LOGGER.info("Logging message outside scenario: $message")

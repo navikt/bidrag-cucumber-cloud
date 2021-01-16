@@ -13,8 +13,8 @@ private val JSON_FILE_FOR_APPLICATION: MutableMap<String, String> = HashMap()
 internal class NaisConfiguration {
 
     fun read(applicationName: String): Security {
-        val applfolder = File("${Environment.naisProjectFolder}/$applicationName")
-        val naisFolder = File("${Environment.naisProjectFolder}/$applicationName/nais")
+        val applfolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName")
+        val naisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/nais")
         val jsonFile = fetchJsonByEnvironment(applicationName)
 
         LOGGER.info("> applFolder exists: ${applfolder.exists()}, path: $applfolder")
@@ -58,13 +58,16 @@ internal class NaisConfiguration {
     }
 
     private fun fetchJsonByEnvironment(applicationName: String): File {
-        val miljoJson = File("${Environment.naisProjectFolder}/$applicationName/nais/${Environment.miljo}.json")
+        val naisProjectFolder = File(Environment.fetchIntegrationInput().naisProjectFolder).absolutePath
+        val miljoJson = File("${naisProjectFolder}/$applicationName/nais/${Environment.fetchIntegrationInput().environment}.json")
 
         if (miljoJson.exists()) {
             return miljoJson
         }
 
-        throw IllegalStateException("Unable to find ${Environment.miljo}.json in folder ${Environment.naisProjectFolder}/$applicationName/nais")
+        throw IllegalStateException(
+            "Unable to find ${Environment.fetchIntegrationInput().environment}.json in folder ${naisProjectFolder}/$applicationName/nais"
+        )
     }
 
     internal fun hentApplicationHostUrl(naisApplication: String): String {

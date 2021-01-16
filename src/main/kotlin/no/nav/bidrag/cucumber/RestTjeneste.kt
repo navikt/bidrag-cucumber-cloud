@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.ktor.client.HttpClient
 import no.nav.bidrag.commons.CorrelationId
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
@@ -18,7 +19,7 @@ private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
 @Suppress("UNCHECKED_CAST")
 open class RestTjeneste(
     private val applicationName: String,
-    private val rest: RestTemplateMedBaseUrl
+    private val rest: ResttjenesteMedBaseUrl
 ) {
 
     private lateinit var debugFullUrl: String
@@ -157,5 +158,5 @@ open class RestTjeneste(
         return manglendeProps
     }
 
-    class RestTemplateMedBaseUrl(val template: RestTemplate, val baseUrl: String)
+    class ResttjenesteMedBaseUrl(val template: RestTemplate, val httpClient: HttpClient? = null, val baseUrl: String)
 }
