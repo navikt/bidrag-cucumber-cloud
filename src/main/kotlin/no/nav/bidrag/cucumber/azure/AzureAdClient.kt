@@ -1,11 +1,14 @@
 package no.nav.bidrag.cucumber.azure
 
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
+
+private val LOGGER = LoggerFactory.getLogger(AzureAdClient::class.java)
 
 class AzureAdClient(private val configuration: Configuration.AzureAd) {
 
@@ -25,6 +28,10 @@ class AzureAdClient(private val configuration: Configuration.AzureAd) {
         map.add("grant_type", "password")
 
         val request = HttpEntity(map, httpHeaders)
+
+        LOGGER.info("> url    : $azureAdUrl")
+        LOGGER.info("> headers: $httpHeaders")
+        LOGGER.info("> map    : $map")
 
         return restTemplate.postForEntity(azureAdUrl, request, Token::class.java).body
             ?: throw IllegalStateException("Klarte ikke å hente token fra $azureAdUrl")

@@ -24,10 +24,6 @@ internal object CacheRestTemplateMedBaseUrl {
         NaisConfiguration.read(applicationName)
 
         val applicationHostUrl = NaisConfiguration.hentApplicationHostUrl(applicationName)
-        val configuration = NaisConfiguration.CONFIG_FOR_APPLICATION[applicationName]
-            ?: throw IllegalStateException("Ikke lest konfigurasjon for $applicationName")
-
-        configuration.applicationHostUrl = applicationHostUrl
 
         val applicationUrl = if (!applicationHostUrl.endsWith('/') && !applicationName.startsWith('/')) {
             "$applicationHostUrl/$applicationName/"

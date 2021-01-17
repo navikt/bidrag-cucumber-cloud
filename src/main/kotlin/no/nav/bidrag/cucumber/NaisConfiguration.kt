@@ -7,7 +7,7 @@ import java.io.File
 
 internal object NaisConfiguration {
 
-    internal val CONFIG_FOR_APPLICATION: MutableMap<String, Configuration> = HashMap()
+    private val ENVIRONMENT_FOR_APPLICATION: MutableMap<String, EnvironmentFile> = HashMap()
     private val LOGGER = LoggerFactory.getLogger(NaisConfiguration::class.java)
 
     fun read(applicationName: String): Security {
@@ -22,7 +22,7 @@ internal object NaisConfiguration {
         val canReadNaisEnvironment = applfolder.exists() && naisFolder.exists() && envFile.exists()
 
         if (canReadNaisEnvironment) {
-            CONFIG_FOR_APPLICATION[applicationName] = Configuration(envFile)
+            ENVIRONMENT_FOR_APPLICATION[applicationName] = EnvironmentFile(envFile)
         } else {
             throw IllegalStateException("Unable to read json configuration for $applicationName")
         }
@@ -35,9 +35,9 @@ internal object NaisConfiguration {
     private fun hentSecurityForNaisApp(envFile: File) = if (harAzureSomSikkerhet(envFile.parent)) Security.AZURE else Security.NONE
 
     private fun harAzureSomSikkerhet(naisFolder: String): Boolean {
-        val naisYamlReader = File(naisFolder, "nais.yaml").bufferedReader()
+        val lines = File(naisFolder, "nais.yaml").readLines(Charsets.UTF_8)
         val pureYaml = mutableListOf<String>()
-        naisYamlReader.useLines { lines -> lines.forEach { if (!it.contains("{{")) pureYaml.add(it) } }
+        lines.forEach { if (!it.contains("{{")) pureYaml.add(it) }
         val yamlMap = Yaml().load<Map<String, Any>>(pureYaml.joinToString("\n"))
 
         return isEnabled(yamlMap, mutableListOf("spec", "azure", "application", "enabled"))
@@ -78,8 +78,8 @@ internal object NaisConfiguration {
     }
 
     internal fun hentApplicationHostUrl(naisApplication: String): String {
-        val configuration = CONFIG_FOR_APPLICATION[naisApplication]
-            ?: throw IllegalStateException("no path for $naisApplication in $CONFIG_FOR_APPLICATION")
+        val configuration = ENVIRONMENT_FOR_APPLICATION[naisApplication]
+            ?: throw IllegalStateException("no path for $naisApplication in $ENVIRONMENT_FOR_APPLICATION")
 
         val ingresses = if (configuration.endsWith(".yaml")) {
             fetchIngressesFromYaml(configuration)
@@ -90,41 +90,33 @@ internal object NaisConfiguration {
         return fetchIngress(ingresses).replace("//", "/").replace("https:/", "https://")
     }
 
-    private fun fetchIngressesFromYaml(configuration: Configuration): List<String> {
-        val yamlReader = configuration.naisEnvironmentFile.bufferedReader()
+    private fun fetchIngressesFromYaml(environmentFile: EnvironmentFile): List<String> {
+        val yamlReader = environmentFile.naisEnvironmentFile.bufferedReader()
         val yamlMap = Yaml().load<Map<String, List<String>>>(yamlReader)
 
         return yamlMap.getValue("ingresses")
     }
 
-    private fun fetchIngressesFromJson(configuration: Configuration): List<String> {
-        val bufferedReader = configuration.naisEnvironmentFile.bufferedReader()
+    private fun fetchIngressesFromJson(environmentFile: EnvironmentFile): List<String> {
+        val bufferedReader = environmentFile.naisEnvironmentFile.bufferedReader()
         val gson = Gson()
 
         @Suppress("UNCHECKED_CAST")
-        return (gson.fromJson(bufferedReader, Map::class.java) as Map<String, List<String>>)["ingresses"]
-            ?: throw IllegalStateException("Fant ikke ingresser for ${configuration.naisEnvironmentPath}")
+        return (gson.fromJson(bufferedReader, Map::class.java) as Map<String, List<String>>).getValue("ingresses")
     }
 
     private fun fetchIngress(ingresses: List<String?>): String {
-        for (ingress in ingresses) {
-            if (ingress?.contains(Regex("dev.adeo"))!!) {
-                return ingress
-            }
-        }
-
-        throw IllegalStateException("Kunne ikke fastslå ingress til tjeneste!")
+        return ingresses.first { it?.contains("dev.adeo") == true } ?: throw IllegalStateException("Kunne ikke fastslå ingress til tjeneste!")
     }
-}
 
-data class Configuration(
-    val naisEnvironmentFile: File,
-    var applicationHostUrl: String = "not added"
-) {
-    val naisEnvironmentPath: String
-        get() = naisEnvironmentFile.absolutePath
+    private data class EnvironmentFile(
+        val naisEnvironmentFile: File
+    ) {
+        val naisEnvironmentPath: String
+            get() = naisEnvironmentFile.absolutePath
 
-    fun endsWith(suffix: String): Boolean {
-        return naisEnvironmentPath.endsWith(suffix)
+        fun endsWith(suffix: String): Boolean {
+            return naisEnvironmentPath.endsWith(suffix)
+        }
     }
 }

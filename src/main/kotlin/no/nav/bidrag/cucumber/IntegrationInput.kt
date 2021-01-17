@@ -52,7 +52,7 @@ class IntegrationInput(
 
     fun fetchTenantUsername(): String {
         val testUserUpperCase = userTest.toUpperCase()
-        return "F_$testUserUpperCase.E_$testUserUpperCase@trydeetaten.no"
+        return "F_$testUserUpperCase.E_$testUserUpperCase@trygdeetaten.no"
     }
 }
 

@@ -16,7 +16,7 @@ internal object Sikkerhet {
 
     internal fun fetchAzureToken(applicationName: String): String {
         try {
-            return fetchToken(Environment.fetchIntegrationInput().fetchAzureInput(applicationName))
+            return fetchToken(applicationName)
         } catch (e: RuntimeException) {
             val exception = "${e.javaClass.name}: ${e.message} - ${e.stackTrace.first { it.fileName != null && it.fileName!!.endsWith("kt") }}"
             LOGGER.error("Feil ved henting av online id token, $exception")
@@ -24,12 +24,10 @@ internal object Sikkerhet {
         }
     }
 
-    private fun fetchToken(azureInput: AzureInput): String {
+    private fun fetchToken(applicationName: String): String {
         val integrationInput = Environment.fetchIntegrationInput()
-        val applicationHostUrl = NaisConfiguration.CONFIG_FOR_APPLICATION[azureInput.name]?.applicationHostUrl
-            ?: throw IllegalStateException("Fant ikke konfigurasjon for ${azureInput.name}")
-
-        val azureAdUrl = "$applicationHostUrl/${azureInput.authorityEndpoint}/${azureInput.tenant}/oauth2/v2.0/token"
+        val azureInput = integrationInput.fetchAzureInput(applicationName)
+        val azureAdUrl = "${azureInput.authorityEndpoint}/${azureInput.tenant}/oauth2/v2.0/token"
         val httpHeaders = HttpHeaders()
         val restTemplate = RestTemplate()
 
@@ -42,6 +40,10 @@ internal object Sikkerhet {
         map.add("scope", "openid ${azureInput.clientId}/.default")
         map.add("username", integrationInput.fetchTenantUsername())
         map.add("password", integrationInput.userTestAuth)
+
+        LOGGER.info("> url    : $azureAdUrl")
+        LOGGER.info("> headers: $httpHeaders")
+        LOGGER.info("> map    : $map")
 
         val request = HttpEntity(map, httpHeaders)
         val token = restTemplate.postForEntity(azureAdUrl, request, Token::class.java).body

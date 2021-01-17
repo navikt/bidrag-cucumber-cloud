@@ -8,7 +8,7 @@
     "name": "bidrag-sak",
     "clientId": "61137106-058f-4b4c-8a65-11911f1bdd8f",
     "clientSecret": "cSDgM_6tpZO38MsE3wX.4aV-_QQ94dX97M",
-    "tenant": "61137106-058f-4b4c-8a65-11911f1bdd8f"
+    "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
   }],
   "environment":"feature",
   "naisProjectFolder": "..",
