@@ -5,16 +5,11 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-// constants for input via System.getProperty()/System.geteenv()
-internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
-
-// Headers
-internal const val X_ENHET_HEADER = "X-Enhet"
-
-private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
-
 object BidragCucumberNais {
+    // constants for input via System.getProperty()/System.geteenv()
+    internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
 
+    private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
     private var scenario: Scenario? = null
     private var correlationIdForScenario: String = createCorrelationIdValue()
 
@@ -23,8 +18,14 @@ object BidragCucumberNais {
         correlationIdForScenario = createCorrelationIdValue()
     }
 
+    fun reset(scenario: Scenario) {
+        LOGGER.info("Finished ${scenario.name}")
+        this.scenario = null
+        correlationIdForScenario = createCorrelationIdValue()
+    }
+
     private fun createCorrelationIdValue(): String {
-        return "cucumber-nais-${java.lang.Long.toHexString(System.currentTimeMillis())}"
+        return "bdt-${java.lang.Long.toHexString(System.currentTimeMillis())}"
     }
 
     fun log(message: String) {

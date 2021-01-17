@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
 import org.slf4j.LoggerFactory
 import java.io.File
 

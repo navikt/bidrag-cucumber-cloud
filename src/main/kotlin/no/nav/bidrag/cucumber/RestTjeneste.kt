@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
+import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
@@ -31,7 +32,6 @@ open class RestTjeneste(
     fun hentHttpHeaders(): HttpHeaders = responseEntity.headers
     fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
     fun hentResponse(): String? = responseEntity.body
-    fun hentResponseSomListe() = ObjectMapper().readValue(responseEntity.body, List::class.java) as List<Map<String, Any>>
     fun hentResponseSomMap() = ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any>
 
     fun exchangeGet(endpointUrl: String): ResponseEntity<String> {
@@ -55,14 +55,10 @@ open class RestTjeneste(
         return responseEntity
     }
 
-    internal fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
-        return initHttpHeadersWithCorrelationIdAndEnhet(null)
-    }
-
-    private fun initHttpHeadersWithCorrelationIdAndEnhet(enhet: String?): HttpHeaders {
+    private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
         val headers = HttpHeaders()
         headers.add(CorrelationId.CORRELATION_ID_HEADER, BidragCucumberNais.getCorrelationIdForScenario())
-        headers.add(X_ENHET_HEADER, enhet ?: "4802")
+        headers.add(X_ENHET_HEADER, "4802")
 
         BidragCucumberNais.log(
             BidragCucumberNais.createCorrelationIdLinkTitle(),
@@ -79,47 +75,20 @@ open class RestTjeneste(
         return httpHeaders
     }
 
-    fun exchangePut(endpointUrl: String, journalpostJson: String) {
-        exchangePut(endpointUrl, journalpostJson, null)
-    }
-
-    fun exchangePut(endpointUrl: String, journalpostJson: String, enhet: String?) {
-        val jsonEntity = httpEntity(endpointUrl, enhet, journalpostJson)
-        exchange(jsonEntity, endpointUrl, HttpMethod.PUT)
-    }
-
-    fun exchangePost(endpointUrl: String, json: String, enhet: String?) {
-        val jsonEntity = httpEntity(endpointUrl, enhet, json)
-        exchange(jsonEntity, endpointUrl, HttpMethod.POST)
-    }
-
     fun exchangePost(endpointUrl: String, json: String) {
-        val jsonEntity = httpEntity(endpointUrl = endpointUrl, json = json, enhet = null)
+        val jsonEntity = httpEntity(endpointUrl, json)
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
 
-    fun exchangePost(endpointUrl: String) {
-        val jsonEntity = httpEntity(endpointUrl)
-        exchange(jsonEntity, endpointUrl, HttpMethod.POST)
-    }
-
-    internal fun httpEntity(endpointUrl: String): HttpEntity<String> {
+    private fun httpEntity(endpointUrl: String, json: String): HttpEntity<String> {
         this.debugFullUrl = rest.baseUrl + endpointUrl
         val headers = initHttpHeadersWithCorrelationIdAndEnhet()
-        headers.contentType = MediaType.APPLICATION_JSON
-
-        return HttpEntity(headers)
-    }
-
-    private fun httpEntity(endpointUrl: String, enhet: String?, json: String): HttpEntity<String> {
-        this.debugFullUrl = rest.baseUrl + endpointUrl
-        val headers = initHttpHeadersWithCorrelationIdAndEnhet(enhet)
         headers.contentType = MediaType.APPLICATION_JSON
 
         return HttpEntity(json, headers)
     }
 
-    internal fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
+    private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
         try {
             LOGGER.info("$httpMethod: $endpointUrl")
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
@@ -130,50 +99,11 @@ open class RestTjeneste(
         }
     }
 
-    fun post(endpointUrl: String, jsonEntity: HttpEntity<String>) {
-        debugFullUrl = rest.baseUrl + endpointUrl
-
-        responseEntity = try {
-            rest.template.postForEntity(endpointUrl, jsonEntity, String::class.java)
-        } catch (e: HttpStatusCodeException) {
-            LOGGER.error("POST FEILET: $debugFullUrl: $e")
-            ResponseEntity(e.statusCode)
-        }
-    }
-
-    fun hentManglendeProperties(objects: List<*>, properties: List<String>): List<String> {
-        val manglendeProps = ArrayList<String>()
-
-        objects.forEach {
-            @Suppress("UNCHECKED_CAST") manglendeProps.addAll(hentManglendeProperties(it as LinkedHashMap<String, *>, properties))
-        }
-
-        return manglendeProps
-    }
-
-    fun hentManglendeProperties(objects: LinkedHashMap<*, *>, properties: List<String>): List<String> {
-        val manglendeProps = ArrayList<String>()
-        properties.forEach { if (!objects.containsKey(it)) manglendeProps.add(it) }
-
-        return manglendeProps
-    }
-
     fun removeHeaderGenerator(headerName: String) {
         val restTjeneste = rest.template
 
         if (restTjeneste is HttpHeaderRestTemplate) {
             restTjeneste.removeHeaderGenerator(headerName)
-        } else {
-            throw IllegalStateException("Ukjent implementasjon for bidrag")
-        }
-    }
-
-    fun addHeaderGenerator(headerName: String, headerGenedrator: () -> String) {
-        val restTjeneste = rest.template
-
-        if (restTjeneste is HttpHeaderRestTemplate) {
-            restTjeneste.removeHeaderGenerator(headerName)
-            restTjeneste.addHeaderGenerator(headerName, headerGenedrator)
         } else {
             throw IllegalStateException("Ukjent implementasjon for bidrag")
         }

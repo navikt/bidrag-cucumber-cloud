@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber
 
+import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
