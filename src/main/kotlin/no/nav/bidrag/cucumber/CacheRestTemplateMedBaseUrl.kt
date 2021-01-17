@@ -68,34 +68,34 @@ internal object CacheRestTemplateMedBaseUrl {
 
         return requestFactory
     }
-}
 
-private class BaseUrlTemplateHandler(val baseUrl: String) : UriTemplateHandler {
-    override fun expand(uriTemplate: String, uriVariables: MutableMap<String, *>): URI {
-        if (uriVariables.isNotEmpty()) {
-            val queryString = StringBuilder()
-            uriVariables.forEach { if (queryString.length == 1) queryString.append("$it") else queryString.append("?$it") }
+    private class BaseUrlTemplateHandler(val baseUrl: String) : UriTemplateHandler {
+        override fun expand(uriTemplate: String, uriVariables: MutableMap<String, *>): URI {
+            if (uriVariables.isNotEmpty()) {
+                val queryString = StringBuilder()
+                uriVariables.forEach { if (queryString.length == 1) queryString.append("$it") else queryString.append("?$it") }
 
-            return URI.create(baseUrl + uriTemplate + queryString)
-        }
-
-        return URI.create(baseUrl + uriTemplate)
-    }
-
-    override fun expand(uriTemplate: String, vararg uriVariables: Any?): URI {
-        if (uriVariables.isNotEmpty() && (uriVariables.size != 1 && uriVariables.first() != null)) {
-            val queryString = StringBuilder("&")
-            uriVariables.forEach {
-                if (it != null && queryString.length == 1) {
-                    queryString.append("$it")
-                } else if (it != null) {
-                    queryString.append("?$it")
-                }
+                return URI.create(baseUrl + uriTemplate + queryString)
             }
 
-            return URI.create(baseUrl + uriTemplate + queryString)
+            return URI.create(baseUrl + uriTemplate)
         }
 
-        return URI.create(baseUrl + uriTemplate)
+        override fun expand(uriTemplate: String, vararg uriVariables: Any?): URI {
+            if (uriVariables.isNotEmpty() && (uriVariables.size != 1 && uriVariables.first() != null)) {
+                val queryString = StringBuilder("&")
+                uriVariables.forEach {
+                    if (it != null && queryString.length == 1) {
+                        queryString.append("$it")
+                    } else if (it != null) {
+                        queryString.append("?$it")
+                    }
+                }
+
+                return URI.create(baseUrl + uriTemplate + queryString)
+            }
+
+            return URI.create(baseUrl + uriTemplate)
+        }
     }
 }
