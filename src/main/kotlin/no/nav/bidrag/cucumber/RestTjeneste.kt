@@ -55,7 +55,7 @@ open class RestTjeneste(
         return responseEntity
     }
 
-    internal fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
+    private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
         val headers = HttpHeaders()
         headers.add(CorrelationId.CORRELATION_ID_HEADER, BidragCucumberNais.getCorrelationIdForScenario())
         headers.add(X_ENHET_HEADER, "4802")
@@ -80,7 +80,7 @@ open class RestTjeneste(
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
 
-    internal fun httpEntity(endpointUrl: String, json: String): HttpEntity<String> {
+    private fun httpEntity(endpointUrl: String, json: String): HttpEntity<String> {
         this.debugFullUrl = rest.baseUrl + endpointUrl
         val headers = initHttpHeadersWithCorrelationIdAndEnhet()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -88,7 +88,7 @@ open class RestTjeneste(
         return HttpEntity(json, headers)
     }
 
-    internal fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
+    private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
         try {
             LOGGER.info("$httpMethod: $endpointUrl")
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)

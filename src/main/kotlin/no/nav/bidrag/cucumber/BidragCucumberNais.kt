@@ -18,8 +18,14 @@ object BidragCucumberNais {
         correlationIdForScenario = createCorrelationIdValue()
     }
 
+    fun reset(scenario: Scenario) {
+        LOGGER.info("Finished ${scenario.name}")
+        this.scenario = null
+        correlationIdForScenario = createCorrelationIdValue()
+    }
+
     private fun createCorrelationIdValue(): String {
-        return "cucumber-nais-${java.lang.Long.toHexString(System.currentTimeMillis())}"
+        return "bdt-${java.lang.Long.toHexString(System.currentTimeMillis())}"
     }
 
     fun log(message: String) {
