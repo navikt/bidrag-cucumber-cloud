@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.azure.Token
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
