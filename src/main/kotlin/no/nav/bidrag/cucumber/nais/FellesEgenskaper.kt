@@ -4,7 +4,9 @@ import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.BidragScenario
 import no.nav.bidrag.cucumber.RestTjeneste
 import org.assertj.core.api.Assertions.assertThat
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import java.util.EnumSet
 
 class FellesEgenskaper : No {
     init {
@@ -21,6 +23,20 @@ class FellesEgenskaper : No {
             val verdiFraResponse = responseObject[key]?.toString()
 
             assertThat(verdiFraResponse).`as`("json response").isEqualTo(value)
+        }
+
+        Når("det gjøres et kall til {string}") { endpointUrl: String ->
+            BidragScenario.restTjeneste.exchangeGet(endpointUrl)
+        }
+
+        Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
+            assertThat(BidragScenario.restTjeneste.hentHttpStatus())
+                .`as`("HttpStatus for " + BidragScenario.restTjeneste.hentEndpointUrl())
+                .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
+        }
+
+        Når("det mangler sikkerhetstoken i HttpRequest") {
+            BidragScenario.restTjeneste.removeHeaderGenerator(HttpHeaders.AUTHORIZATION)
         }
     }
 }

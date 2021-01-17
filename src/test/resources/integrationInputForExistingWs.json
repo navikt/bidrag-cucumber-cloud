@@ -1,10 +1,17 @@
 {
-  "azureAppNames":["bidrag-azure-app"],
-  "environment":"main",
+  "azureInputs":[{
+    "name": "bidrag-dokument",
+    "clientId": "d220e284-c0f0-43f1-a585-5c5b5c63dc0a",
+    "clientSecret": "ce23q3.i7-sedNfRMoXio_.m9gW0-m7B.9",
+    "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
+  }, {
+    "name": "bidrag-sak",
+    "clientId": "61137106-058f-4b4c-8a65-11911f1bdd8f",
+    "clientSecret": "cSDgM_6tpZO38MsE3wX.4aV-_QQ94dX97M",
+    "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
+  }],
+  "environment":"feature",
   "naisProjectFolder": "..",
-  "taggedTest":"bidrag-azure-app",
-  "userNav":"j104364",
-  "userNavAuth":"svada",
-  "userTest":"z104364",
-  "userTestAuth":"lada"
+  "userTest":"z991656",
+  "userTestAuth":"Sjonkel8"
 }
