@@ -15,13 +15,14 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
-private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
-
 @Suppress("UNCHECKED_CAST")
 open class RestTjeneste(
     private val applicationName: String,
     private val rest: ResttjenesteMedBaseUrl
 ) {
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
+    }
 
     private lateinit var debugFullUrl: String
     private lateinit var responseEntity: ResponseEntity<String>

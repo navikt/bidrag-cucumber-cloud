@@ -8,8 +8,5 @@
   "environment":"main",
   "naisProjectFolder": "src/test/resources",
   "taggedTest":"bidrag-azure-app",
-  "userNav":"j104364",
-  "userNavAuth":"svada",
-  "userTest":"z104364",
-  "userTestAuth":"lada"
+  "userTest":"z104364"
 }

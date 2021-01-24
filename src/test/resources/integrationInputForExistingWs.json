@@ -1,17 +1,25 @@
 {
-  "azureInputs":[{
-    "name": "bidrag-dokument",
-    "clientId": "d220e284-c0f0-43f1-a585-5c5b5c63dc0a",
-    "clientSecret": "ce23q3.i7-sedNfRMoXio_.m9gW0-m7B.9",
-    "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
-  }, {
-    "name": "bidrag-sak",
-    "clientId": "61137106-058f-4b4c-8a65-11911f1bdd8f",
-    "clientSecret": "cSDgM_6tpZO38MsE3wX.4aV-_QQ94dX97M",
-    "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
-  }],
-  "environment":"feature",
-  "naisProjectFolder": "..",
-  "userTest":"z991656",
-  "userTestAuth":"Sjonkel8"
+  "azureInputs": [
+    {
+      "name": "bidrag-dokument",
+      "clientId": "26752a51-2e4b-446e-a897-db3690f1d456",
+      "clientSecret": "_BUWcga2JVWyVV.AQ.-0-cn3yJ3CS0fsRB",
+      "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
+    },
+    {
+      "name": "bidrag-sak-feature",
+      "clientId": "61137106-058f-4b4c-8a65-11911f1bdd8f",
+      "clientSecret": "cSDgM_6tpZO38MsE3wX.4aV-_QQ94dX97M",
+      "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
+    },
+    {
+      "name": "bidrag-sak",
+      "clientId": "e011313d-5858-4c33-9869-f7be9bf1242a",
+      "clientSecret": "a7~thgM0E1UT8FK-saTD.33rHFOU9_-zCx",
+      "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
+    }
+  ],
+  "environment": "feature",
+  "naisProjectFolder": "/Users/jactor/ws",
+  "userTest": "z991656"
 }

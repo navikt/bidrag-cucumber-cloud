@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.sikkerhet
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
