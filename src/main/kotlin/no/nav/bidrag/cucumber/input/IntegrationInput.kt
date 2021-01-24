@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.input
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
@@ -12,18 +12,13 @@ class IntegrationInput(
     var environment: String = "<not set>",
     var naisProjectFolder: String = "<not set>",
     var taggedTest: String? = null,
-    var userNav: String = "<not set>",
-    var userNavAuth: String = "<not set>",
     var userTest: String = "<not set>",
-    var userTestAuth: String = "<not set>"
 ) {
     companion object {
         internal var provider = Provider.FILE
         internal var instance: IntegrationInput? = null
 
-        fun fromJson(): IntegrationInput {
-            val filePath = System.getProperty(INTEGRATION_INPUT) ?: System.getenv(INTEGRATION_INPUT)
-
+        fun from(filePath: String?): IntegrationInput {
             return when (provider) {
                 Provider.FILE -> readJsonFile(filePath ?: throw IllegalStateException("Fant ikke angitt json-path: $filePath"))
                 Provider.INSTANCE -> instance

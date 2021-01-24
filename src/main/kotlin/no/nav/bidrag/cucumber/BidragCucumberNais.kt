@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter
 object BidragCucumberNais {
     // constants for input via System.getProperty()/System.geteenv()
     internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
+    internal const val TEST_AUTH = "TEST_AUTH"
 
     private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
     private var scenario: Scenario? = null

@@ -1,5 +1,6 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.sikkerhet
 
+import no.nav.bidrag.cucumber.Environment
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -38,7 +39,7 @@ internal object Sikkerhet {
         map.add("grant_type", "password")
         map.add("scope", "openid ${azureInput.clientId}/.default")
         map.add("username", integrationInput.fetchTenantUsername())
-        map.add("password", integrationInput.userTestAuth)
+        map.add("password", Environment.fetchTestUserAuthentication())
 
         LOGGER.info("> url    : $azureAdUrl")
         LOGGER.info("> headers: $httpHeaders")

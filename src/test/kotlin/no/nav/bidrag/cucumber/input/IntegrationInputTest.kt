@@ -1,6 +1,5 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.input
 
-import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -10,24 +9,18 @@ import java.io.File
 internal class IntegrationInputTest {
     @Test
     fun `skal lese og mappe fra json`() {
-        System.setProperty(INTEGRATION_INPUT, "src/test/resources/integrationInput.json")
-        val integrationInput = IntegrationInput.fromJson()
+        val integrationInput = IntegrationInput.from("src/test/resources/integrationInput.json")
 
         assertAll(
             { assertThat(integrationInput.environment).`as`("environment").isEqualTo("main") },
             { assertThat(integrationInput.naisProjectFolder).`as`("naisProjectFolder").isEqualTo("src/test/resources") },
-            { assertThat(integrationInput.taggedTest).`as`("taggedTest").isEqualTo("bidrag-azure-app") },
-            { assertThat(integrationInput.userNav).`as`("taggedTest").isEqualTo("j104364") },
-            { assertThat(integrationInput.userNavAuth).`as`("taggedTest").isEqualTo("svada") },
             { assertThat(integrationInput.userTest).`as`("taggedTest").isEqualTo("z104364") },
-            { assertThat(integrationInput.userTestAuth).`as`("taggedTest").isEqualTo("lada") }
         )
     }
 
     @Test
     fun `skal lese liste med AzureInput til IntegrationInput`() {
-        System.setProperty(INTEGRATION_INPUT, "src/test/resources/integrationInput.json")
-        val azureInputs = IntegrationInput.fromJson().azureInputs
+        val azureInputs = IntegrationInput.from("src/test/resources/integrationInput.json").azureInputs
 
         assertAll(
             { assertThat(azureInputs).`as`("azureInputs").hasSize(1) },
@@ -41,11 +34,8 @@ internal class IntegrationInputTest {
     @Test
     @DisplayName("skal ha authorityEndpoint hardkoded i AzureInput når den ikke er angitt i json fil")
     fun `skal ha authorityEndpoint hardkoded i AzureInput nar den ikke er angitt i json fil`() {
-        val relativePathToJson = "src/test/resources/integrationInput.json"
-        System.setProperty(INTEGRATION_INPUT, relativePathToJson)
-
-        val azureInput = IntegrationInput.fromJson().azureInputs.first()
-        val jsonText = File(relativePathToJson).readText(Charsets.UTF_8)
+        val azureInput = IntegrationInput.from("src/test/resources/integrationInput.json").azureInputs.first()
+        val jsonText = File("src/test/resources/integrationInput.json").readText(Charsets.UTF_8)
 
         assertAll(
             { assertThat(azureInput.authorityEndpoint).`as`("authorityEndpoint").isEqualTo("https://login.microsoftonline.com") },
