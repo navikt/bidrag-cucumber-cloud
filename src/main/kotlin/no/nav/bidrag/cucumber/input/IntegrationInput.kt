@@ -1,11 +1,8 @@
 package no.nav.bidrag.cucumber.input
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
 import org.slf4j.LoggerFactory
 import java.io.File
-
-private val LOGGER = LoggerFactory.getLogger(IntegrationInput::class.java)
 
 class IntegrationInput(
     var azureInputs: List<AzureInput> = emptyList(),
@@ -15,6 +12,8 @@ class IntegrationInput(
     var userTest: String = "<not set>",
 ) {
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(IntegrationInput::class.java)
+
         internal var provider = Provider.FILE
         internal var instance: IntegrationInput? = null
 
@@ -50,16 +49,8 @@ class IntegrationInput(
         val testUserUpperCase = userTest.toUpperCase()
         return "F_$testUserUpperCase.E_$testUserUpperCase@trygdeetaten.no"
     }
-}
 
-class AzureInput(
-    var authorityEndpoint: String = "https://login.microsoftonline.com",
-    var clientId: String = "<not set>",
-    var clientSecret: String = "<not set>",
-    var name: String = "<not set>",
-    var tenant: String = "<not set>"
-)
-
-internal enum class Provider {
-    FILE, INSTANCE
+    internal enum class Provider {
+        FILE, INSTANCE
+    }
 }

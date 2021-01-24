@@ -3,7 +3,7 @@ package no.nav.bidrag.cucumber
 import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
 import no.nav.bidrag.cucumber.BidragCucumberNais.TEST_AUTH
 import no.nav.bidrag.cucumber.input.IntegrationInput
-import no.nav.bidrag.cucumber.input.Provider
+import no.nav.bidrag.cucumber.input.IntegrationInput.Provider
 
 internal object Environment {
     private var integrationInput: IntegrationInput? = null
