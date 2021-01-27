@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
-import no.nav.bidrag.cucumber.sikkerhet.Security
 import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet
+import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet.Security
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.ssl.SSLContexts

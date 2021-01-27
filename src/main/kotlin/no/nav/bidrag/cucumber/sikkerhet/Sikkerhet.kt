@@ -45,7 +45,7 @@ internal object Sikkerhet {
 
         LOGGER.info("> url    : $azureAdUrl")
         LOGGER.info("> headers: $httpHeaders")
-        LOGGER.info("> map    : $map")
+        LOGGER.info("> map    : ${suppressPasswords(map)}")
 
         val request = HttpEntity(map, httpHeaders)
         val token = restTemplate.postForEntity(azureAdUrl, request, Token::class.java).body
@@ -56,6 +56,13 @@ internal object Sikkerhet {
         return "Bearer ${token.token}"
     }
 
+    private fun suppressPasswords(map: MultiValueMap<String, String>): String {
+        val suppressed = HashMap<String, String?>()
+        map.keys.forEach { key -> suppressed[key] = if (key.toUpperCase() != "PASSWORD") map.getValue(key).toString() else "[***]" }
+
+        return suppressed.toString()
+    }
+
     fun fetchSecurityFor(applicationName: String): Security {
         return SECURITY_FOR_APPLICATION[applicationName] ?: Security.NONE
     }
@@ -63,8 +70,8 @@ internal object Sikkerhet {
     fun fetchOrReadSecurityFor(applicationName: String, envFile: File): Security {
         return SECURITY_FOR_APPLICATION.computeIfAbsent(applicationName) { NaisConfiguration.hentSecurityForNaisApp(envFile) }
     }
-}
 
-enum class Security {
-    AZURE, NONE
+    enum class Security {
+        AZURE, NONE
+    }
 }

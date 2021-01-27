@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.input.IntegrationInput
-import no.nav.bidrag.cucumber.sikkerhet.Security
+import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet.Security
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
