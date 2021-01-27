@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.input
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import no.nav.bidrag.cucumber.Environment
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -11,6 +12,10 @@ class IntegrationInput(
     var taggedTest: String? = null,
     var userTest: String = "<not set>",
 ) {
+    val userTestAuth: String
+        get() =
+            Environment.fetchTestUserAuthentication()
+
     companion object {
         private val LOGGER = LoggerFactory.getLogger(IntegrationInput::class.java)
 
@@ -42,7 +47,15 @@ class IntegrationInput(
     }
 
     fun fetchAzureInput(applicationName: String): AzureInput {
-        return azureInputs.find { it.name == applicationName } ?: throw IllegalStateException("Fant ikke azureInputs for $applicationName")
+        val environment = Environment.fetchIntegrationInput().environment
+        val applicationNameForEnvironment = when (environment) {
+            "main" -> applicationName
+            else -> "$applicationName-$environment"
+        }
+
+        return azureInputs.find { it.name == applicationNameForEnvironment } ?: throw IllegalStateException(
+            "Fant ikke azureInputs for $applicationNameForEnvironment"
+        )
     }
 
     fun fetchTenantUsername(): String {

@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.sikkerhet
 
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.NaisConfiguration
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -8,11 +9,12 @@ import org.springframework.http.MediaType
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
+import java.io.File
 
 internal object Sikkerhet {
 
     private val LOGGER = LoggerFactory.getLogger(Sikkerhet::class.java)
-    internal val SECURITY_FOR_APPLICATION: MutableMap<String, Security> = HashMap()
+    private val SECURITY_FOR_APPLICATION: MutableMap<String, Security> = HashMap()
 
     internal fun fetchAzureToken(applicationName: String): String {
         try {
@@ -39,7 +41,7 @@ internal object Sikkerhet {
         map.add("grant_type", "password")
         map.add("scope", "openid ${azureInput.clientId}/.default")
         map.add("username", integrationInput.fetchTenantUsername())
-        map.add("password", Environment.fetchTestUserAuthentication())
+        map.add("password", integrationInput.userTestAuth)
 
         LOGGER.info("> url    : $azureAdUrl")
         LOGGER.info("> headers: $httpHeaders")
@@ -52,6 +54,14 @@ internal object Sikkerhet {
         LOGGER.info("Fetched id token for ${integrationInput.userTest}")
 
         return "Bearer ${token.token}"
+    }
+
+    fun fetchSecurityFor(applicationName: String): Security {
+        return SECURITY_FOR_APPLICATION[applicationName] ?: Security.NONE
+    }
+
+    fun fetchOrReadSecurityFor(applicationName: String, envFile: File): Security {
+        return SECURITY_FOR_APPLICATION.computeIfAbsent(applicationName) { NaisConfiguration.hentSecurityForNaisApp(envFile) }
     }
 }
 

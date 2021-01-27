@@ -18,10 +18,10 @@ internal object CacheRestTemplateMedBaseUrl {
     private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
 
     fun hentEllerKonfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
+        return REST_TJENESTE_TIL_APPLIKASJON.computeIfAbsent(applicationName) { konfigurer(applicationName) }
+    }
 
-        if (REST_TJENESTE_TIL_APPLIKASJON.containsKey(applicationName)) {
-            return REST_TJENESTE_TIL_APPLIKASJON.getValue(applicationName)
-        }
+    private fun konfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
         NaisConfiguration.read(applicationName)
 
@@ -33,23 +33,21 @@ internal object CacheRestTemplateMedBaseUrl {
             "$applicationHostUrl$applicationName/"
         }
 
-        return hentEllerKonfigurerApplikasjonForUrl(applicationName, applicationUrl)
+        return konfigurerSikkerhet(applicationName, applicationUrl)
     }
 
-    private fun hentEllerKonfigurerApplikasjonForUrl(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
+    private fun konfigurerSikkerhet(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
         val httpComponentsClientHttpRequestFactory = hentHttpRequestFactorySomIgnorererHttps()
         val httpHeaderRestTemplate = HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-        when (Sikkerhet.SECURITY_FOR_APPLICATION[applicationName]) {
+        when (Sikkerhet.fetchSecurityFor(applicationName)) {
             Security.AZURE -> httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureToken(applicationName) }
             Security.NONE -> LOGGER.info("No security needed when accessing $applicationName")
         }
 
-        REST_TJENESTE_TIL_APPLIKASJON[applicationName] = RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
-
-        return REST_TJENESTE_TIL_APPLIKASJON[applicationName]!!
+        return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
     }
 
     private fun hentHttpRequestFactorySomIgnorererHttps(): HttpComponentsClientHttpRequestFactory {

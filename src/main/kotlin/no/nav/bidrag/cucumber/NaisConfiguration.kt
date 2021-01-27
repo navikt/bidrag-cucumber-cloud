@@ -29,12 +29,10 @@ internal object NaisConfiguration {
             throw IllegalStateException("Unable to read json configuration for $applicationName")
         }
 
-        Sikkerhet.SECURITY_FOR_APPLICATION.computeIfAbsent(applicationName) { hentSecurityForNaisApp(envFile) }
-
-        return Sikkerhet.SECURITY_FOR_APPLICATION.getValue(applicationName)
+        return Sikkerhet.fetchOrReadSecurityFor(applicationName, envFile)
     }
 
-    private fun hentSecurityForNaisApp(envFile: File) = if (harAzureSomSikkerhet(envFile.parent)) Security.AZURE else Security.NONE
+    internal fun hentSecurityForNaisApp(envFile: File) = if (harAzureSomSikkerhet(envFile.parent)) Security.AZURE else Security.NONE
 
     private fun harAzureSomSikkerhet(naisFolder: String): Boolean {
         val lines = File(naisFolder, "nais.yaml").readLines(Charsets.UTF_8)

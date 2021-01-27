@@ -9,7 +9,7 @@ internal object Environment {
     private var integrationInput: IntegrationInput? = null
 
     fun fetchIntegrationInput() = integrationInput ?: readIntegrationInput()
-    fun fetchTestUserAuthentication() = fetchExistingPropertyOrEnvironment(TEST_AUTH, "Unable to find '$TEST_AUTH'!")
+    internal fun fetchTestUserAuthentication() = fetchExistingPropertyOrEnvironment(TEST_AUTH, "Unable to find '$TEST_AUTH'!")
 
     private fun readIntegrationInput(): IntegrationInput {
         return when (IntegrationInput.provider) {
