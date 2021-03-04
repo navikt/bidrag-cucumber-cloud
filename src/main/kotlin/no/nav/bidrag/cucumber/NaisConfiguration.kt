@@ -15,11 +15,13 @@ internal object NaisConfiguration {
     fun read(applicationName: String): Security {
         val applfolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName")
         val naisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/nais")
-        val envFile = fetchEnvFileByEnvironment(applicationName)
+        val hiddenNaisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/.nais")
+        val envFile = fetchEnvFileByEnvironment(if (naisFolder.exists()) naisFolder else hiddenNaisFolder)
 
-        LOGGER.info("> applFolder exists: ${applfolder.exists()}, path: $applfolder")
-        LOGGER.info("> naisFolder exists: ${naisFolder.exists()}, path: $naisFolder")
-        LOGGER.info("> envFile    exists: ${envFile.exists()}, path: $envFile")
+        LOGGER.info("> applFolder       exists: ${applfolder.exists()}, path: $applfolder")
+        LOGGER.info("> naisFolder       exists: ${naisFolder.exists()}, path: $naisFolder")
+        LOGGER.info("> hiddenNaisFolder exists: ${hiddenNaisFolder.exists()}, path: $naisFolder")
+        LOGGER.info("> envFile          exists: ${envFile.exists()}, path: $envFile")
 
         val canReadNaisEnvironment = applfolder.exists() && naisFolder.exists() && envFile.exists()
 
@@ -59,22 +61,21 @@ internal object NaisConfiguration {
         return false
     }
 
-    private fun fetchEnvFileByEnvironment(applicationName: String): File {
-        val naisProjectFolder = File(Environment.fetchIntegrationInput().naisProjectFolder).absolutePath
+    private fun fetchEnvFileByEnvironment(naisFolder: File): File {
         val miljo = Environment.fetchIntegrationInput().environment
-        val miljoYaml = File("${naisProjectFolder}/$applicationName/nais/$miljo.yaml")
+        val miljoYaml = File(naisFolder, "$miljo.yaml")
 
         if (miljoYaml.exists()) {
             return miljoYaml
         }
 
-        val miljoJson = File("${naisProjectFolder}/$applicationName/nais/$miljo.json")
+        val miljoJson = File(naisFolder, "$miljo.json")
 
         if (miljoJson.exists()) {
             return miljoJson
         }
 
-        throw IllegalStateException("Unable to find $naisProjectFolder/$applicationName/nais/$miljo.? (yaml or json)")
+        throw IllegalStateException("Unable to find $naisFolder/$miljo.? (yaml or json)")
     }
 
     internal fun hentApplicationHostUrl(naisApplication: String): String {
