@@ -44,6 +44,16 @@
         <artifactId>oauth2-oidc-sdk</artifactId>
         <version>8.36.2</version>
       </dependency>
+      <dependency>
+        <groupId>net.minidev</groupId>
+        <artifactId>json-smart</artifactId>
+        <version>2.4.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.core</groupId>
+        <artifactId>jersey-common</artifactId>
+        <version>2.34</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
