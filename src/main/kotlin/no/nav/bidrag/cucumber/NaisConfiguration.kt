@@ -107,7 +107,9 @@ internal object NaisConfiguration {
     }
 
     private fun fetchIngress(ingresses: List<String?>): String {
-        return ingresses.first { it?.contains("dev.adeo") == true } ?: throw IllegalStateException("Kunne ikke fastslå ingress til tjeneste!")
+        return ingresses.first { it?.contains("dev.intern.nav.no") == true }
+            ?: ingresses.first { it?.contains("dev.adeo") == true }
+            ?: throw IllegalStateException("Kunne ikke fastslå ingress til tjeneste!")
     }
 
     private data class EnvironmentFile(
