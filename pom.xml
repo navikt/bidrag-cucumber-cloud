@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>no.nav.bidrag.cucumber</groupId>
-  <artifactId>bidrag-cucumber-nais</artifactId>
-  <name>bidrag-cucumber-nais</name>
+  <artifactId>bidrag-cucumber-cloud</artifactId>
+  <name>bidrag-cucumber-cloud</name>
 
-  <version>0.0.32-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>

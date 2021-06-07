@@ -5,7 +5,7 @@ on:
       - '**'
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/bidrag-cucumber-nais:${{ github.sha }}
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/bidrag-cucumber-cloud:${{ github.sha }}
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - uses: navikt/bidrag-docker/exists@v1
         id: dockerimage
         with:
-          image_name: bidrag-cucumber-nais
+          image_name: bidrag-cucumber-cloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo NOT_FOUND=${{ steps.dockerimage.outputs.not_found }} >> $GITHUB_ENV
