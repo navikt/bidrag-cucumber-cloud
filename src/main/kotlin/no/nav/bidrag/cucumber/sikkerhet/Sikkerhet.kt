@@ -58,7 +58,7 @@ internal object Sikkerhet {
 
     private fun suppressPasswords(map: MultiValueMap<String, String>): String {
         val suppressed = HashMap<String, String?>()
-        map.keys.forEach { key -> suppressed[key] = if (key.toUpperCase() != "PASSWORD") map.getValue(key).toString() else "[***]" }
+        map.keys.forEach { key -> suppressed[key] = if (key.uppercase() != "PASSWORD") map.getValue(key).toString() else "[***]" }
 
         return suppressed.toString()
     }
