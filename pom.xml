@@ -16,12 +16,12 @@
     <cucumber.version>6.10.4</cucumber.version>
     <json-path.version>2.5.0</json-path.version>
     <oidc-spring-support.version>0.2.18</oidc-spring-support.version>
-    <spring-boot.version>2.4.5</spring-boot.version>
+    <spring-boot.version>2.5.0</spring-boot.version>
     <snakeyaml.version>1.28</snakeyaml.version>
 
     <!-- build -->
     <build-helper-maven-plugin.version>3.2.0</build-helper-maven-plugin.version>
-    <kotlin.version>1.5.0</kotlin.version>
+    <kotlin.version>1.5.10</kotlin.version>
     <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
@@ -37,22 +37,6 @@
         <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <!-- vulnerabilites overridden -->
-      <dependency>
-        <groupId>com.nimbusds</groupId>
-        <artifactId>oauth2-oidc-sdk</artifactId>
-        <version>8.36.2</version>
-      </dependency>
-      <dependency>
-        <groupId>net.minidev</groupId>
-        <artifactId>json-smart</artifactId>
-        <version>2.4.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish.jersey.core</groupId>
-        <artifactId>jersey-common</artifactId>
-        <version>2.34</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
