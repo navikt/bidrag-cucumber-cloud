@@ -1,41 +1,45 @@
 {
-  "beregnDatoFra": "2017-01-01",
-  "beregnDatoTil": "2019-01-01",
-  "bidragMottakerBarnPeriodeListe": [
+  "beregnDatoFra": "2020-12-01",
+  "beregnDatoTil": "2021-01-01",
+  "grunnlagListe": [
     {
-      "periodeDatoFra": "2017-01-01",
-      "periodeDatoTil": "2019-01-01"
-    }
-  ],
-  "bidragMottakerInntektPeriodeListe": [
+      "referanse": "Mottatt_GenerellInfo",
+      "type": "GenerellInfo",
+      "innhold": {
+        "rolle": "SB",
+        "fodselsdato": "2006-02-01"
+      }
+    },
     {
-      "inntektBelop": 0,
-      "inntektType": "OVERGANGSSTONAD",
-      "inntektDatoFraTil": {
-        "periodeDatoFra": "2017-01-01",
-        "periodeDatoTil": "2019-01-01"
+      "referanse": "Mottatt_Bostatus_20201201",
+      "type": "Bostatus",
+      "innhold": {
+        "rolle": "SB",
+        "datoFom": "2020-12-01",
+        "datoTil": "2021-01-01",
+        "bostatusKode": "MED_FORELDRE"
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_AG_20201201",
+      "type": "Inntekt",
+      "innhold": {
+        "rolle": "BM",
+        "datoFom": "2020-12-01",
+        "datoTil": "2021-01-01",
+        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
+        "belop": 290000
+      }
+    },
+    {
+      "referanse": "Mottatt_Sivilstand_20201201",
+      "type": "Sivilstand",
+      "innhold": {
+        "rolle": "BM",
+        "datoFom": "2020-12-01",
+        "datoTil": "2021-01-01",
+        "sivilstandKode": "GIFT"
       }
     }
-  ],
-  "bidragMottakerSivilstandPeriodeListe": [
-    {
-      "sivilstandDatoFraTil": {
-        "periodeDatoFra": "2017-01-01",
-        "periodeDatoTil": "2019-01-01"
-      },
-      "sivilstandKode": "GIFT"
-    }
-  ],
-  "soknadBarn": {
-    "soknadBarnBostatusPeriodeListe": [
-      {
-        "bostatusKode": "MED_FORELDRE",
-        "bostatusDatoFraTil": {
-          "periodeDatoFra": "2017-01-01",
-          "periodeDatoTil": "2019-01-01"
-        }
-      }
-    ],
-    "soknadBarnFodselsdato": "2006-08-01"
-  }
+  ]
 }

@@ -18,6 +18,6 @@ Egenskap: bidrag-beregn-forskudd-rest
   Scenario:
     Når jeg bruker endpoint '/beregn/forskudd' med json fra 'forskudd/forskudd_eksempel.json'
     Så skal http status være 200
-    Og responsen skal inneholde beløpet '1530' under stien '$.resultatPeriodeListe[0].resultatBeregning.resultatBelop'
-    Og responsen skal inneholde resultatkoden 'FORHOYET_FORSKUDD_100_PROSENT' under stien '$.resultatPeriodeListe[0].resultatBeregning.resultatKode'
+    Og responsen skal inneholde beløpet '2090' under stien '$.beregnetForskuddPeriodeListe[0].resultat.belop'
+    Og responsen skal inneholde resultatkoden 'FORHOYET_FORSKUDD_11_AAR_125_PROSENT' under stien '$.beregnetForskuddPeriodeListe[0].resultat.kode'
 
