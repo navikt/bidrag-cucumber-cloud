@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber.nais
+package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
 import io.cucumber.java8.Scenario

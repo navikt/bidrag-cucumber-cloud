@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber.nais.beregn
+package no.nav.bidrag.cucumber.cloud.beregn
 
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 import java.io.File
 
-private const val BEREGN_RESOURCES = "src/main/resources/no/nav/bidrag/cucumber/nais/beregn"
+private const val BEREGN_RESOURCES = "src/main/resources/no/nav/bidrag/cucumber/cloud/beregn"
 private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
 
 class BeregnEgenskaper : No {

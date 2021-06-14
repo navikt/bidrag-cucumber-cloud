@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber.nais.sak
+package no.nav.bidrag.cucumber.cloud.sak
 
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.BidragScenario

@@ -260,7 +260,7 @@
           <finalName>${project.artifactId}</finalName>
           <archive>
             <manifest>
-              <mainClass>no.nav.bidrag.cucumber.nais.IntegrationTestsKt</mainClass>
+              <mainClass>no.nav.bidrag.cucumber.cloud.IntegrationTestsKt</mainClass>
             </manifest>
           </archive>
         </configuration>
