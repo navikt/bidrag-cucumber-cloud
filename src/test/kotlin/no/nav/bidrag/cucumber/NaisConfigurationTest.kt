@@ -11,7 +11,7 @@ internal class NaisConfigurationTest {
 
     @BeforeEach
     fun `bruk IntegrationInput`() {
-        IntegrationInput.use(IntegrationInput(environment = "main", naisProjectFolder = "src/test/resources"))
+        IntegrationInput.use(IntegrationInput(environment = Environment.MAIN_ENVIRONMENT, naisProjectFolder = "src/test/resources"))
     }
 
     @Test

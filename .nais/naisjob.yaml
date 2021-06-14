@@ -1,0 +1,15 @@
+apiVersion: nais.io/v1
+kind: Naisjob
+metadata:
+  labels:
+    team: bidrag
+  name: {{ name }}
+  namespace: bidrag
+spec:
+  env:
+    - name: TOPIC_JOURNALPOST
+      value: {{ kafka.topic }}
+  image: {{ image }}
+  kafka:
+    pool: nav-dev
+  schedule: "30 3 * * *"

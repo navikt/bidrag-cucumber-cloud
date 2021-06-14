@@ -1,11 +1,12 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.core.cli.Main
+import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.Environment
 import org.opentest4j.AssertionFailedError
 import org.slf4j.LoggerFactory
 
-private val LOGGER = LoggerFactory.getLogger("no.nav.bidrag.cucumber.nais.IntegrationTests.kt")
+private val LOGGER = LoggerFactory.getLogger(BidragCucumberCloud::class.java)
 
 fun main(args: Array<String>) {
     val taggedTest = Environment.fetchIntegrationInput().taggedTest

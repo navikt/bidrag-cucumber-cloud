@@ -12,9 +12,7 @@ class IntegrationInput(
     var taggedTest: String? = null,
     var userTest: String = "<not set>",
 ) {
-    val userTestAuth: String
-        get() =
-            Environment.fetchTestUserAuthentication()
+    val userTestAuth: String get() = Environment.fetchTestUserAuthentication()
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(IntegrationInput::class.java)
@@ -22,12 +20,10 @@ class IntegrationInput(
         internal var provider = Provider.FILE
         internal var instance: IntegrationInput? = null
 
-        fun from(filePath: String?): IntegrationInput {
-            return when (provider) {
-                Provider.FILE -> readJsonFile(filePath ?: throw IllegalStateException("Fant ikke angitt json-path: $filePath"))
-                Provider.INSTANCE -> instance
-            } ?: throw IllegalStateException("Unable to find IntegrationInput: $filePath")
-        }
+        fun from(filePath: String?) = when (provider) {
+            Provider.FILE -> readJsonFile(filePath ?: throw IllegalStateException("Fant ikke angitt json-path: $filePath"))
+            Provider.INSTANCE -> instance
+        } ?: throw IllegalStateException("Unable to find IntegrationInput: $filePath")
 
         private fun readJsonFile(filePath: String): IntegrationInput? {
             LOGGER.info("Will try to read environment file from $filePath")
@@ -47,9 +43,8 @@ class IntegrationInput(
     }
 
     fun fetchAzureInput(applicationName: String): AzureInput {
-        val environment = Environment.fetchIntegrationInput().environment
-        val applicationNameForEnvironment = when (environment) {
-            "main" -> applicationName
+        val applicationNameForEnvironment = when (Environment.fetchIntegrationInput().environment) {
+            Environment.MAIN_ENVIRONMENT -> applicationName
             else -> "$applicationName-$environment"
         }
 

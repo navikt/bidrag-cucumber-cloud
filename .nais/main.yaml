@@ -1,0 +1,3 @@
+name: bidrag-cucumber-gcp
+kafka:
+  topic: bidrag.journalpost

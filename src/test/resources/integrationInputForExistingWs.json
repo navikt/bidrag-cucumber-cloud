@@ -1,12 +1,6 @@
 {
   "azureInputs": [
     {
-      "name": "bidrag-dokument-feature",
-      "clientId": "d220e284-c0f0-43f1-a585-5c5b5c63dc0a",
-      "clientSecret": "-8ff1-7k_twdqkXGKuY.0sVq0DpGX.1cK.",
-      "tenant": "966ac572-f5b7-4bbe-aa88-c76419c0f851"
-    },
-    {
       "name": "bidrag-sak-feature",
       "clientId": "61137106-058f-4b4c-8a65-11911f1bdd8f",
       "clientSecret": "cSDgM_6tpZO38MsE3wX.4aV-_QQ94dX97M",

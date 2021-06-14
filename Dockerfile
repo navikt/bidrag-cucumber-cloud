@@ -1,5 +1,7 @@
 FROM navikt/java:16
 LABEL maintainer="Team Bidrag" \
-      email="nav.ikt.prosjekt.og.forvaltning.bidrag@nav.no"
+      email="bidrag@nav.no"
 
-COPY ./target/bidrag-cucumber-cloud-jar-with-dependencies.jar app.jar
+COPY ./target/bidrag-cucumber-cloud-*.jar app.jar
+
+EXPOSE 8080
