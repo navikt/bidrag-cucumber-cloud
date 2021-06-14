@@ -32,7 +32,5 @@ internal object Environment {
         return this.integrationInput!!
     }
 
-    private fun fetchPropertyOrEnvironment(key: String): String? {
-        return System.getProperty(key) ?: System.getenv(key)
-    }
+    private fun fetchPropertyOrEnvironment(key: String) = System.getProperty(key) ?: System.getenv(key)
 }

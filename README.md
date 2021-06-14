@@ -7,7 +7,13 @@ Integrasjonstester for nais mikrotjenester i bidrag
 
 ## beskrivelse
 
-Kotlin gjør det enkelt å skape lett-leselige tester og dette er satt opp med `Gherkin`-filer (*.feature) som har norsk tekst og ligger i
+Funksjonelle tester av bidrag nais applikasjoner som er designet for å kunne kjøres på en laptop som har innstallert naisdevice. Dette er vil først
+og fremst gjelde applikasjoner som er deployet i google-cloud. Når applikasjonen ikke er satt opp med sikkerhet, kan den også nås herfra, sålenge
+ingresser som kan brukes via et naisdevice brukes.
+
+### Teknisk beskrivelse
+
+Modulen er skrevet i Kotlin som gjør det enkelt å skape lett-leselige tester satt opp med `Gherkin`-filer (*.feature) som har norsk tekst og ligger i
 `src/test/resources/<pakkenavn>`
 
 BDD (Behaviour driven development) beskrives i `Gherkin`-filene (`*.featue`) som kjører automatiserte tester på bakgrunnen av funksjonaliteten som
@@ -43,8 +49,27 @@ Kort forklart:
 - linje 12-14: "Gitt" - "Når" - "Så": forventet oppførsel til dette scenarioet
 
 Norske kodeord for `gherkin`: `Gitt` - `Når` - `Så` er de fremste kodeordene for norsk BDD.
-Alle norske nøkkelord som kan brukes i `gherkin`-filer er `Egenskap`, `Bakgrunn`, `Scenario`, `Eksepmel`, `Abstrakt scenario`, `Gitt`, `Når`, `Og`, `Men`, `Så`, `Eksempler`
+Alle norske nøkkelord som kan brukes i `gherkin`-filer er `Egenskap`, `Bakgrunn`, `Scenario`, `Eksepmel`, `Abstrakt scenario`, `Gitt`, `Når`, `Og`,
+`Men`, `Så`, `Eksempler`
 
 Cucumber støtter flere språk og for mer detaljert oversikt over funksjonaliteten som `gherkin` gir, se detaljert beskrivelse på nett: 
 <https://cucumber.io/docs/gherkin/reference/>
 
+## Integration Input
+
+Kjøring av [Cucumber](https://cucumber.io) testene krever at applikasjonen får data om integrasjonen som er påkrevd. Disse dataaene kan deles i to
+grupper:
+1) data som er felles for en test kjøring
+   * `environment`: er det main eller feature branch som testes
+   * `taggedTest`: (valgfritt) denne ene tag'en (eller samtlige når ingen verdi er oppgitt her)
+   * `userTest`: testbrukeren som brukes for å kjøre testene
+   * `naisProjectFolder`: en folder som inneholder nais konfigurasjon for applikasjonene som testes, `naisProjectFolder/<nais app som testes>/.nais/`
+      * innholdet i `.nais` mappa skal være `nais.yaml` samt `main.yaml` eller `feature.yaml` 
+2) data som er unike for applikasjonen som testes
+   * `name`: navnet på applikasjonen
+   * `clientId`: Azure client Id
+   * `clientSecret`: Azure client secret
+   * `tenant`: Azure tenant, eks for gcp-dev: `966ac572-f5b7-4bbe-aa88-c76419c0f851` (trygdeetaten.no)
+
+Eksempel på ei slik integrasjonsfil kan sees under `src/test/resources/integrationInput.json` og det er forventet at denne fila oppgies i en 
+miljøvariabel som heter `INTEGRATION_INPUT`

@@ -18,10 +18,10 @@ internal object NaisConfiguration {
         val hiddenNaisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/.nais")
         val envFile = fetchEnvFileByEnvironment(if (naisFolder.exists()) naisFolder else hiddenNaisFolder)
 
-        LOGGER.info("> applFolder       - ${exists(applfolder)} $applfolder")
-        LOGGER.info("> naisFolder       - ${exists(naisFolder)} $naisFolder")
-        LOGGER.info("> hiddenNaisFolder - ${exists(hiddenNaisFolder)} $naisFolder")
-        LOGGER.info("> envFile          - ${exists(envFile)} $envFile")
+        LOGGER.info("> applFolder       - ${exists(applfolder)}\t$applfolder")
+        LOGGER.info("> naisFolder       - ${exists(naisFolder)}\t$naisFolder")
+        LOGGER.info("> hiddenNaisFolder - ${exists(hiddenNaisFolder)}\t$hiddenNaisFolder")
+        LOGGER.info("> envFile          - ${exists(envFile)}\t$envFile")
 
         if (envFile.exists()) {
             ENVIRONMENT_FOR_APPLICATION[applicationName] = EnvironmentFile(envFile)
@@ -107,8 +107,8 @@ internal object NaisConfiguration {
     }
 
     private fun fetchIngress(ingresses: List<String?>): String {
-        return ingresses.first { it?.contains("dev.intern.nav.no") == true }
-            ?: ingresses.first { it?.contains("dev.adeo") == true }
+        return ingresses.firstOrNull { it?.contains("dev.intern.nav.no") == true }
+            ?: ingresses.firstOrNull { it?.contains("dev.adeo.no") == true }
             ?: throw IllegalStateException("Kunne ikke fastslå ingress til tjeneste!")
     }
 
