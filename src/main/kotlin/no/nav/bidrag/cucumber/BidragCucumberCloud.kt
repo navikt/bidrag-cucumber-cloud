@@ -5,14 +5,14 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-object BidragCucumberNais {
+object BidragCucumberCloud {
     // constants for input via System.getProperty()/System.geteenv()
     internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
     internal const val TEST_AUTH = "TEST_AUTH"
 
-    private val LOGGER = LoggerFactory.getLogger(BidragCucumberNais::class.java)
+    private val LOGGER = LoggerFactory.getLogger(BidragCucumberCloud::class.java)
     private var scenario: Scenario? = null
-    private var correlationIdForScenario: String = createCorrelationIdValue()
+    private lateinit var correlationIdForScenario: String
 
     fun use(scenario: Scenario) {
         this.scenario = scenario
@@ -22,11 +22,11 @@ object BidragCucumberNais {
     fun reset(scenario: Scenario) {
         LOGGER.info("Finished ${scenario.name}")
         this.scenario = null
-        correlationIdForScenario = createCorrelationIdValue()
+        correlationIdForScenario = createCorrelationIdValue("outside-scenario")
     }
 
-    private fun createCorrelationIdValue(): String {
-        return "bdt-${java.lang.Long.toHexString(System.currentTimeMillis())}"
+    private fun createCorrelationIdValue(label: String = "bcc"): String {
+        return "$label-${java.lang.Long.toHexString(System.currentTimeMillis())}"
     }
 
     fun log(message: String) {

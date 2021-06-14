@@ -18,10 +18,10 @@ internal object NaisConfiguration {
         val hiddenNaisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/.nais")
         val envFile = fetchEnvFileByEnvironment(if (naisFolder.exists()) naisFolder else hiddenNaisFolder)
 
-        LOGGER.info("> applFolder       - ${exists(applfolder)}\t$applfolder")
-        LOGGER.info("> naisFolder       - ${exists(naisFolder)}\t$naisFolder")
-        LOGGER.info("> hiddenNaisFolder - ${exists(hiddenNaisFolder)}\t$hiddenNaisFolder")
-        LOGGER.info("> envFile          - ${exists(envFile)}\t$envFile")
+        LOGGER.info("> applFolder       - ${exists(applfolder)}")
+        LOGGER.info("> naisFolder       - ${exists(naisFolder)}")
+        LOGGER.info("> hiddenNaisFolder - ${exists(hiddenNaisFolder)}")
+        LOGGER.info("> envFile          - ${exists(envFile)}")
 
         if (envFile.exists()) {
             ENVIRONMENT_FOR_APPLICATION[applicationName] = EnvironmentFile(envFile)
@@ -32,7 +32,7 @@ internal object NaisConfiguration {
         return Sikkerhet.fetchOrReadSecurityFor(applicationName, envFile)
     }
 
-    private fun exists(file: File) = if (file.exists()) "Existing path" else "Missing path"
+    private fun exists(file: File) = "${if (file.exists()) "Existing path" else "Missing path"}\t$file"
 
     internal fun hentSecurityForNaisApp(envFile: File) = if (harAzureSomSikkerhet(envFile.parent)) Security.AZURE else Security.NONE
 
