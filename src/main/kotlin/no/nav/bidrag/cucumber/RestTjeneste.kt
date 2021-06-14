@@ -40,7 +40,7 @@ open class RestTjeneste(
 
         val header = initHttpHeadersWithCorrelationIdAndEnhet()
 
-        BidragCucumberNais.log("GET ${this.debugFullUrl}")
+        BidragCucumberCloud.log("GET ${this.debugFullUrl}")
 
         responseEntity = try {
             rest.template.exchange(endpointUrl, HttpMethod.GET, HttpEntity(null, header), String::class.java)
@@ -48,7 +48,7 @@ open class RestTjeneste(
             ResponseEntity(headerWithAlias(), e.statusCode)
         }
 
-        BidragCucumberNais.log(
+        BidragCucumberCloud.log(
             if (responseEntity.body != null) "response with json and status ${responseEntity.statusCode}"
             else "no response body with status ${responseEntity.statusCode}"
         )
@@ -58,12 +58,12 @@ open class RestTjeneste(
 
     private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
         val headers = HttpHeaders()
-        headers.add(CorrelationId.CORRELATION_ID_HEADER, BidragCucumberNais.getCorrelationIdForScenario())
+        headers.add(CorrelationId.CORRELATION_ID_HEADER, BidragCucumberCloud.getCorrelationIdForScenario())
         headers.add(X_ENHET_HEADER, "4802")
 
-        BidragCucumberNais.log(
-            BidragCucumberNais.createCorrelationIdLinkTitle(),
-            BidragCucumberNais.createQueryLinkForCorrelationId()
+        BidragCucumberCloud.log(
+            BidragCucumberCloud.createCorrelationIdLinkTitle(),
+            BidragCucumberCloud.createQueryLinkForCorrelationId()
         )
 
         return headers

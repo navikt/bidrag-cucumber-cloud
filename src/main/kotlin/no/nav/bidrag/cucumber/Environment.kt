@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.BidragCucumberNais.INTEGRATION_INPUT
-import no.nav.bidrag.cucumber.BidragCucumberNais.TEST_AUTH
+import no.nav.bidrag.cucumber.BidragCucumberCloud.INTEGRATION_INPUT
+import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_AUTH
 import no.nav.bidrag.cucumber.input.IntegrationInput
 import no.nav.bidrag.cucumber.input.IntegrationInput.Provider
 

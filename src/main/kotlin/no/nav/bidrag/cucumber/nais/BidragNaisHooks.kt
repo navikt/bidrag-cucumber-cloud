@@ -2,16 +2,16 @@ package no.nav.bidrag.cucumber.nais
 
 import io.cucumber.java8.No
 import io.cucumber.java8.Scenario
-import no.nav.bidrag.cucumber.BidragCucumberNais
+import no.nav.bidrag.cucumber.BidragCucumberCloud
 
 class BidragNaisHooks : No {
     init {
         Before(10) { scenario: Scenario ->
-            BidragCucumberNais.use(scenario)
+            BidragCucumberCloud.use(scenario)
         }
 
-        After(10) {  scenario: Scenario ->
-            BidragCucumberNais.reset(scenario)
+        After(10) { scenario: Scenario ->
+            BidragCucumberCloud.reset(scenario)
         }
     }
 }
