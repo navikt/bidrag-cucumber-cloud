@@ -5,8 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
 class BidragCucumberCloudApp {
-    fun main(args: Array<String>) {
-        val app = SpringApplication(BidragCucumberCloudApp::class.java)
-        app.run(*args)
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val app = SpringApplication(BidragCucumberCloudApp::class.java)
+            app.run(*args)
+        }
     }
 }
