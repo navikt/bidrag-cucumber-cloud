@@ -1,12 +1,19 @@
-FROM maven:3.8.1-openjdk-16-slim
+FROM maven:3.8.1-openjdk-16
 LABEL maintainer="Team Bidrag" \
       email="bidrag@nav.no"
 
-# COPY ./scripts/settings.xml /root/.m2/.
-COPY ./src .
+COPY ./settings.xml /usr/share/maven/ref/
+COPY ./src/ ./src/
+COPY ./apps ./apps/
 COPY ./pom.xml .
+COPY ./integrationInput.json .
 
-ENTRYPOINT mvn exec:java                           \
-        -Dexec.classpathScope=test                 \
-        -Dexec.mainClass=io.cucumber.core.cli.Main \
+RUN mvn -B -f /pom.xml -s /usr/share/maven/ref/settings.xml clean install -DskipTests
+
+EXPOSE 8080
+
+ENTRYPOINT mvn -f /pom.xml -s /usr/share/maven/ref/settings.xml exec:java \
+        -DINTEGRATION_INPUT=/integrationInput.json                        \
+        -Dexec.classpathScope=test                                        \
+        -Dexec.mainClass=io.cucumber.core.cli.Main                        \
         -Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
