@@ -80,7 +80,7 @@ Alle applikasjoner på gcp er i utgangspunktet sikret med Azure Ad. Dette er dog
 applikasjoner. Derfor vil det også være aktuelt å bruke en testbruker som simulerer en saksbehandler hos NAV. Dette er en såkalt Z-bruker og det må
 sørges for at når den brukes ved testing, så må den ha et gyldig passord.
 * test bruker hentes fra `IntegrationInput`: `userTest`
-* passord settes i miljøvariabel: `TEST_USER`
+* passord settes i miljøvariabel: `TEST_AUTH`
 
 ### Kjøring lokalt
 
