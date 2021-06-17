@@ -4,7 +4,7 @@ import io.cucumber.java8.No
 import io.cucumber.java8.Scenario
 import no.nav.bidrag.cucumber.BidragCucumberCloud
 
-class BidragNaisHooks : No {
+class BidragCucumberCloudHooks : No {
     init {
         Before(10) { scenario: Scenario ->
             BidragCucumberCloud.use(scenario)
