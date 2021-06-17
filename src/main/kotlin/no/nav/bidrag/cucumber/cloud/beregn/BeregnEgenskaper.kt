@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 import java.io.File
 
-private const val BEREGN_RESOURCES = "src/main/resources/no/nav/bidrag/cucumber/cloud/beregn"
+private const val BEREGN_RESOURCES = "src/test/resources/no/nav/bidrag/cucumber/cloud/beregn"
 private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
 
 class BeregnEgenskaper : No {

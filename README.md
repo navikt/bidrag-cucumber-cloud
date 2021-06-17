@@ -73,3 +73,42 @@ grupper:
 
 Eksempel på ei slik integrasjonsfil kan sees under `src/test/resources/integrationInput.json` og det er forventet at denne fila oppgies i en 
 miljøvariabel som heter `INTEGRATION_INPUT`
+
+### Testbruker
+
+Alle applikasjoner på gcp er i utgangspunktet sikret med Azure Ad. Dette er dog bare et lag av sikkerhet og sikrer bare kommunikasjon mellom
+applikasjoner. Derfor vil det også være aktuelt å bruke en testbruker som simulerer en saksbehandler hos NAV. Dette er en såkalt Z-bruker og det må
+sørges for at når den brukes ved testing, så må den ha et gyldig passord.
+* test bruker hentes fra `IntegrationInput`: `userTest`
+* passord settes i miljøvariabel: `TEST_USER`
+
+### Kjøring lokalt
+
+#### Kjøring med maven
+
+Den simpleste formen er å bruke maven:
+```
+mvn exec:java                                                                           \
+    -DTEST_AUTH=passord til din testbruker (z1234567)                                   \
+    -DINTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input') \
+    -Dexec.classpathScope=test                                                          \
+    -Dexec.mainClass=io.cucumber.core.cli.Main                                          \
+    -Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
+```
+#### Kjøring med IntelliJ
+
+Man kan ogå bruke IntelliJ til å kjøre cucumber testene direkte. IntelliJ har innebygd støtte for cucumber (java), men hvis du vil navigeere i koden
+ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (IntelliJ settings/prefrences -> Plugins)
+
+Kjør
+* alle testene: høyreklikk på prosjektet og velg `Run 'All features in bidrag-cucumber-cloud'`
+* en feature: høyreklikk på feature-fil, eks `sak.feature`prosjektet og velg `Run 'Feature: ...'`
+
+Programargumenter er i maven-kommandoen må inn som miljøvariabler for å kjøre testene i IntelliJ
+```
+  TEST_AUTH=passord til din testbruker (z1234567)
+  INTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input')
+```
+* Dette gjøres i nedtrekksmenyen: `Select Run/Debug Configuration`.
+  * Velg `Edit Configuration...` og legg inn miljøvariablene under `Environment variables:` i cucumber-testene som trenger dem
+  * Når dette er gjort så kan du lagre denne konfigurasjonen ved å velge `Save '<testen>' Configuration` fra nedtrekksmenyen.
