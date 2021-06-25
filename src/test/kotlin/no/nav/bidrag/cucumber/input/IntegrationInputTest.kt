@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber.input
 
+import no.nav.bidrag.cucumber.Environment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -38,7 +39,7 @@ internal class IntegrationInputTest {
         val jsonText = File("src/test/resources/integrationInput.json").readText(Charsets.UTF_8)
 
         assertAll(
-            { assertThat(azureInput.authorityEndpoint).`as`("authorityEndpoint").isEqualTo("https://login.microsoftonline.com") },
+            { assertThat(azureInput.authorityEndpoint).`as`("authorityEndpoint").isEqualTo(Environment.AZURE_LOGIN_ENDPOINT) },
             { assertThat(jsonText).`as`("jsonText").doesNotContain("authorityEndpoint") }
         )
     }

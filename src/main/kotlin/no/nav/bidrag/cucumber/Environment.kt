@@ -6,21 +6,19 @@ import no.nav.bidrag.cucumber.input.IntegrationInput
 import no.nav.bidrag.cucumber.input.IntegrationInput.Provider
 
 internal object Environment {
+    const val AZURE_LOGIN_ENDPOINT = "https://login.microsoftonline.com"
+    const val MAIN_ENVIRONMENT = "main"
+
     private var integrationInput: IntegrationInput? = null
 
     fun fetchIntegrationInput() = integrationInput ?: readIntegrationInput()
-    internal fun fetchTestUserAuthentication() = fetchExistingPropertyOrEnvironment(TEST_AUTH, "Unable to find '$TEST_AUTH'!")
+    internal fun fetchTestUserAuthentication() = fetchPropertyOrEnvironment(TEST_AUTH) ?: throw IllegalStateException("Unable to find '$TEST_AUTH'!")
 
     private fun readIntegrationInput(): IntegrationInput {
         return when (IntegrationInput.provider) {
             Provider.FILE -> readWhenNull()
             Provider.INSTANCE -> IntegrationInput.instance ?: throw IllegalStateException("no instance provided")
         }
-    }
-
-    @Suppress("SameParameterValue")
-    private fun fetchExistingPropertyOrEnvironment(key: String, errorMassage: String): String {
-        return fetchPropertyOrEnvironment(key) ?: throw IllegalStateException(errorMassage)
     }
 
     private fun readWhenNull(): IntegrationInput {

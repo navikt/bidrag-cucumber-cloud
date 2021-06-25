@@ -16,7 +16,7 @@ internal object NaisConfiguration {
         val applfolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName")
         val naisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/nais")
         val hiddenNaisFolder = File("${Environment.fetchIntegrationInput().naisProjectFolder}/$applicationName/.nais")
-        val envFile = fetchEnvFileByEnvironment(if (naisFolder.exists()) naisFolder else hiddenNaisFolder)
+        val envFile = fetchEnvFileByFolder(if (naisFolder.exists()) naisFolder else hiddenNaisFolder)
 
         LOGGER.info("> applFolder       - ${exists(applfolder)}")
         LOGGER.info("> naisFolder       - ${exists(naisFolder)}")
@@ -46,7 +46,7 @@ internal object NaisConfiguration {
     }
 
     private fun isEnabled(map: Map<String, Any>, keys: MutableList<String>): Boolean {
-        LOGGER.info("> key=value  to use: ${keys[0]}=${map[keys[0]]}")
+        LOGGER.info("> key(s)=value(s)  : ${keys[0]}=${map[keys[0]]}")
 
         if (map.containsKey(keys[0])) {
             return if (keys.size == 1) map.getValue(keys[0]) as Boolean
@@ -61,7 +61,7 @@ internal object NaisConfiguration {
         return false
     }
 
-    private fun fetchEnvFileByEnvironment(naisFolder: File): File {
+    private fun fetchEnvFileByFolder(naisFolder: File): File {
         val miljo = Environment.fetchIntegrationInput().environment
         val miljoYaml = File(naisFolder, "$miljo.yaml")
 

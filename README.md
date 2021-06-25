@@ -1,9 +1,9 @@
 # bidrag-cucumber-cloud
-Integrasjonstester for nais mikrotjenester i bidrag
+Nais jobb som kjører integrasjonstester for nais mikrotjenester i bidrag som ligger i dev-gcp
 
 ## workflow
-![build docker image](https://github.com/navikt/bidrag-cucumber-cloud/workflows/build%20docker%20image/badge.svg)
-![test on pull request](https://github.com/navikt/bidrag-cucumber-cloud/workflows/test%20build%20on%20pull%20request/badge.svg)
+[![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
+[![test build on pull request](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/pr.yaml)
 
 ## beskrivelse
 
@@ -84,6 +84,8 @@ sørges for at når den brukes ved testing, så må den ha et gyldig passord.
 
 ### Kjøring lokalt
 
+Tester i `bidrag-cucumber-cloud` er tilgjengelig fra et "naisdevice". Man må være koblet opp mot det nais-clusteret man tester mot.
+
 #### Kjøring med maven
 
 Den simpleste formen er å bruke maven:
@@ -112,3 +114,34 @@ Programargumenter er i maven-kommandoen må inn som miljøvariabler for å kjør
 * Dette gjøres i nedtrekksmenyen: `Select Run/Debug Configuration`.
   * Velg `Edit Configuration...` og legg inn miljøvariablene under `Environment variables:` i cucumber-testene som trenger dem
   * Når dette er gjort så kan du lagre denne konfigurasjonen ved å velge `Save '<testen>' Configuration` fra nedtrekksmenyen.
+
+### Kjøring lokalt
+
+#### Kjøring med maven
+
+Den simpleste formen er å bruke maven:
+```
+mvn exec:java                                                                           \
+    -DTEST_AUTH=passord til din testbruker (z1234567)                                   \
+    -DINTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input') \
+    -Dexec.classpathScope=test                                                          \
+    -Dexec.mainClass=io.cucumber.core.cli.Main                                          \
+    -Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
+```
+#### Kjøring med IntelliJ
+
+Man kan ogå bruke IntelliJ til å kjøre cucumber testene direkte. IntelliJ har innebygd støtte for cucumber (java), men hvis du vil navigeere i koden
+ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (IntelliJ settings/prefrences -> Plugins)
+
+Kjør
+* alle testene: høyreklikk på prosjektet og velg `Run 'All features in bidrag-cucumber-cloud'`
+* en feature: høyreklikk på feature-fil, eks `sak.feature`prosjektet og velg `Run 'Feature: ...'`
+
+Programargumenter i maven-kommandoen må inn som miljøvariabler for å kjøre testene i IntelliJ
+```
+  TEST_AUTH=passord til din testbruker (z1234567)
+  INTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input')
+```
+* Dette gjøres i nedtrekksmenyen: `Select Run/Debug Configuration`.
+  * Velg `Edit Configuration...` og legg inn miljøvariablene under `Environment variables:` i cucumber-testene som trenger dem
+  * Når dette er gjort så kan du lagre denne konfigurasjonen ved å velge `Save '<feature(s)>' Configuration` fra nedtrekksmenyen.
