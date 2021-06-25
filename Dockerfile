@@ -8,6 +8,11 @@ COPY ./pom.xml .
 
 RUN mvn -B -f /pom.xml -s /usr/share/maven/ref/settings.xml install -DskipTests
 
+# to download all dependencies using settings.xml only valid for build workflow...
+RUN mvn -f /pom.xml -s /usr/share/maven/ref/settings.xml exec:java \
+            -Dexec.classpathScope=test                                        \
+            -Dexec.mainClass=io.cucumber.core.cli.Main || true
+
 EXPOSE 8080
 
 ENTRYPOINT mvn -f /pom.xml -s /usr/share/maven/ref/settings.xml exec:java \
