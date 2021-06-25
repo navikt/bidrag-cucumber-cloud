@@ -2,7 +2,7 @@
 Nais jobb som kjører integrasjonstester for nais mikrotjenester i bidrag som ligger i dev-gcp
 
 ## workflow
-[![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
+[![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
 [![test build on pull request](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/pr.yaml)
 
 ## beskrivelse
