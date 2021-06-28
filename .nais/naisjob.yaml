@@ -6,16 +6,33 @@ metadata:
   name: {{ name }}
   namespace: bidrag
 spec:
+  accessPolicy:
+    outbound:
+      rules:
+        - application: {{ bidrag-testdata-cloud.name }}
+        - application: {{ test.name }}
+  azure:
+    application:
+      enabled: true
+  env:
+    - name: ENVIRONMENT
+      value: {{ environment }}
+    - name: TEST_NAIS_APP
+      value: {{ test.name }}
+    - name: TEST_NAIS_APP_INGRESS
+      value: {{ test.ingress }}
+    - name: TESTDATA_URL
+      value: {{ bidrag-testdata-cloud.ingress }}
   image: {{ image }}
-  schedule: "30 3 * * *"
   template:
     spec:
       containers:
         - name: {{ name }}
           image: {{ image }}
-          command: |
-            [
-              "mvn", "-f /pom.xml", "-Dexec.classpathScope=test", "-Dexec.mainClass=io.cucumber.core.cli.Main"
-              "-Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
-            ]
-
+          command:
+            - "mvn"
+            - "-f"
+            - "/pom.xml"
+            - "-Dexec.classpathScope=test"
+            - "-Dexec.mainClass=io.cucumber.core.cli.Main"
+            - "-Dexec.args=\"src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud\""
