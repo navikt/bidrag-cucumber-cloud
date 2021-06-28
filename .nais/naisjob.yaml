@@ -6,10 +6,16 @@ metadata:
   name: {{ name }}
   namespace: bidrag
 spec:
-  env:
-    - name: TOPIC_JOURNALPOST
-      value: {{ kafka.topic }}
   image: {{ image }}
-  kafka:
-    pool: nav-dev
   schedule: "30 3 * * *"
+  template:
+    spec:
+      containers:
+        - name: {{ name }}
+          image: {{ image }}
+          command: |
+            [
+              "mvn", "-f /pom.xml", "-Dexec.classpathScope=test", "-Dexec.mainClass=io.cucumber.core.cli.Main"
+              "-Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
+            ]
+
