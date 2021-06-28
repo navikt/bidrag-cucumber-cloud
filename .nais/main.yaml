@@ -1,3 +1,8 @@
 name: bidrag-cucumber-cloud
-kafka:
-  topic: bidrag.journalpost
+environment: main
+bidrag-testdata-cloud:
+  name: bidrag-testdata-cloud
+  ingress: https://bidrag-dokument-cloud.dev.intern.nav.no/
+test:
+  name: bidrag-testdata-cloud
+  ingress: https://bidrag-dokument-cloud.dev.intern.nav.no/
