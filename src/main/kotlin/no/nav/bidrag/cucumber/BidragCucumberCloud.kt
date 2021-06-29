@@ -10,6 +10,7 @@ object BidragCucumberCloud {
     // constants for input via System.getProperty()/System.geteenv()
     internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
     internal const val TEST_AUTH = "TEST_AUTH"
+    internal const val SANITY_CHECK = "SANITY_CHECK"
 
     private val LOGGER = LoggerFactory.getLogger(BidragCucumberCloud::class.java)
     private var scenario: Scenario? = null

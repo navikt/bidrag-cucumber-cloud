@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.BidragCucumberCloud.INTEGRATION_INPUT
+import no.nav.bidrag.cucumber.BidragCucumberCloud.SANITY_CHECK
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_AUTH
 import no.nav.bidrag.cucumber.input.IntegrationInput
 import no.nav.bidrag.cucumber.input.IntegrationInput.Provider
@@ -13,6 +14,7 @@ internal object Environment {
 
     fun fetchIntegrationInput() = integrationInput ?: readIntegrationInput()
     internal fun fetchTestUserAuthentication() = fetchPropertyOrEnvironment(TEST_AUTH) ?: throw IllegalStateException("Unable to find '$TEST_AUTH'!")
+    internal fun isSanityCheck() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
 
     private fun readIntegrationInput(): IntegrationInput {
         return when (IntegrationInput.provider) {
