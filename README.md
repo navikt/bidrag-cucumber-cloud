@@ -55,48 +55,50 @@ Alle norske nøkkelord som kan brukes i `gherkin`-filer er `Egenskap`, `Bakgrunn
 Cucumber støtter flere språk og for mer detaljert oversikt over funksjonaliteten som `gherkin` gir, se detaljert beskrivelse på nett: 
 <https://cucumber.io/docs/gherkin/reference/>
 
-## Integration Input
+### Test av scenario
 
-Kjøring av [Cucumber](https://cucumber.io) testene krever at applikasjonen får data om integrasjonen som er påkrevd. Disse dataaene kan deles i to
-grupper:
-1) data som er felles for en test kjøring
-   * `environment`: er det main eller feature branch som testes
-   * `taggedTest`: (valgfritt) denne ene tag'en (eller samtlige når ingen verdi er oppgitt her)
-   * `userTest`: testbrukeren som brukes for å kjøre testene
-   * `naisProjectFolder`: en folder som inneholder nais konfigurasjon for applikasjonene som testes, `naisProjectFolder/<nais app som testes>/.nais/`
-      * innholdet i `.nais` mappa skal være `nais.yaml` samt `main.yaml` eller `feature.yaml` 
-2) data som er unike for applikasjonen som testes
-   * `name`: navnet på applikasjonen
-   * `clientId`: Azure client Id
-   * `clientSecret`: Azure client secret
-   * `tenant`: Azure tenant, eks for gcp-dev: `966ac572-f5b7-4bbe-aa88-c76419c0f851` (trygdeetaten.no)
+Et scenario for en nais applikasjon er implementert på følgende måte:
+* en `*.feature` er tagget med applikasjonen som skal testes: `@<applikasjon>`, eks: `@bidrag-sak`, som vil være navnet på applikasjonen
+  som er deployet.
+* scenario-steget `Gitt nais applikasjon 'bidrag-sak'` vil hente ingressen som er oppgitt for nais applikasjonen som i dette tilfellet er `bidrag-sak`
 
-Eksempel på ei slik integrasjonsfil kan sees under `src/test/resources/integrationInput.json` og det er forventet at denne fila oppgies i en 
-miljøvariabel som heter `INTEGRATION_INPUT`
+### Miljøvariabler for kjøring
 
-### Testbruker
+`TEST_USER` - Testbruker (saksbehandler) med ident ala z123456
+`TEST_AUTH` - Passord til testbruker
 
-Alle applikasjoner på gcp er i utgangspunktet sikret med Azure Ad. Dette er dog bare et lag av sikkerhet og sikrer bare kommunikasjon mellom
-applikasjoner. Derfor vil det også være aktuelt å bruke en testbruker som simulerer en saksbehandler hos NAV. Dette er en såkalt Z-bruker og det må
-sørges for at når den brukes ved testing, så må den ha et gyldig passord.
-* test bruker hentes fra `IntegrationInput`: `userTest`
-* passord settes i miljøvariabel: `TEST_AUTH`
+#### Miljøvariabler for kjøring lokalt
 
-### Kjøring lokalt
+`SANITY_CHECK=true` - for tjenester som har implementert sikkerhet, så må denne settes slik at selve sjekken bare logges til konsoll og ikke feiler...
 
-Tester i `bidrag-cucumber-cloud` er tilgjengelig fra et "naisdevice". Man må være koblet opp mot det nais-clusteret man tester mot.
+#### Testbruker
 
-#### Kjøring med maven
+Alle applikasjoner på gcp er i utgangspunktet sikret med Azure Ad. Et lag i denne sikkerhetet er kommunikasjon mellom applikasjoner. Derfor kan det
+også være aktuelt å bruke en testbruker som simulerer en saksbehandler hos NAV. Dette er en såkalt Z-bruker og det må sørges for at den har et gyldig
+passord og at "two factor authentication" er slått av for brukeren.
 
-Den simpleste formen er å bruke maven:
+#### Kjøring lokalt
+
+Tester i `bidrag-cucumber-cloud` er tilgjengelig fra et "naisdevice", men kjøring lokalt vil kun være en "sanity-check" for å sjekke at cucumber er
+koblet opp riktig og at kjøring kan gjøres uten tekniske feil. Dette grunnet "zero trust" regimet som nais-applikasjonene kjører under. En applikasjon
+som kjører uten sikkerhet kan testes lokalt.
+
+Er det satt på sikkerhet, så kan ikke nais-applikasjonen testes fullt ut fra lokal kjøring. For å unngå at sjekker feiler når man kjører lokalt, så
+må miljøvariabelen `SANITY_CHECK=true` settes. Den vil bare logge resultatet fra en kjøring til konsoll og ikke gjøre den aktuelle sjekken.
+
+##### Kjøring med maven
+
+Den simpleste formen er å bruke maven (Se avsnittet om miljøvariabler for kjøring for alle verdier som forventes):
 ```
 mvn exec:java                                                                           \
-    -DTEST_AUTH=passord til din testbruker (z1234567)                                   \
+    -D<en miljøvariabel="en verdi">                                                     \
+    -D<en annen miljøvariabel="en annen verdi">                                         \
+    -DSANITY_CHECK=true                                                                 \
     -DINTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input') \
     -Dexec.classpathScope=test                                                          \
     -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
-#### Kjøring med IntelliJ
+##### Kjøring med IntelliJ
 
 Man kan ogå bruke IntelliJ til å kjøre cucumber testene direkte. IntelliJ har innebygd støtte for cucumber (java), men hvis du vil navigeere i koden
 ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (IntelliJ settings/prefrences -> Plugins)
@@ -105,11 +107,13 @@ Kjør
 * alle testene: høyreklikk på prosjektet og velg `Run 'All features in bidrag-cucumber-cloud'`
 * en feature: høyreklikk på feature-fil, eks `sak.feature`prosjektet og velg `Run 'Feature: ...'`
 
-Programargumenter er i maven-kommandoen må inn som miljøvariabler for å kjøre testene i IntelliJ
-```
-  TEST_AUTH=passord til din testbruker (z1234567)
-  INTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input')
-```
+Systemvariabler i maven-kommandoen (`-D<miljøvariabel=verdi`) må inn som miljøvariabler i IntelliJ. Se avsnittet "Miljøvariabler for kjøring"
+for alle verdier som forventes.
+
 * Dette gjøres i nedtrekksmenyen: `Select Run/Debug Configuration`.
   * Velg `Edit Configuration...` og legg inn miljøvariablene under `Environment variables:` i cucumber-testene som trenger dem
   * Når dette er gjort så kan du lagre denne konfigurasjonen ved å velge `Save '<feature(s)>' Configuration` fra nedtrekksmenyen.
+  
+For å fjerne feil om dublicate `*.feature`-filer i konfigurasjonen (fra valg om å kjøre alle features), så legg til `/src/test/resources` i feltet
+`Feature or folder path:` fra `Edit configuration...`...
+* dette girbare feil i konsoll fra Run-dialog og har ingen praktisk betydning 
