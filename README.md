@@ -94,8 +94,7 @@ mvn exec:java                                                                   
     -DTEST_AUTH=passord til din testbruker (z1234567)                                   \
     -DINTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input') \
     -Dexec.classpathScope=test                                                          \
-    -Dexec.mainClass=io.cucumber.core.cli.Main                                          \
-    -Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
+    -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
 #### Kjøring med IntelliJ
 

@@ -34,5 +34,4 @@ spec:
             - "-f"
             - "/pom.xml"
             - "-Dexec.classpathScope=test"
-            - "-Dexec.mainClass=io.cucumber.core.cli.Main"
-            - "-Dexec.args=\"src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud\""
+            - "-Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud"

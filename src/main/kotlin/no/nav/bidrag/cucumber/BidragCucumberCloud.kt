@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber
 
+import io.cucumber.core.cli.Main
 import io.cucumber.java8.Scenario
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
@@ -76,5 +77,12 @@ object BidragCucumberCloud {
             "<h5>An error occured!</h5>\n"
         else
             ""
+    }
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Main.main(
+            "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud"
+        )
     }
 }

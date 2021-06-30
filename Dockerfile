@@ -14,8 +14,3 @@ RUN mvn -f /pom.xml -s /usr/share/maven/ref/settings.xml exec:java \
             -Dexec.mainClass=io.cucumber.core.cli.Main || true
 
 EXPOSE 8080
-
-ENTRYPOINT mvn -f /pom.xml -s /usr/share/maven/ref/settings.xml exec:java \
-        -Dexec.classpathScope=test                                        \
-        -Dexec.mainClass=io.cucumber.core.cli.Main                        \
-        -Dexec.args="src/test/resources/no/nav/bidrag/cucumber/cloud --glue no.nav.bidrag.cucumber.cloud"
