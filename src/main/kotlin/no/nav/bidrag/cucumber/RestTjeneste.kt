@@ -20,33 +20,25 @@ open class RestTjeneste(
     private val applicationName: String,
     private val rest: ResttjenesteMedBaseUrl
 ) {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
-    }
-
     private lateinit var debugFullUrl: String
-    private lateinit var responseEntity: ResponseEntity<String>
+    private lateinit var responseEntity: ResponseEntity<String?>
 
     constructor(naisApplication: String) : this(naisApplication, CacheRestTemplateMedBaseUrl.hentEllerKonfigurer(naisApplication))
 
     fun hentEndpointUrl() = debugFullUrl
+
     fun hentHttpHeaders(): HttpHeaders = responseEntity.headers
     fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
     fun hentResponse(): String? = responseEntity.body
-    fun hentResponseSomMap() = ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any>
+    fun hentResponseSomMap() =
+        if (responseEntity.body != null) ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any> else HashMap()
 
-    fun exchangeGet(endpointUrl: String): ResponseEntity<String> {
+    fun exchangeGet(endpointUrl: String): ResponseEntity<String?> {
         debugFullUrl = rest.baseUrl + endpointUrl
 
         val header = initHttpHeadersWithCorrelationIdAndEnhet()
 
-        BidragCucumberCloud.log("GET ${this.debugFullUrl}")
-
-        responseEntity = try {
-            rest.template.exchange(endpointUrl, HttpMethod.GET, HttpEntity(null, header), String::class.java)
-        } catch (e: HttpStatusCodeException) {
-            ResponseEntity(headerWithAlias(), e.statusCode)
-        }
+        exchange(HttpEntity(null, header), endpointUrl, HttpMethod.GET)
 
         BidragCucumberCloud.log(
             if (responseEntity.body != null) "response with json and status ${responseEntity.statusCode}"
@@ -91,11 +83,11 @@ open class RestTjeneste(
 
     private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
         try {
-            LOGGER.info("$httpMethod: $endpointUrl")
+            BidragCucumberCloud.log("$httpMethod: $debugFullUrl")
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
         } catch (e: HttpStatusCodeException) {
-            LOGGER.error("$httpMethod FEILET: $debugFullUrl: $e")
-            responseEntity = ResponseEntity.status(e.statusCode).body<Any>("${e.javaClass.simpleName}: ${e.message}") as ResponseEntity<String>
+            BidragCucumberCloud.errorLog("$httpMethod FEILET: $debugFullUrl: $e")
+            responseEntity = ResponseEntity.status(e.statusCode).body<Any>("${e.javaClass.simpleName}: ${e.message}") as ResponseEntity<String?>
             throw e
         }
     }

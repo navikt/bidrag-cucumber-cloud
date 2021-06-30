@@ -30,15 +30,21 @@ object BidragCucumberCloud {
     }
 
     fun log(message: String) {
-        log(null, message)
+        log(null, message, LogLevel.INFO)
     }
 
     fun log(messageTitle: String?, message: String) {
+        log(messageTitle, message, LogLevel.INFO)
+    }
+
+    private fun  log(messageTitle: String?, message: String, logLevel: LogLevel) {
         if (scenario != null) {
-            val title = if (messageTitle != null) "<h5>$messageTitle</h5>\n" else ""
+            val title = logLevel.produceMessageTitle(messageTitle)
             scenario!!.log("$title<p>\n$message\n</p>")
+        } else if (logLevel == LogLevel.INFO) {
+            LOGGER.info("Outside scenario: $message")
         } else {
-            LOGGER.info("Logging message outside scenario: $message")
+            LOGGER.error("Outside scenario: $message")
         }
     }
 
@@ -55,6 +61,20 @@ object BidragCucumberCloud {
         return "https://logs.adeo.no/app/kibana#/discover?_g=($time)&_a=($columns,$index,interval:auto,$query,$sort)"
     }
 
-    fun createCorrelationIdLinkTitle() = "Link for correlation-id ($correlationIdForScenario):"
+    fun createCorrelationIdLinkTitle() = "Link for correlation-id, $correlationIdForScenario"
     fun getCorrelationIdForScenario() = correlationIdForScenario
+    fun errorLog(message: String) = log(null, message, LogLevel.ERROR)
+
+    private enum class LogLevel {
+        INFO, ERROR;
+
+        fun produceMessageTitle(messageTitle: String?) = if (messageTitle != null && this == INFO)
+            "<h5>$messageTitle</h5>\n"
+        else if (messageTitle != null && this == ERROR)
+            "<h5>An error occured: $messageTitle</h5>\n"
+        else if (this == ERROR)
+            "<h5>An error occured!</h5>\n"
+        else
+            ""
+    }
 }
