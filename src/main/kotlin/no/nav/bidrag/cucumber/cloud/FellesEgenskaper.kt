@@ -14,14 +14,8 @@ class FellesEgenskaper : No {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
 
-        private class Assertion(val message: String, val value: Any, val expectation: Any) {
-            fun check() {
-                assertThat(value).`as`(message).isEqualTo(expectation)
-            }
-        }
-
-        private fun sanityCheck(assertion: Assertion) {
-            if (Environment.isSanityCheck()) {
+        fun sanityCheck(assertion: Assertion) {
+            if (Environment.isSanityCheck) {
                 LOGGER.info("No assertion: ${assertion.message}: ${assertion.value} vs ${assertion.expectation}")
             } else {
                 assertion.check()

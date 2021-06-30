@@ -7,9 +7,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object BidragCucumberCloud {
-    // constants for input via System.getProperty()/System.geteenv()
-    internal const val INTEGRATION_INPUT: String = "INTEGRATION_INPUT"
+    // constants for input via System.getProperty(...)/System.getenv(...)
+    internal const val AZURE_APP_CLIENT_ID = "AZURE_APP_CLIENT_ID"
+    internal const val AZURE_APP_CLIENT_SECRET = "AZURE_APP_CLIENT_SECRET"
+    internal const val AZURE_APP_TENANT_ID = "AZURE_APP_TENANT_ID"
     internal const val TEST_AUTH = "TEST_AUTH"
+    internal const val TEST_INGRESSES = "TEST_INGRESSES"
+    internal const val TEST_USER = "TEST_USER"
     internal const val SANITY_CHECK = "SANITY_CHECK"
 
     private val LOGGER = LoggerFactory.getLogger(BidragCucumberCloud::class.java)

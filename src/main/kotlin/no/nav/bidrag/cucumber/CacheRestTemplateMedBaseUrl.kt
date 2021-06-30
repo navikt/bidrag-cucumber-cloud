@@ -2,7 +2,6 @@ package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet
-import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet.Security
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.ssl.SSLContexts
@@ -14,6 +13,7 @@ import java.net.URI
 import java.security.cert.X509Certificate
 
 internal object CacheRestTemplateMedBaseUrl {
+    private val INGRESS_FOR_APPLICATION: MutableMap<String, String> = HashMap()
     private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.java)
     private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
 
@@ -23,17 +23,23 @@ internal object CacheRestTemplateMedBaseUrl {
 
     private fun konfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
-        NaisConfiguration.read(applicationName)
+        val ingress = fetchIngress(applicationName)
 
-        val applicationHostUrl = NaisConfiguration.hentApplicationHostUrl(applicationName)
-
-        val applicationUrl = if (!applicationHostUrl.endsWith('/') && !applicationName.startsWith('/')) {
-            "$applicationHostUrl/$applicationName/"
+        val applicationUrl = if (!ingress.endsWith('/') && !applicationName.startsWith('/')) {
+            "$ingress/$applicationName/"
         } else {
-            "$applicationHostUrl$applicationName/"
+            "$ingress$applicationName/"
         }
 
         return konfigurerSikkerhet(applicationName, applicationUrl)
+    }
+
+    private fun fetchIngress(applicationName: String): String {
+        if (INGRESS_FOR_APPLICATION.isEmpty()) {
+            INGRESS_FOR_APPLICATION.putAll(Environment.fetchIngresses())
+        }
+
+        return INGRESS_FOR_APPLICATION[applicationName] ?: throw IllegalStateException("Ingen ingress spesifisert for $applicationName!")
     }
 
     private fun konfigurerSikkerhet(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
@@ -42,9 +48,10 @@ internal object CacheRestTemplateMedBaseUrl {
         val httpHeaderRestTemplate = HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-        when (Sikkerhet.fetchSecurityFor(applicationName)) {
-            Security.AZURE -> httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureToken(applicationName) }
-            Security.NONE -> LOGGER.info("No security needed when accessing $applicationName")
+        if (Environment.isTestUserPresent()) {
+            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureBearerToken() }
+        } else {
+            LOGGER.info("No user to provide security for when accessing $applicationName")
         }
 
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)

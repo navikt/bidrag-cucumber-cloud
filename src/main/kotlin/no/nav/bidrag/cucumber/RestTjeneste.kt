@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -18,7 +17,7 @@ import org.springframework.web.client.RestTemplate
 @Suppress("UNCHECKED_CAST")
 open class RestTjeneste(
     private val applicationName: String,
-    private val rest: ResttjenesteMedBaseUrl
+    internal val rest: ResttjenesteMedBaseUrl
 ) {
     private lateinit var debugFullUrl: String
     private lateinit var responseEntity: ResponseEntity<String?>
@@ -88,7 +87,10 @@ open class RestTjeneste(
         } catch (e: HttpStatusCodeException) {
             BidragCucumberCloud.errorLog("$httpMethod FEILET: $debugFullUrl: $e")
             responseEntity = ResponseEntity.status(e.statusCode).body<Any>("${e.javaClass.simpleName}: ${e.message}") as ResponseEntity<String?>
-            throw e
+
+            if (Environment.isNotSanityCheck()) {
+                throw e
+            }
         }
     }
 

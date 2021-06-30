@@ -2,7 +2,6 @@ package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.BidragScenario
-import org.assertj.core.api.Assertions.assertThat
 
 class HelseEgenskap : No {
     init {
@@ -10,8 +9,11 @@ class HelseEgenskap : No {
 
         Og("header {string} skal være {string}") { navn: String, verdi: String ->
             val headere = BidragScenario.restTjeneste.hentHttpHeaders()
+            val headerVerdi = headere[navn]?.first()
 
-            assertThat(headere[navn]?.first()).isEqualTo(verdi)
+            FellesEgenskaper.sanityCheck(
+                Assertion("Header '$navn'", headerVerdi, verdi)
+            )
         }
     }
 }

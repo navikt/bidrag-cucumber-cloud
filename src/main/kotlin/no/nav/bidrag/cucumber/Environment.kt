@@ -1,36 +1,42 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.BidragCucumberCloud.INTEGRATION_INPUT
+import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_CLIENT_ID
+import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_CLIENT_SECRET
+import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_TENANT_ID
 import no.nav.bidrag.cucumber.BidragCucumberCloud.SANITY_CHECK
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_AUTH
-import no.nav.bidrag.cucumber.input.IntegrationInput
-import no.nav.bidrag.cucumber.input.IntegrationInput.Provider
+import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_INGRESSES
+import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_USER
 
 internal object Environment {
     const val AZURE_LOGIN_ENDPOINT = "https://login.microsoftonline.com"
-    const val MAIN_ENVIRONMENT = "main"
 
-    private var integrationInput: IntegrationInput? = null
+    val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: throwException("Ingen $AZURE_APP_CLIENT_ID å finne")
+    val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: throwException("Ingen $AZURE_APP_CLIENT_SECRET å finne!")
+    val isSanityCheck: Boolean get() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
+    val userTest: String? get() = fetchPropertyOrEnvironment(TEST_USER)
+    val userTestAuth: String get() = fetchPropertyOrEnvironment(TEST_AUTH) ?: throwException("Ingen $TEST_AUTH å finne!")
+    val tenant: String get() = fetchPropertyOrEnvironment(AZURE_APP_TENANT_ID) ?: throwException("Ingen $AZURE_APP_TENANT_ID å finne!")
+    val tenantUsername: String get() = "F_${userTest?.uppercase()}.E_${userTest?.uppercase()}@trygdeetaten.no"
 
-    fun fetchIntegrationInput() = integrationInput ?: readIntegrationInput()
-    internal fun fetchTestUserAuthentication() = fetchPropertyOrEnvironment(TEST_AUTH) ?: throw IllegalStateException("Unable to find '$TEST_AUTH'!")
-    internal fun isSanityCheck() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
+    fun fetchIngresses(): Map<String, String> {
+        val ingresses: MutableMap<String, String> = HashMap()
+        val ingressesString = fetchPropertyOrEnvironment(TEST_INGRESSES) ?: throw IllegalStateException("Ingen '$TEST_INGRESSES' å finne!")
 
-    private fun readIntegrationInput(): IntegrationInput {
-        return when (IntegrationInput.provider) {
-            Provider.FILE -> readWhenNull()
-            Provider.INSTANCE -> IntegrationInput.instance ?: throw IllegalStateException("no instance provided")
+        ingressesString.split(',').forEach { string: String ->
+            if (string.contains('@')) {
+                val app = string.split('@')[0]
+                val ingress = string.split('@')[1]
+
+                ingresses[app] = ingress
+            }
         }
+
+        return ingresses
     }
 
-    private fun readWhenNull(): IntegrationInput {
-        if (integrationInput == null) {
-            val integrationInput = IntegrationInput.from(fetchPropertyOrEnvironment(INTEGRATION_INPUT))
-            this.integrationInput = integrationInput
-        }
-
-        return this.integrationInput!!
-    }
-
-    private fun fetchPropertyOrEnvironment(key: String) = System.getProperty(key) ?: System.getenv(key)
+    fun isTestUserPresent() = userTest != null
+    private fun throwException(message: String): String = throw IllegalStateException(message)
+    private fun fetchPropertyOrEnvironment(key: String): String? = System.getProperty(key) ?: System.getenv(key)
+    fun isNotSanityCheck() = !isSanityCheck
 }
