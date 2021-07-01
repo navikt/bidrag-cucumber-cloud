@@ -94,7 +94,6 @@ mvn exec:java                                                                   
     -D<en miljøvariabel="en verdi">                                                     \
     -D<en annen miljøvariabel="en annen verdi">                                         \
     -DSANITY_CHECK=true                                                                 \
-    -DINTEGRATION_INPUT=sti til integationInput.json (se avsnittet 'Integration Input') \
     -Dexec.classpathScope=test                                                          \
     -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
