@@ -11,8 +11,8 @@ object BidragCucumberCloud {
     internal const val AZURE_APP_CLIENT_ID = "AZURE_APP_CLIENT_ID"
     internal const val AZURE_APP_CLIENT_SECRET = "AZURE_APP_CLIENT_SECRET"
     internal const val AZURE_APP_TENANT_ID = "AZURE_APP_TENANT_ID"
+    internal const val INGRESSES_FOR_TAGS = "INGRESSES_FOR_TAGS"
     internal const val TEST_AUTH = "TEST_AUTH"
-    internal const val TEST_INGRESSES = "TEST_INGRESSES"
     internal const val TEST_USER = "TEST_USER"
     internal const val SANITY_CHECK = "SANITY_CHECK"
 
@@ -43,7 +43,7 @@ object BidragCucumberCloud {
         log(messageTitle, message, LogLevel.INFO)
     }
 
-    private fun  log(messageTitle: String?, message: String, logLevel: LogLevel) {
+    private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
         if (scenario != null) {
             val title = logLevel.produceMessageTitle(messageTitle)
             scenario!!.log("$title<p>\n$message\n</p>")
@@ -86,7 +86,14 @@ object BidragCucumberCloud {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val tags = if (args.isEmpty()) "not @ignored" else args.joinToString(prefix = "(@", postfix = " and not @ignore)", separator = " or ")
+        if (args.isEmpty()) {
+            val message = "Ingen ingress(er) med tag som argument!"
+            LOGGER.error(message)
+            throw IllegalStateException(message)
+        }
+
+        System.setProperty(INGRESSES_FOR_TAGS, args.joinToString(separator = ","))
+        val tags = hentUtTags(args)
 
         val result = Main.run(
             "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
@@ -97,5 +104,15 @@ object BidragCucumberCloud {
             LOGGER.error(message)
             throw IllegalStateException(message)
         }
+    }
+
+    private fun hentUtTags(args: Array<String>): String {
+        val tagstring = args.joinToString(",")
+            .split(',').map { it.substring(it.indexOf('@')) }
+            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " or ")
+
+        LOGGER.info("Created '$tagstring' from '${args.joinToString(separator = ",")}'")
+
+        return tagstring
     }
 }

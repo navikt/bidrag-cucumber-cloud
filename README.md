@@ -63,9 +63,12 @@ Et scenario for en nais applikasjon er implementert på følgende måte:
 * scenario-steget `Gitt nais applikasjon 'bidrag-sak'` vil hente ingressen som er oppgitt for nais applikasjonen som i dette tilfellet er `bidrag-sak`
 
 ### Miljøvariabler for kjøring
-
-`TEST_USER` - Testbruker (saksbehandler) med ident ala z123456
-`TEST_AUTH` - Passord til testbruker
+Miljøvariabel | Beskrivelse | Kommentar
+---|---|---
+`INGRESSES_FOR_TAGS` | kommaseparert liste over ingress og nais-applikasjon som testes | nais-applikasjon blir også tolket som cucumber tag
+- | - | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon
+`TEST_USER` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check (kjøring lokalt) |
+`TEST_AUTH` | Passord til testbruker | unødvendig for sanity check (kjøring lokalt) |
 
 #### Miljøvariabler for kjøring lokalt
 

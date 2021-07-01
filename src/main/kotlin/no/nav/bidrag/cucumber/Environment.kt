@@ -3,9 +3,9 @@ package no.nav.bidrag.cucumber
 import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_CLIENT_ID
 import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_CLIENT_SECRET
 import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_TENANT_ID
+import no.nav.bidrag.cucumber.BidragCucumberCloud.INGRESSES_FOR_TAGS
 import no.nav.bidrag.cucumber.BidragCucumberCloud.SANITY_CHECK
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_AUTH
-import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_INGRESSES
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_USER
 import org.slf4j.LoggerFactory
 
@@ -24,13 +24,13 @@ internal object Environment {
 
     fun fetchIngresses(): Map<String, String> {
         val ingresses: MutableMap<String, String> = HashMap()
-        val ingressesString = fetchPropertyOrEnvironment(TEST_INGRESSES) ?: throw IllegalStateException("Ingen '$TEST_INGRESSES' å finne!")
+        val ingressesString = fetchPropertyOrEnvironment(INGRESSES_FOR_TAGS) ?: throw IllegalStateException("Ingen '$INGRESSES_FOR_TAGS' å finne!")
 
         ingressesString.split(',').forEach { string: String ->
             if (string.contains('@')) {
                 LOGGER.info("Lager ingress av $string")
-                val app = string.split('@')[0]
-                val ingress = string.split('@')[1]
+                val ingress = string.split('@')[0]
+                val app = string.split('@')[1]
 
                 ingresses[app] = ingress
             } else {
