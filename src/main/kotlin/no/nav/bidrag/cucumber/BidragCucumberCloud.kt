@@ -86,8 +86,16 @@ object BidragCucumberCloud {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        Main.main(
-            "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud"
+        val tags = if (args.isEmpty()) "not @ignored" else args.joinToString(prefix = "(@", postfix = " and not @ignore)", separator = " or ")
+
+        val result = Main.run(
+            "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
         )
+
+        if (result != 0.toByte()) {
+            val message = "Kjøring av cucumber var mislykket (tags: $tags)!"
+            LOGGER.error(message)
+            throw IllegalStateException(message)
+        }
     }
 }

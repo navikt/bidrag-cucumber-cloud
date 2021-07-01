@@ -7,9 +7,12 @@ import no.nav.bidrag.cucumber.BidragCucumberCloud.SANITY_CHECK
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_AUTH
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_INGRESSES
 import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_USER
+import org.slf4j.LoggerFactory
 
 internal object Environment {
     const val AZURE_LOGIN_ENDPOINT = "https://login.microsoftonline.com"
+
+    private val LOGGER = LoggerFactory.getLogger(Environment::class.java)
 
     val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: throwException("Ingen $AZURE_APP_CLIENT_ID å finne")
     val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: throwException("Ingen $AZURE_APP_CLIENT_SECRET å finne!")
@@ -25,10 +28,13 @@ internal object Environment {
 
         ingressesString.split(',').forEach { string: String ->
             if (string.contains('@')) {
+                LOGGER.info("Lager ingress av $string")
                 val app = string.split('@')[0]
                 val ingress = string.split('@')[1]
 
                 ingresses[app] = ingress
+            } else {
+                LOGGER.error("kunne ikke lage ingress av $string")
             }
         }
 
