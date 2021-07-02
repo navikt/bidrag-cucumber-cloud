@@ -16,7 +16,7 @@ class FellesEgenskaper : No {
 
         fun sanityCheck(assertion: Assertion) {
             if (Environment.isSanityCheck) {
-                LOGGER.info("No assertion: ${assertion.message}: ${assertion.value} vs ${assertion.expectation}")
+                LOGGER.info("No assertion: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
             } else {
                 assertion.check()
             }

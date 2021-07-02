@@ -6,6 +6,7 @@ on:
 
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/bidrag-cucumber-cloud:${{ github.sha }}
+  TEST-AUTH: ${{ secrets.TEST_AUTH }}
 
 jobs:
   build:
@@ -55,37 +56,63 @@ jobs:
           docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
           docker push ${IMAGE}
 
-  deploy:
+  deploy-single:
     runs-on: ubuntu-latest
-    name: Deploy docker image (nais job) to dev-gcp
+    name: Deploy single cucumber test (nais job) to dev-gcp
     needs: build
 
     steps:
       - uses: actions/checkout@v2
         with:
           path: deploy
-      - name: Run nais job and use main branch as scheduled job in dev-gcp
+      - name: Run single cucumber test on main branch in dev-gcp
         if: github.ref == 'refs/heads/main'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: deploy/.nais/naisjob.yaml
-          VARS: deploy/.nais/main.yaml
-      - name: Run single nais job on feature branch in dev-gcp
+          VARS: deploy/.nais/main-single.yaml
+      - name: Run single cucumber test on feature branch in dev-gcp
         if: github.ref != 'refs/heads/main'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: deploy/.nais/naisjob.yaml
-          VARS: deploy/.nais/feature.yaml
+          VARS: deploy/.nais/feature-single.yaml
+
+  deploy-multiple:
+    runs-on: ubuntu-latest
+    name: Deploy single cucumber test (nais job) to dev-gcp
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: deploy
+      - name: Run multiple cucumber tests on main branch in dev-gcp
+        if: github.ref == 'refs/heads/main'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: deploy/.nais/naisjob.yaml
+          VARS: deploy/.nais/main-multiple.yaml
+      - name: Run single cucumber test on feature branch in dev-gcp
+        if: github.ref != 'refs/heads/main'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: deploy/.nais/naisjob.yaml
+          VARS: deploy/.nais/feature-multiple.yaml
 
   bump_dev_version:
     runs-on: ubuntu-latest
     name: Bump SNAPSHOT version
     if: github.ref == 'refs/heads/main'
-    needs: deploy
+    needs: [deploy-single, deploy-multiple]
 
     steps:
       - uses: actions/checkout@v2

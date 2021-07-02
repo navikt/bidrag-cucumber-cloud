@@ -15,14 +15,14 @@ spec:
     application:
       enabled: true
   env:
-    - name: ENVIRONMENT
-      value: {{ environment }}
-    - name: TEST_NAIS_APP
-      value: {{ test.name }}
-    - name: TEST_NAIS_APP_INGRESS
-      value: {{ test.ingress }}
-    - name: TESTDATA_URL
-      value: {{ bidrag-testdata-cloud.ingress }}
+    - name: INGRESSES_FOR_TAGS
+      value: {{ ingresses-for-tags }}
+    - name: SANITY_CHECK
+      value: false
+    - name: TEST_USER
+      value: {{ test-user }}
+    - name: TEST_AUTH
+      value: {{ test-auth }}
   image: {{ image }}
   template:
     spec:
@@ -30,8 +30,7 @@ spec:
         - name: {{ name }}
           image: {{ image }}
           command:
-            - "mvn"
-            - "-f"
-            - "/pom.xml"
-            - "-Dexec.classpathScope=test"
-            - "-Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud"
+            - "docker"
+            - "run"
+            - "-t"
+            - "bidrag-cucumber-cloud:latest"

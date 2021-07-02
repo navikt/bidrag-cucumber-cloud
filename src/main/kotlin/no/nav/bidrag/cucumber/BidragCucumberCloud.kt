@@ -26,7 +26,11 @@ object BidragCucumberCloud {
     }
 
     fun reset(scenario: Scenario) {
-        LOGGER.info("Finished ${scenario.name}")
+        val noScenario = scenario.name != null && scenario.name.isNotBlank()
+        val scenarioString = if (noScenario) "'${scenario.name}'" else "nameless scenario from ${scenario.uri}"
+
+        LOGGER.info("Finished $scenarioString")
+
         this.scenario = null
         correlationIdForScenario = createCorrelationIdValue("outside-scenario")
     }
@@ -107,9 +111,12 @@ object BidragCucumberCloud {
     }
 
     private fun hentUtTags(args: Array<String>): String {
+        // joiner args med komma for deretter å splitte de opp igjen på komma for å forsikre at eventuelle argument som inneholder flere ingresser med
+        // tags blir behandlet som unike argument...
+
         val tagstring = args.joinToString(",")
-            .split(',').map { it.substring(it.indexOf('@')) }
-            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " or ")
+            .split(',')
+            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " or ") { it.substring(it.indexOf('@')) }
 
         LOGGER.info("Created '$tagstring' from '${args.joinToString(separator = ",")}'")
 
