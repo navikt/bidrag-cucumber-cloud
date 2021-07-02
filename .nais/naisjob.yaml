@@ -6,11 +6,6 @@ metadata:
   name: {{ name }}
   namespace: bidrag
 spec:
-  accessPolicy:
-    outbound:
-      rules:
-        - application: {{ bidrag-testdata-cloud.name }}
-        - application: {{ test.name }}
   azure:
     application:
       enabled: true
@@ -18,11 +13,11 @@ spec:
     - name: INGRESSES_FOR_TAGS
       value: {{ ingresses-for-tags }}
     - name: SANITY_CHECK
-      value: false
+      value: "false"
     - name: TEST_USER
       value: {{ test-user }}
     - name: TEST_AUTH
-      value: {{ test-auth }}
+      value: "${{ test-auth }}"
   image: {{ image }}
   template:
     spec:
@@ -33,4 +28,4 @@ spec:
             - "docker"
             - "run"
             - "-t"
-            - "bidrag-cucumber-cloud:latest"
+            - "{{ image }}"

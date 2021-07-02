@@ -84,7 +84,7 @@ jobs:
 
   deploy-multiple:
     runs-on: ubuntu-latest
-    name: Deploy single cucumber test (nais job) to dev-gcp
+    name: Deploy multiple cucumber tests (nais job) to dev-gcp
     needs: build
 
     steps:

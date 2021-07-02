@@ -90,14 +90,9 @@ object BidragCucumberCloud {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        if (args.isEmpty()) {
-            val message = "Ingen ingress(er) med tag som argument!"
-            LOGGER.error(message)
-            throw IllegalStateException(message)
-        }
-
-        System.setProperty(INGRESSES_FOR_TAGS, args.joinToString(separator = ","))
-        val tags = hentUtTags(args)
+        val tagGenerator = TagGenerator(args)
+        val tags = tagGenerator.hentUtTags()
+        System.setProperty(INGRESSES_FOR_TAGS, tagGenerator.ingressesForTags)
 
         val result = Main.run(
             "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
@@ -108,18 +103,5 @@ object BidragCucumberCloud {
             LOGGER.error(message)
             throw IllegalStateException(message)
         }
-    }
-
-    private fun hentUtTags(args: Array<String>): String {
-        // joiner args med komma for deretter å splitte de opp igjen på komma for å forsikre at eventuelle argument som inneholder flere ingresser med
-        // tags blir behandlet som unike argument...
-
-        val tagstring = args.joinToString(",")
-            .split(',')
-            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " or ") { it.substring(it.indexOf('@')) }
-
-        LOGGER.info("Created '$tagstring' from '${args.joinToString(separator = ",")}'")
-
-        return tagstring
     }
 }
