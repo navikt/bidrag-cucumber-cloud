@@ -1,0 +1,3 @@
+name: bidrag-cucumber-cloud-single
+ingresses-for-tags: https://bidrag-sak.dev.intern.nav.no@bidrag-sak
+test-user: z992903

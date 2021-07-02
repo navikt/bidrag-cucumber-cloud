@@ -1,8 +1,0 @@
-name: bidrag-cucumber-cloud-feature
-environment: feature
-bidrag-testdata-cloud:
-  name: bidrag-testdata-cloud-feature
-  ingress: https://bidrag-dokument-cloud-feature.dev.intern.nav.no/
-test:
-  name: bidrag-testdata-cloud-feature
-  ingress: https://bidrag-dokument-cloud-feature.dev.intern.nav.no/

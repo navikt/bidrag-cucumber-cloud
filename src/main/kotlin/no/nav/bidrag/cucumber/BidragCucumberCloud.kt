@@ -11,8 +11,8 @@ object BidragCucumberCloud {
     internal const val AZURE_APP_CLIENT_ID = "AZURE_APP_CLIENT_ID"
     internal const val AZURE_APP_CLIENT_SECRET = "AZURE_APP_CLIENT_SECRET"
     internal const val AZURE_APP_TENANT_ID = "AZURE_APP_TENANT_ID"
+    internal const val INGRESSES_FOR_TAGS = "INGRESSES_FOR_TAGS"
     internal const val TEST_AUTH = "TEST_AUTH"
-    internal const val TEST_INGRESSES = "TEST_INGRESSES"
     internal const val TEST_USER = "TEST_USER"
     internal const val SANITY_CHECK = "SANITY_CHECK"
 
@@ -26,7 +26,11 @@ object BidragCucumberCloud {
     }
 
     fun reset(scenario: Scenario) {
-        LOGGER.info("Finished ${scenario.name}")
+        val noScenario = scenario.name != null && scenario.name.isNotBlank()
+        val scenarioString = if (noScenario) "'${scenario.name}'" else "nameless scenario from ${scenario.uri}"
+
+        LOGGER.info("Finished $scenarioString")
+
         this.scenario = null
         correlationIdForScenario = createCorrelationIdValue("outside-scenario")
     }
@@ -43,7 +47,7 @@ object BidragCucumberCloud {
         log(messageTitle, message, LogLevel.INFO)
     }
 
-    private fun  log(messageTitle: String?, message: String, logLevel: LogLevel) {
+    private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
         if (scenario != null) {
             val title = logLevel.produceMessageTitle(messageTitle)
             scenario!!.log("$title<p>\n$message\n</p>")
@@ -86,8 +90,18 @@ object BidragCucumberCloud {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        Main.main(
-            "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud"
+        val tagGenerator = TagGenerator(args)
+        val tags = tagGenerator.hentUtTags()
+        System.setProperty(INGRESSES_FOR_TAGS, tagGenerator.ingressesForTags)
+
+        val result = Main.run(
+            "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
         )
+
+        if (result != 0.toByte()) {
+            val message = "Kjøring av cucumber var mislykket (tags: $tags)!"
+            LOGGER.error(message)
+            throw IllegalStateException(message)
+        }
     }
 }

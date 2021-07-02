@@ -62,10 +62,16 @@ Et scenario for en nais applikasjon er implementert på følgende måte:
   som er deployet.
 * scenario-steget `Gitt nais applikasjon 'bidrag-sak'` vil hente ingressen som er oppgitt for nais applikasjonen som i dette tilfellet er `bidrag-sak`
 
-### Miljøvariabler for kjøring
+### Variabler for kjøring
+System.property | Beskrivelse | Kommentar
+---|---|---
+`INGRESSES_FOR_TAGS` | kommaseparert liste over ingress og nais-applikasjon som testes | nais-applikasjon blir også tolket som cucumber tag
+- | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon | er argument til `BidragCucumberCloud.main(...)` 
 
-`TEST_USER` - Testbruker (saksbehandler) med ident ala z123456
-`TEST_AUTH` - Passord til testbruker
+Miljøvariabler | Beskrivelse | Kommentar
+---|---|---
+`TEST_USER` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check (kjøring lokalt) |
+`TEST_AUTH` | Passord til testbruker | unødvendig for sanity check (kjøring lokalt) |
 
 #### Miljøvariabler for kjøring lokalt
 
@@ -88,31 +94,50 @@ må miljøvariabelen `SANITY_CHECK=true` settes. Den vil bare logge resultatet f
 
 ##### Kjøring med maven
 
-Den simpleste formen er å bruke maven (Se avsnittet om miljøvariabler for kjøring for alle verdier som forventes):
+Den simpleste formen er å bruke maven
 ```
-mvn exec:java                                                                           \
-    -D<en miljøvariabel="en verdi">                                                     \
-    -D<en annen miljøvariabel="en annen verdi">                                         \
-    -DSANITY_CHECK=true                                                                 \
-    -Dexec.classpathScope=test                                                          \
-    -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
+mvn exec:java                                                   \
+    -DSANITY_CHECK=true                                         \
+    -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud \
+    -Dexec.args=<ingress@tag1,ingress@tag2> 
 ```
+**NB!**
+Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil kjøre en fullskala test av applikasjon uten sikkerhet.
+
+##### Kjøring med Docker
+
+BidragCucumberCloud er en java-applikasjon som kjøres fra docker. Dette kan også kjøres lokalt. Bygg eller last ned siste docker image:
+* Bygg
+  * kopier din `~/.m2/settings.xml` til roten av dette prosjektet.
+  * kjør kommandoen `docker build -t bidrag-cucumber-cloud .`
+  * kjør kommandoen `docker run -t bidrag-cucumber-cloud`
+* Last ned
+  * gå til https://github.com/navikt/bidrag-cucumber-cloud/packages
+  * trykk på `bidrag-cucumber-cloud` og kopier `Pull image from the command line`: `docker pull
+    docker.pkg.github.com/navikt/bidrag-cucumber-cloud/bidrag-cucumber-cloud:(github.sha)`
+  * kjør kommandoen `docker run -t docker.pkg.github.com/navikt/bidrag-cucumber-cloud/bidrag-cucumber-cloud:(github.sha) .`
+
 ##### Kjøring med IntelliJ
 
 Man kan ogå bruke IntelliJ til å kjøre cucumber testene direkte. IntelliJ har innebygd støtte for cucumber (java), men hvis du vil navigeere i koden
 ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (IntelliJ settings/prefrences -> Plugins)
 
-Kjør
+###### Kjør cucumber features
 * alle testene: høyreklikk på prosjektet og velg `Run 'All features in bidrag-cucumber-cloud'`
 * en feature: høyreklikk på feature-fil, eks `sak.feature`prosjektet og velg `Run 'Feature: ...'`
 
-Systemvariabler i maven-kommandoen (`-D<miljøvariabel=verdi`) må inn som miljøvariabler i IntelliJ. Se avsnittet "Miljøvariabler for kjøring"
-for alle verdier som forventes.
+**NB!**
+Husk å legg inn miljøvariablene `SANITY_CHECK` og `INGRESSES_FOR_TAGS` i `Edit Configurations...` under `Run`-drop down menyen...
 
-* Dette gjøres i nedtrekksmenyen: `Select Run/Debug Configuration`.
-  * Velg `Edit Configuration...` og legg inn miljøvariablene under `Environment variables:` i cucumber-testene som trenger dem
+###### Kjør kotlin program `BidragCucumberCloud`
+* Høyreklikk på kotlin objektet og velg `Run BidragCucumberCloud`, deretter 
+  * Velg `Edit Configuration...` i `Run`-drop down menyen og legg inn programargumentet `ingress.x@tag.x,...,ingress.z@tag.z 
   * Når dette er gjort så kan du lagre denne konfigurasjonen ved å velge `Save '<feature(s)>' Configuration` fra nedtrekksmenyen.
   
 For å fjerne feil om dublicate `*.feature`-filer i konfigurasjonen (fra valg om å kjøre alle features), så legg til `/src/test/resources` i feltet
 `Feature or folder path:` fra `Edit configuration...`...
-* dette girbare feil i konsoll fra Run-dialog og har ingen praktisk betydning 
+* denne feilen vises bare i konsollet til `Run` og har ingen praktisk betydning
+
+###### Lagre feature/program som er kjørt
+Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes opp på ny...
+* Velg `Save '<program/feature>' Configuration` fra `Run`-drop down menyen...

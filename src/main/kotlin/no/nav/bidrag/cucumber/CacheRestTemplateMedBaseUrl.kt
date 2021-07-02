@@ -13,7 +13,7 @@ import java.net.URI
 import java.security.cert.X509Certificate
 
 internal object CacheRestTemplateMedBaseUrl {
-    private val INGRESS_FOR_APPLICATION: MutableMap<String, String> = HashMap()
+    internal val INGRESS_FOR_APPLICATION: MutableMap<String, String> = HashMap()
     private val LOGGER = LoggerFactory.getLogger(CacheRestTemplateMedBaseUrl::class.java)
     private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
 
