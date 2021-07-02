@@ -1,5 +1,5 @@
 # bidrag-cucumber-cloud
-Nais jobb som kjører integrasjonstester for nais mikrotjenester i bidrag som ligger i dev-gcp
+Nais jobb som kjører integrasjonstester for nais applikasjoner som er tilgjengelig via naisdevice og som bruker Azure Ad
 
 ## workflow
 [![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
@@ -66,7 +66,7 @@ Et scenario for en nais applikasjon er implementert på følgende måte:
 System.property | Beskrivelse | Kommentar
 ---|---|---
 `INGRESSES_FOR_TAGS` | kommaseparert liste over ingress og nais-applikasjon som testes | nais-applikasjon blir også tolket som cucumber tag
-- | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon | er argument til `BidragCucumberCloud.main(...)` 
+| - | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon | er argument til `BidragCucumberCloud.main(...)` 
 
 Miljøvariabler | Beskrivelse | Kommentar
 ---|---|---
@@ -79,18 +79,19 @@ Miljøvariabler | Beskrivelse | Kommentar
 
 #### Testbruker
 
-Alle applikasjoner på gcp er i utgangspunktet sikret med Azure Ad. Et lag i denne sikkerhetet er kommunikasjon mellom applikasjoner. Derfor kan det
-også være aktuelt å bruke en testbruker som simulerer en saksbehandler hos NAV. Dette er en såkalt Z-bruker og det må sørges for at den har et gyldig
-passord og at "two factor authentication" er slått av for brukeren.
+Applikasjoner som er sikret med Azure Ad. Et lag i denne sikkerhetet er kommunikasjon mellom applikasjoner. Derfor kan det også være aktuelt å bruke en
+testbruker som simulerer en saksbehandler hos NAV. Dette er en såkalt Z-bruker og det må sørges for at den har et gyldig passord og at "two factor
+authentication" er slått av for brukeren.
 
 #### Kjøring lokalt
 
 Tester i `bidrag-cucumber-cloud` er tilgjengelig fra et "naisdevice", men kjøring lokalt vil kun være en "sanity-check" for å sjekke at cucumber er
-koblet opp riktig og at kjøring kan gjøres uten tekniske feil. Dette grunnet "zero trust" regimet som nais-applikasjonene kjører under. En applikasjon
-som kjører uten sikkerhet kan testes lokalt.
+koblet opp riktig og at kjøring kan gjøres uten tekniske feil. Dette grunnet "zero trust" regimet som nais-applikasjonene på Azure AD kjører under. En
+applikasjon som kjører uten sikkerhet kan testes lokalt.
 
 Er det satt på sikkerhet, så kan ikke nais-applikasjonen testes fullt ut fra lokal kjøring. For å unngå at sjekker feiler når man kjører lokalt, så
-må miljøvariabelen `SANITY_CHECK=true` settes. Den vil bare logge resultatet fra en kjøring til konsoll og ikke gjøre den aktuelle sjekken.
+må miljøvariabelen `SANITY_CHECK=true` settes. Da vil bare resultatene fra operasjoner som krever sikkerhet logges til konsoll i stedet for å den
+aktuelle sjekken.
 
 ##### Kjøring med maven
 
@@ -110,12 +111,13 @@ BidragCucumberCloud er en java-applikasjon som kjøres fra docker. Dette kan ogs
 * Bygg
   * kopier din `~/.m2/settings.xml` til roten av dette prosjektet.
   * kjør kommandoen `docker build -t bidrag-cucumber-cloud .`
-  * kjør kommandoen `docker run -t bidrag-cucumber-cloud`
+  * kjør kommandoen `docker run -t -e SANITY_CHECK=true -e INGRESSES_FOR_TAGS=<ingress@app,...> bidrag-cucumber-cloud`
 * Last ned
   * gå til https://github.com/navikt/bidrag-cucumber-cloud/packages
   * trykk på `bidrag-cucumber-cloud` og kopier `Pull image from the command line`: `docker pull
     docker.pkg.github.com/navikt/bidrag-cucumber-cloud/bidrag-cucumber-cloud:(github.sha)`
-  * kjør kommandoen `docker run -t docker.pkg.github.com/navikt/bidrag-cucumber-cloud/bidrag-cucumber-cloud:(github.sha) .`
+  * kjør kommandoen `docker run -t -e SANITY_CHECK=true -e INGRESSES_FOR_TAGS=<ingress@app,...>
+    docker.pkg.github.com/navikt/bidrag-cucumber-cloud/bidrag-cucumber-cloud:(github.sha) .`
 
 ##### Kjøring med IntelliJ
 
