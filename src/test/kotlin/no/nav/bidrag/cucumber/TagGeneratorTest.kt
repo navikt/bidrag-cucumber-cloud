@@ -35,7 +35,7 @@ internal class TagGeneratorTest {
     @Test
     @Suppress("NonAsciiCharacters")
     fun `skal hente ut taggene som skal kjøres fra argumentet`() {
-        val tagGenerator = TagGenerator(arrayOf("ingress@app.x,ingress@app.y"))
-        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app.x and not @ignore) or (@app.y and not @ignore)")
+        val tagGenerator = TagGenerator(arrayOf("ingress@app.y,ingress@app.z"))
+        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app.y and not @ignore) or (@app.z and not @ignore)")
     }
 }

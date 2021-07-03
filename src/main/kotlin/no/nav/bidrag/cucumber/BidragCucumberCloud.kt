@@ -16,6 +16,7 @@ object BidragCucumberCloud {
     internal const val TEST_USER = "TEST_USER"
     internal const val SANITY_CHECK = "SANITY_CHECK"
 
+    internal val ABSOLUTE_CLOUD_PATH = FilePath("cloud-features.path").findFolderPath()
     private val LOGGER = LoggerFactory.getLogger(BidragCucumberCloud::class.java)
     private var scenario: Scenario? = null
     private lateinit var correlationIdForScenario: String
