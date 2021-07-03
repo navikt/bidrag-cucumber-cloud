@@ -49,13 +49,17 @@ object BidragCucumberCloud {
     }
 
     private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
-        if (scenario != null) {
-            val title = logLevel.produceMessageTitle(messageTitle)
-            scenario!!.log("$title<p>\n$message\n</p>")
-        } else if (logLevel == LogLevel.INFO) {
-            LOGGER.info("Outside scenario: $message")
-        } else {
-            LOGGER.error("Outside scenario: $message")
+        when {
+            scenario != null -> {
+                val title = logLevel.produceMessageTitle(messageTitle)
+                scenario!!.log("$title<p>\n$message\n</p>")
+            }
+            logLevel == LogLevel.INFO -> {
+                LOGGER.info("Outside scenario: $message")
+            }
+            else -> {
+                LOGGER.error("Outside scenario: $message")
+            }
         }
     }
 

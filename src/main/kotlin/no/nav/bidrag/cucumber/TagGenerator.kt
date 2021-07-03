@@ -7,7 +7,7 @@ class TagGenerator(ingressesForTags: Array<String>) {
         private val LOGGER = LoggerFactory.getLogger(TagGenerator::class.java)
     }
 
-    val ingressesForTags: String = ingressesForTags.joinToString(separator = ",")
+    internal val ingressesForTags = ingressesForTags.joinToString(separator = ",")
 
     init {
         if (ingressesForTags.isEmpty()) {
@@ -19,7 +19,9 @@ class TagGenerator(ingressesForTags: Array<String>) {
 
     fun hentUtTags(): String {
         val tagstring = ingressesForTags.split(',')
-            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " and not @ignore) or (") { it.substring(it.indexOf('@')) }
+            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " and not @ignore) or (") {
+                it.substring(it.indexOf('@'))
+            }
 
         LOGGER.info("Created '$tagstring' from '$ingressesForTags'")
 

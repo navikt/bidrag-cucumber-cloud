@@ -5,7 +5,7 @@ import java.io.File
 
 data class FilePath(val fileName: String) {
     companion object {
-        val LOGGER = LoggerFactory.getLogger(FilePath::class.java)
+        private val LOGGER = LoggerFactory.getLogger(FilePath::class.java)
     }
 
     internal fun findFile() = File(".")
@@ -15,7 +15,7 @@ data class FilePath(val fileName: String) {
         .find { isFileName(it) } ?: throw IllegalStateException("Cannot find $fileName located in ${File(".").absolutePath}")
 
     private fun isFileName(file: File): Boolean {
-        LOGGER.info("is $fileName?. $file")
+        LOGGER.info("is $fileName?: $file")
 
         return fileName == file.name
     }
