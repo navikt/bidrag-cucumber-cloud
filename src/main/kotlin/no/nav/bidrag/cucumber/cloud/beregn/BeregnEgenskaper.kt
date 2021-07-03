@@ -2,22 +2,21 @@ package no.nav.bidrag.cucumber.cloud.beregn
 
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
+import no.nav.bidrag.cucumber.BidragCucumberCloud.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.BidragScenario
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 import java.io.File
 
-private const val BEREGN_RESOURCES = "src/test/resources/no/nav/bidrag/cucumber/cloud/beregn"
-private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
-
 class BeregnEgenskaper : No {
     companion object {
-        private val PROJECT_PATH = File("").absolutePath
+        private val BEREGN_RESOURCES = "$ABSOLUTE_CLOUD_PATH/beregn"
+        private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
     }
 
     init {
         Når("jeg bruker endpoint {string} med json fra {string}") { endpoint: String, jsonFilePath: String ->
-            LOGGER.info("Leser $PROJECT_PATH/$BEREGN_RESOURCES/$jsonFilePath")
+            LOGGER.info("Leser $BEREGN_RESOURCES/$jsonFilePath")
             val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
             val json = jsonFile.readText(Charsets.UTF_8)
 
