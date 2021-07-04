@@ -15,6 +15,7 @@
     <bidrag-commons.version>0.5.7</bidrag-commons.version>
     <cucumber.version>6.10.4</cucumber.version>
     <json-path.version>2.6.0</json-path.version>
+    <mockito-kotlin.version>3.2.0</mockito-kotlin.version>
     <spring-boot.version>2.5.2</spring-boot.version>
     <snakeyaml.version>1.29</snakeyaml.version>
 
@@ -149,6 +150,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito.kotlin</groupId>
+      <artifactId>mockito-kotlin</artifactId>
+      <version>${mockito-kotlin.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
