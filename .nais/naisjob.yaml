@@ -19,13 +19,8 @@ spec:
     - name: TEST_AUTH
       value: "${{ test-auth }}"
   image: {{ image }}
-  template:
-    spec:
-      containers:
-        - name: {{ name }}
-          image: {{ image }}
-          command:
-            - "docker"
-            - "run"
-            - "-t"
-            - "{{ image }}"
+  command:
+    - "docker"        # THIS
+    - "run"           # AIN'T
+    - "-t"            # GONNA
+    - "{{ image }}"   # WORK!
