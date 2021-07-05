@@ -48,10 +48,16 @@ internal object CacheRestTemplateMedBaseUrl {
         val httpHeaderRestTemplate = HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-        if (Environment.isTestUserPresent()) {
+        if (Environment.isNotSanityCheck() && Environment.isTestUserPresent()) {
             httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureBearerToken() }
         } else {
-            LOGGER.info("No user to provide security for when accessing $applicationName")
+            val message = if (Environment.isSanityCheck) {
+                "No security provided when running sanity check on $applicationName"
+            } else {
+                "No user to provide security for when accessing $applicationName"
+            }
+
+            LOGGER.info(message)
         }
 
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
