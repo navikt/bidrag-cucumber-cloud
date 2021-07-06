@@ -10,7 +10,7 @@ internal class RestTjenesteTest {
 
     @BeforeEach
     fun `fjern eventuell gammel cache av ingresser`() {
-        CacheRestTemplateMedBaseUrl.INGRESS_FOR_APPLICATION.clear()
+        CacheRestTemplateMedBaseUrl.clearIngressCache()
     }
 
     @Test

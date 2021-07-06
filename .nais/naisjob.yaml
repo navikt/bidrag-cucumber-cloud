@@ -13,14 +13,9 @@ spec:
     - name: INGRESSES_FOR_TAGS
       value: {{ ingresses-for-tags }}
     - name: SANITY_CHECK
-      value: "false"
+      value: "true" # sanity check until satisfactory settings of TEST_USER and TEST_AUTH
     - name: TEST_USER
       value: {{ test-user }}
     - name: TEST_AUTH
       value: "${{ test-auth }}"
   image: {{ image }}
-  command:
-    - "docker"        # THIS
-    - "run"           # AIN'T
-    - "-t"            # GONNA
-    - "{{ image }}"   # WORK!
