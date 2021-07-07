@@ -13,9 +13,7 @@ spec:
     - name: INGRESSES_FOR_TAGS
       value: {{ ingresses-for-tags }}
     - name: SANITY_CHECK
-      value: "true" # sanity check until satisfactory settings of TEST_USER and TEST_AUTH
-    - name: TEST_USER
-      value: {{ test-user }}
-    - name: TEST_AUTH
-      value: "${{ test-auth }}"
+      value: "true"
+  envFrom:
+    - secret: test-credentials-z992903
   image: {{ image }}
