@@ -1,4 +1,4 @@
 name: bidrag-cucumber-cloud-multiple-feature
 ingresses-for-tags:
-  - https://bidrag-sak-feature.dev.intern.nav.no@bidrag-sak
+  - https://bidrag-sak-feature.dev.intern.nav.no@bidrag-sak,
   - https://bidrag-beregn-barnebidrag-rest-feature.dev.adeo.no@bidrag-beregn-barnebidrag-rest
