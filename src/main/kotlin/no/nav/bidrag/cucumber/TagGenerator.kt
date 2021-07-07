@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 
 class TagGenerator(ingressesForTags: Array<String>) {
     companion object {
+        const val NOT_IGNORED = "not @ignored"
         private val LOGGER = LoggerFactory.getLogger(TagGenerator::class.java)
     }
 
@@ -19,7 +20,7 @@ class TagGenerator(ingressesForTags: Array<String>) {
 
     fun hentUtTags(): String {
         val tagstring = ingressesForTags.split(',')
-            .joinToString(prefix = "(", postfix = " and not @ignore)", separator = " and not @ignore) or (") {
+            .joinToString(prefix = "(", postfix = " and $NOT_IGNORED)", separator = " and $NOT_IGNORED) or (") {
                 it.substring(it.indexOf('@'))
             }
 

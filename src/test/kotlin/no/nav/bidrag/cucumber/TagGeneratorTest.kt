@@ -22,20 +22,20 @@ internal class TagGeneratorTest {
     @Suppress("NonAsciiCharacters")
     fun `skal hente ut tag som skal kjøres fra argument`() {
         val tagGenerator = TagGenerator(arrayOf("ingress@app"))
-        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app and not @ignore)")
+        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app and not @ignored)")
     }
 
     @Test
     @Suppress("NonAsciiCharacters")
     fun `skal hente ut taggene som skal kjøres fra argumentene`() {
         val tagGenerator = TagGenerator(arrayOf("ingress@app.x", "ingress@app.y"))
-        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app.x and not @ignore) or (@app.y and not @ignore)")
+        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app.x and not @ignored) or (@app.y and not @ignored)")
     }
 
     @Test
     @Suppress("NonAsciiCharacters")
     fun `skal hente ut taggene som skal kjøres fra argumentet`() {
         val tagGenerator = TagGenerator(arrayOf("ingress@app.y,ingress@app.z"))
-        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app.y and not @ignore) or (@app.z and not @ignore)")
+        assertThat(tagGenerator.hentUtTags()).isEqualTo("(@app.y and not @ignored) or (@app.z and not @ignored)")
     }
 }
