@@ -1,5 +1,5 @@
 # bidrag-cucumber-cloud
-Nais jobb som kjører integrasjonstester for nais applikasjoner som er tilgjengelig via naisdevice og som bruker Azure Ad
+Nais jobb for applikasjoner som bruker Azure Ad og har ingress med tilgang via naisdevice
 
 ## workflow
 [![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
@@ -109,7 +109,7 @@ Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil k
 
 BidragCucumberCloud er en java-applikasjon som kjøres fra docker. Dette kan også kjøres lokalt. Bygg eller last ned siste docker image:
 * Bygg
-  * kopier din `~/.m2/settings.xml` til roten av dette prosjektet.
+  * Bygg koden med maven (`mvn clean install`)
   * kjør kommandoen `docker build -t bidrag-cucumber-cloud .`
   * kjør kommandoen `docker run -t -e SANITY_CHECK=true -e INGRESSES_FOR_TAGS=<ingress@app,...> bidrag-cucumber-cloud`
 * Last ned

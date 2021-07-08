@@ -5,8 +5,7 @@ on:
       - '**'
 
 env:
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/bidrag-cucumber-cloud:${{ github.sha }}
-  TEST-AUTH: ${{ secrets.TEST_AUTH }}
+  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
 
 jobs:
   build:
@@ -44,17 +43,14 @@ jobs:
         if: env.NOT_FOUND == 'true'
       - run: mvn install -B -e
         if: env.NOT_FOUND == 'true'
-      - name: copy settings for maven
-        if: env.NOT_FOUND == 'true'
-        run: cp $HOME/.m2/settings.xml .
       - name: Build and publish Docker image
         if: env.NOT_FOUND == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          docker build --tag ${IMAGE} .
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-          docker push ${IMAGE}
+          docker image build --tag ${IMAGE} .
+          echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
+          docker image push ${IMAGE}
 
   deploy-single:
     runs-on: ubuntu-latest

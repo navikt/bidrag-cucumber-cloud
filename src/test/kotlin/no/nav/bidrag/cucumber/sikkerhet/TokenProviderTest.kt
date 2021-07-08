@@ -15,7 +15,8 @@ import org.springframework.http.ResponseEntity
 
 internal class TokenProviderTest {
     @Test
-    fun `skal hente Azure token`() {
+    @Suppress("NonAsciiCharacters")
+     fun `gitt at kjøremiljøet har miljøvariabler for azure, skal man hente Azure token`() {
         System.setProperty(AZURE_APP_CLIENT_ID, "xyz")
         System.setProperty(AZURE_APP_CLIENT_SECRET, "hemmelig")
         System.setProperty(TEST_AUTH, "hysj")
