@@ -97,10 +97,10 @@ aktuelle sjekken.
 
 Den simpleste formen er å bruke maven
 ```
-mvn exec:java                                                   \
-    -DSANITY_CHECK=true                                         \
-    -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud \
-    -Dexec.args=<ingress@tag1,ingress@tag2> 
+mvn exec:java                                        \
+    -DSANITY_CHECK=true                              \
+    -DINGRESSES_FOR_TAGS=<ingress@tag1,ingress@tag2> \
+    -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
 **NB!**
 Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil kjøre en fullskala test av applikasjon uten sikkerhet.
