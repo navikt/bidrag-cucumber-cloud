@@ -44,9 +44,6 @@ jobs:
         if: env.NOT_FOUND == 'true'
       - run: mvn install -B -e
         if: env.NOT_FOUND == 'true'
-      - name: copy settings for maven
-        if: env.NOT_FOUND == 'true'
-        run: cp $HOME/.m2/settings.xml .
       - name: Build and publish Docker image
         if: env.NOT_FOUND == 'true'
         env:

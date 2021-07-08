@@ -95,12 +95,12 @@ object BidragCucumberCloud {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val tagGenerator = TagGenerator(args)
+        val tagGenerator = TagGenerator(Environment.ingressesForTags)
         val tags = tagGenerator.hentUtTags()
         System.setProperty(INGRESSES_FOR_TAGS, tagGenerator.ingressesForTags)
 
         val result = Main.run(
-            "src/test/resources/no/nav/bidrag/cucumber/cloud", "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
+            ABSOLUTE_CLOUD_PATH, "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
         )
 
         if (result != 0.toByte()) {
