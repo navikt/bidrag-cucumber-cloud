@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.sak
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.BidragScenario
+import no.nav.bidrag.cucumber.BidragCucumberData
 
 class SakEgenskaper : No {
 
@@ -13,7 +13,7 @@ class SakEgenskaper : No {
         }
 
         Når("jeg henter denne saken") {
-            BidragScenario.restTjeneste.exchangeGet("sak/$saksnummer")
+            BidragCucumberData.restTjeneste.exchangeGet("sak/$saksnummer")
         }
     }
 }

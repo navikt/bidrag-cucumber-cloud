@@ -207,7 +207,6 @@
         <executions>
           <execution>
             <id>remove-old-artifacts</id>
-            <phase>package</phase>
             <goals>
               <goal>remove-project-artifact</goal>
             </goals>

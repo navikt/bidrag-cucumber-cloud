@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber
 
 /**
- * Instanser som er gyldige i et scenario og er felles for flere cucumber steg/egenskaper
+ * Data som er gyldige i en cucumber-kjøring og som er felles for flere cucumber steg/egenskaper
  */
-internal object BidragScenario {
-    internal lateinit var restTjeneste: RestTjeneste
+internal object BidragCucumberData {
+    lateinit var restTjeneste: RestTjeneste
 }

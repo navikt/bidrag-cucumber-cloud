@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.BidragScenario
+import no.nav.bidrag.cucumber.BidragCucumberData
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.RestTjeneste
 import org.assertj.core.api.Assertions.assertThat
@@ -24,37 +24,37 @@ class FellesEgenskaper : No {
     }
 
     init {
-        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> BidragScenario.restTjeneste = RestTjeneste(naisApplikasjon) }
+        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> BidragCucumberData.restTjeneste = RestTjeneste(naisApplikasjon) }
 
         Så("skal http status være {int}") { enHttpStatus: Int ->
             sanityCheck(
                 Assertion(
-                    "HttpStatus for ${BidragScenario.restTjeneste.hentEndpointUrl()}",
-                    BidragScenario.restTjeneste.hentHttpStatus(),
+                    "HttpStatus for ${BidragCucumberData.restTjeneste.hentEndpointUrl()}",
+                    BidragCucumberData.restTjeneste.hentHttpStatus(),
                     HttpStatus.valueOf(enHttpStatus)
                 )
             )
         }
 
         Og("responsen skal inneholde {string} = {string}") { key: String, value: String ->
-            val responseObject = BidragScenario.restTjeneste.hentResponseSomMap()
+            val responseObject = BidragCucumberData.restTjeneste.hentResponseSomMap()
             val verdiFraResponse = responseObject[key]?.toString()
 
             assertThat(verdiFraResponse).`as`("json response").isEqualTo(value)
         }
 
         Når("det gjøres et kall til {string}") { endpointUrl: String ->
-            BidragScenario.restTjeneste.exchangeGet(endpointUrl)
+            BidragCucumberData.restTjeneste.exchangeGet(endpointUrl)
         }
 
         Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
-            assertThat(BidragScenario.restTjeneste.hentHttpStatus())
-                .`as`("HttpStatus for " + BidragScenario.restTjeneste.hentEndpointUrl())
+            assertThat(BidragCucumberData.restTjeneste.hentHttpStatus())
+                .`as`("HttpStatus for " + BidragCucumberData.restTjeneste.hentEndpointUrl())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
         }
 
         Når("det mangler sikkerhetstoken i HttpRequest") {
-            BidragScenario.restTjeneste.removeHeaderGenerator(HttpHeaders.AUTHORIZATION)
+            BidragCucumberData.restTjeneste.removeHeaderGenerator(HttpHeaders.AUTHORIZATION)
         }
     }
 }

@@ -28,7 +28,7 @@ class TokenProvider(private val provider: Provider) {
         map.add("grant_type", "password")
         map.add("scope", "openid ${Environment.clientId}/.default")
         map.add("username", Environment.tenantUsername)
-        map.add("password", Environment.userTestAuth)
+        map.add("password", Environment.testUserAuth)
 
         LOGGER.info("> url    : $azureAdUrl")
         LOGGER.info("> headers: $httpHeaders")
@@ -37,7 +37,7 @@ class TokenProvider(private val provider: Provider) {
         val request = HttpEntity(map, httpHeaders)
         val tokenJson = provider.postForEntity(azureAdUrl, request).body ?: throw IllegalStateException("Klarte ikke å hente token fra $azureAdUrl")
 
-        LOGGER.info("Fetched id token for ${Environment.userTest}")
+        LOGGER.info("Fetched id token for ${Environment.testUsername}")
 
         return tokenJson.token
     }

@@ -1,13 +1,16 @@
 package no.nav.bidrag.cucumber.controller
 
 import no.nav.bidrag.cucumber.CacheRestTemplateMedBaseUrl
+import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.INGRESSES_FOR_TAGS
 import no.nav.bidrag.cucumber.SANITY_CHECK
+import no.nav.bidrag.cucumber.TEST_USER
 import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -28,6 +31,7 @@ internal class CucumberControllerIntegrationTest {
     fun `fjern system props`() {
         System.clearProperty(INGRESSES_FOR_TAGS)
         System.clearProperty(SANITY_CHECK)
+        System.clearProperty(TEST_USER)
     }
 
     @BeforeEach
@@ -76,5 +80,32 @@ internal class CucumberControllerIntegrationTest {
         )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
+    }
+
+    @Test
+    fun `skal angi testbruker for testing`() {
+        assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                 |"testUsername":"z993902",
+                 |"sanityCheck":true
+                }
+                """.trimMargin().trim(), headers
+            ),
+            Void::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
+            { assertThat(Environment.testUsername).isEqualTo("z993902") },
+            { assertThat(Environment.testUsernameUppercase()).isEqualTo("Z993902") }
+        )
     }
 }
