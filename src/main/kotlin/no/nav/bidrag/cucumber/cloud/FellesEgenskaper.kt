@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.BidragCucumberData
+import no.nav.bidrag.cucumber.model.BidragCucumberData
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.RestTjeneste
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +14,7 @@ class FellesEgenskaper : No {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
 
-        fun sanityCheck(assertion: Assertion) {
+        fun assertOrSanityCheck(assertion: Assertion) {
             if (Environment.isSanityCheck) {
                 LOGGER.info("No assertion: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
             } else {
@@ -27,7 +27,7 @@ class FellesEgenskaper : No {
         Gitt("nais applikasjon {string}") { naisApplikasjon: String -> BidragCucumberData.restTjeneste = RestTjeneste(naisApplikasjon) }
 
         Så("skal http status være {int}") { enHttpStatus: Int ->
-            sanityCheck(
+            assertOrSanityCheck(
                 Assertion(
                     "HttpStatus for ${BidragCucumberData.restTjeneste.hentEndpointUrl()}",
                     BidragCucumberData.restTjeneste.hentHttpStatus(),

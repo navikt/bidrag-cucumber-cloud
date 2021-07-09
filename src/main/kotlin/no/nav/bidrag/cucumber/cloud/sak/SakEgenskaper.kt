@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.sak
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.BidragCucumberData
+import no.nav.bidrag.cucumber.model.BidragCucumberData
 
 class SakEgenskaper : No {
 
