@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.BidragCucumberCloud.INGRESSES_FOR_TAGS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

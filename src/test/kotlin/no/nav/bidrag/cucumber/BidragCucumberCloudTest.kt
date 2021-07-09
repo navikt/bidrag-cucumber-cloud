@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.BidragCucumberCloud.SANITY_CHECK
 import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled

@@ -1,5 +1,5 @@
 # bidrag-cucumber-cloud
-Nais jobb for applikasjoner som bruker Azure Ad og har ingress med tilgang via naisdevice
+Nais applikasjon som kjører integrasjonstester for applikasjoner som bruker Azure Ad og har ingress med tilgang via naisdevice
 
 ## workflow
 [![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
@@ -66,16 +66,17 @@ Et scenario for en nais applikasjon er implementert på følgende måte:
 System.property | Beskrivelse | Kommentar
 ---|---|---
 `INGRESSES_FOR_TAGS` | kommaseparert liste over ingress og nais-applikasjon som testes | nais-applikasjon blir også tolket som cucumber tag
-| - | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon | er argument til `BidragCucumberCloud.main(...)` 
+| - | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon | blir sendt i json til appens test-endpoint 
 
 Miljøvariabler | Beskrivelse | Kommentar
 ---|---|---
-`TEST_USER` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check (kjøring lokalt) |
-`TEST_AUTH` | Passord til testbruker | unødvendig for sanity check (kjøring lokalt) |
+`TEST_USER` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check (kjøring lokalt) samt kan sendes i json til test-endpoint
+`TEST_AUTH` | Passord til testbruker | unødvendig for sanity check (kjøring lokalt) samt kan sendes i json til test-endpoint
 
 #### Miljøvariabler for kjøring lokalt
 
 `SANITY_CHECK=true` - for tjenester som har implementert sikkerhet, så må denne settes slik at selve sjekken bare logges til konsoll og ikke feiler...
+Den kan også sendes med json til test-endpoint
 
 #### Testbruker
 

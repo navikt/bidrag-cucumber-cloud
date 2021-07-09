@@ -39,7 +39,7 @@ open class RestTjeneste(
 
         exchange(HttpEntity(null, header), endpointUrl, HttpMethod.GET)
 
-        BidragCucumberCloud.log(
+        ScenarioManager.log(
             if (responseEntity.body != null) "response with json and status ${responseEntity.statusCode}"
             else "no response body with status ${responseEntity.statusCode}"
         )
@@ -49,12 +49,12 @@ open class RestTjeneste(
 
     private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
         val headers = HttpHeaders()
-        headers.add(CorrelationId.CORRELATION_ID_HEADER, BidragCucumberCloud.getCorrelationIdForScenario())
+        headers.add(CorrelationId.CORRELATION_ID_HEADER, ScenarioManager.getCorrelationIdForScenario())
         headers.add(X_ENHET_HEADER, "4802")
 
-        BidragCucumberCloud.log(
-            BidragCucumberCloud.createCorrelationIdLinkTitle(),
-            BidragCucumberCloud.createQueryLinkForCorrelationId()
+        ScenarioManager.log(
+            ScenarioManager.createCorrelationIdLinkTitle(),
+            ScenarioManager.createQueryLinkForCorrelationId()
         )
 
         return headers
@@ -82,10 +82,10 @@ open class RestTjeneste(
 
     private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
         try {
-            BidragCucumberCloud.log("$httpMethod: $debugFullUrl")
+            ScenarioManager.log("$httpMethod: $debugFullUrl")
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
         } catch (e: HttpStatusCodeException) {
-            BidragCucumberCloud.errorLog("$httpMethod FEILET: $debugFullUrl: $e")
+            ScenarioManager.errorLog("$httpMethod FEILET: $debugFullUrl: $e")
             responseEntity = ResponseEntity.status(e.statusCode).body<Any>("${e.javaClass.simpleName}: ${e.message}") as ResponseEntity<String?>
 
             if (Environment.isNotSanityCheck()) {

@@ -1,9 +1,9 @@
 package no.nav.bidrag.cucumber.sikkerhet
 
-import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_CLIENT_ID
-import no.nav.bidrag.cucumber.BidragCucumberCloud.AZURE_APP_CLIENT_SECRET
-import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_AUTH
-import no.nav.bidrag.cucumber.BidragCucumberCloud.TEST_USER
+import no.nav.bidrag.cucumber.AZURE_APP_CLIENT_ID
+import no.nav.bidrag.cucumber.AZURE_APP_CLIENT_SECRET
+import no.nav.bidrag.cucumber.TEST_AUTH
+import no.nav.bidrag.cucumber.TEST_USER
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.mock
