@@ -1,5 +1,7 @@
 package no.nav.bidrag.cucumber
 
+import no.nav.bidrag.cucumber.model.FilePath
+
 // constants for input via System.getProperty(...)/System.getenv(...)
 internal const val AZURE_APP_CLIENT_ID = "AZURE_APP_CLIENT_ID"
 internal const val AZURE_APP_CLIENT_SECRET = "AZURE_APP_CLIENT_SECRET"

@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber
 
+import no.nav.bidrag.cucumber.model.FilePath
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll

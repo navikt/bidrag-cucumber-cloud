@@ -1,8 +1,8 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
 import org.slf4j.LoggerFactory
 
-class TagGenerator(internal val ingressesForTags: String) {
+data class TagGenerator(internal val ingressesForTags: String) {
     companion object {
         const val NOT_IGNORED = "not @ignored"
         private val LOGGER = LoggerFactory.getLogger(TagGenerator::class.java)

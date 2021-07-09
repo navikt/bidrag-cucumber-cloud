@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber
 
+import no.nav.bidrag.cucumber.model.TagGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.Test

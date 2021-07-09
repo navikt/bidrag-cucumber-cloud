@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
 import org.slf4j.LoggerFactory
 import java.io.File
