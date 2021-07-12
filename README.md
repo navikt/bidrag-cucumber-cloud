@@ -4,7 +4,7 @@ Nais applikasjon som kjører integrasjonstester for applikasjoner som bruker Azu
 
 ## workflow
 
-[![build and run naisjob](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-run.yaml)
+[![build and deploy](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-deploy.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/build-and-deploy.yaml)
 [![test build on pull request](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/pr.yaml/badge.svg)](https://github.com/navikt/bidrag-cucumber-cloud/actions/workflows/pr.yaml)
 
 ## beskrivelse

@@ -1,0 +1,38 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  labels:
+    team: bidrag
+  name: {{ name }}
+  namespace: bidrag
+spec:
+  azure:
+    application:
+      enabled: true
+  envFrom:
+    - secret: test-auth-z992903
+  image: {{ image }}
+  liveness:
+    path: /bidrag-cucumber-cloud/actuator/health
+    initialDelay: 35
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /bidrag-cucumber-cloud/actuator/health
+    initialDelay: 30
+    timeout: 1
+  prometheus:
+    enabled: true
+    path: /bidrag-cucumber-cloud/actuator/prometheus
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  ingresses:
+  {{#each ingresses as |url|}}
+    - {{url}}
+  {{/each}}

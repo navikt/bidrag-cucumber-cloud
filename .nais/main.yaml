@@ -1,0 +1,4 @@
+name: bidrag-cucumber-cloud
+ingresses:
+  - https://bidrag-cucumber-cloud/dev.intern.nav.no
+outbound-bidrag-sak: bidrag-sak
