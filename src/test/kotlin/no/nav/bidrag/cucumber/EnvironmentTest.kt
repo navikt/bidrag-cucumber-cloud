@@ -1,6 +1,6 @@
 package no.nav.bidrag.cucumber
 
-import org.assertj.core.api.Assertions.assertThatIllegalStateException
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -19,8 +19,8 @@ internal class EnvironmentTest {
 
     @Test
     fun `skal hente passord basert på testUsername`() {
+        System.setProperty("TEST_AUTH_JACTOR-RISES", "007")
         System.setProperty(TEST_USER, "jactor-rises")
-        assertThatIllegalStateException().isThrownBy { Environment.testUserAuth }
-            .withMessageContaining(TEST_USER_JACTOR_RISES)
+        assertThat(Environment.testUserAuth).isEqualTo("007")
     }
 }

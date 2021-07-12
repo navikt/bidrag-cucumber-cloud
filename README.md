@@ -78,10 +78,12 @@ testbruker angies.
 3. testbruker (for simulering av nav-ident, bruker med sikkerhet implementert i Azure)
 
 Hvis kjøring av denne applikasjonen gjøres lokalt (fra naisdevice) og mot en applikasjon som kjører under sikkerhet, så kan en fullstendig testkjøring
-ikke gjøres, da ``, `` og `` brukes for å lage sikkerhetstoken for testbruker. Det er derfor nødvendig med et ekstra parameter som
-forteller `bidrag-cucumber-cloud` at kjøringen er en "sanity check" for å teste at den tekniske implementasjonen til cucumber er ok.
+ikke gjøres uten at azure token blir send med når testen starter. Azure Ad brukes for å lage sikkerhetstoken for testbruker. Det er derfor nødvendig
+med et ekstra parameter som forteller `bidrag-cucumber-cloud` at testbruker har et manuelt generert sikkerhetstoken eller kjøringen er en "sanity
+check" for å teste at den tekniske implementasjonen til cucumber er ok.
 
-4. sanityCheck=true
+4. securityToken
+5. sanityCheck=true
 
 Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck og testUser er valgfri):
 
@@ -93,9 +95,20 @@ Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lok
     "<ingress>@app.c>"
   ],
   "testUser": "z123456",
-  "sanityCheck": true
+  "sanityCheck": true,
+  "securityToken": "<token for testbruker hentet manuelt>"
 }
 ```
+
+#### Azure Ad data for fullstendig kjøring
+
+Lokalt på et naisdevice, vil sanity check av en cucumber test være alt som er mulig hvis ikke et sikkerhetstoken blir manuelt generert og sendt med
+som input til testen. Følgende azure data blir brukt til å hente sikkerhetstoken for test bruker:
+
+* `AZURE_APP_CLIENT_ID`: miljøvariabel fra kjørende nais applikasjon med azure
+* `AZURE_APP_CLIENT_SECRET`: miljøvariabel fra kjørende nais applikasjon med azure
+* `AZURE_APP_TENANT_ID`: miljøvariabel fra kjørende nais applikasjon med azure
+* `AZURE_LOGIN_ENDPOINT`: login for testbruker sammen med azure verdier: https://login.microsoftonline.com
 
 ### Variabler for kjøring
 

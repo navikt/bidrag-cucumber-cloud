@@ -77,4 +77,26 @@ internal class CucumberControllerMockBeanTest {
 
         verify(testServiceMock).run(CucumberTests(sanityCheck = true))
     }
+
+    @Test
+    fun `skal sende med manuelt generert sikkerhetstoken`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                 |"securityToken":"xyz..."
+                }
+                """.trimMargin().trim(), headers
+            ),
+            Void::class.java
+        )
+
+        assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
+
+        verify(testServiceMock).run(CucumberTests(securityToken = "xyz..."))
+    }
 }

@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.model
 data class CucumberTests(
     var ingressesForTags: List<String> = emptyList(),
     var sanityCheck: Boolean = false,
+    var securityToken: String? = null,
     var testUsername: String? = null
 ) {
     fun getSanityCheck() = sanityCheck.toString()
