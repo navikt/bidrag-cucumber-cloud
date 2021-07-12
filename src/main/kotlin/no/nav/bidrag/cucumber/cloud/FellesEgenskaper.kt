@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
+import no.nav.bidrag.cucumber.model.Assertion
 import no.nav.bidrag.cucumber.model.BidragCucumberData
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.RestTjeneste

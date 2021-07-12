@@ -22,10 +22,9 @@ open class RestTjeneste(
     private lateinit var debugFullUrl: String
     private lateinit var responseEntity: ResponseEntity<String?>
 
-    constructor(naisApplication: String) : this(naisApplication, CacheRestTemplateMedBaseUrl.hentEllerKonfigurer(naisApplication))
+    constructor(naisApplication: String) : this(naisApplication, RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
     fun hentEndpointUrl() = debugFullUrl
-
     fun hentHttpHeaders(): HttpHeaders = responseEntity.headers
     fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
     fun hentResponse(): String? = responseEntity.body

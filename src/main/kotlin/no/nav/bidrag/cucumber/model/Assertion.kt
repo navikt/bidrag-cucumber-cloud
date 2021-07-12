@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber.cloud
+package no.nav.bidrag.cucumber.model
 
 import org.assertj.core.api.Assertions.assertThat
 

@@ -96,7 +96,7 @@ Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lok
   ],
   "testUser": "z123456",
   "sanityCheck": true,
-  "securityToken": "<token for testbruker hentet manuelt>"
+  "securityToken": "<token for testbruker>"
 }
 ```
 
@@ -108,23 +108,19 @@ som input til testen. Følgende azure data blir brukt til å hente sikkerhetstok
 * `AZURE_APP_CLIENT_ID`: miljøvariabel fra kjørende nais applikasjon med azure
 * `AZURE_APP_CLIENT_SECRET`: miljøvariabel fra kjørende nais applikasjon med azure
 * `AZURE_APP_TENANT_ID`: miljøvariabel fra kjørende nais applikasjon med azure
-* `AZURE_LOGIN_ENDPOINT`: login for testbruker sammen med azure verdier: https://login.microsoftonline.com
+* `AZURE_LOGIN_ENDPOINT`: login for testbruker sammen med azure verdier: https://login.microsoftonline.com/$AZURE_APP_TENANT_ID/oauth2/v2.0/token
 
 ### Variabler for kjøring
 
-System.property | Beskrivelse | Kommentar
+json | Beskrivelse | Kommentar
 ---|---|---
-`INGRESSES_FOR_TAGS` | kommaseparert liste over ingress og nais-applikasjon som testes | nais-applikasjon blir også tolket som cucumber tag
-| - | Eks: https://somewhere.com@nais-applikasjon,https://something.com@annen-nais-applikasjon | blir sendt i json til appens test-endpoint
-
-Miljøvariabler | Beskrivelse | Kommentar
----|---|---
-`TEST_USER` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check (kjøring lokalt). Denne kan sendes i json til test-endpoint
-`TEST_AUTH_<test bruker>` | Passord til testbruker | unødvendig for sanity check (kjøring lokalt). Denne må settes som miljøvariabel til kjørende app
+`ingressesForTags` | kommaseparert liste over ingress og nais-applikasjon som testes| Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b
+`testUser` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check, men må brukes med `securityToken` (hvis kjøring lokalt).
 
 #### Miljøvariabler for kjøring lokalt
 
-`SANITY_CHECK=true` - for tjenester som har implementert sikkerhet, så må denne settes slik at selve sjekken bare logges til konsoll og ikke feiler...
+`SECURITY_TOKEN` - manuelt generert sikkerhetstoken for testbruker, Den kan også sendes med json til test-endpoint når testing foregår via spring-boot
+`SANITY_CHECK=true` - for tjenester som har implementert sikkerhet, så kan denne settes slik at selve sjekken bare logges til konsoll og ikke feiler.
 Den kan også sendes med json til test-endpoint når testing foregår via spring-boot
 
 #### Testbruker
@@ -159,11 +155,18 @@ Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil k
 ###### Kjøring med maven og spring-boot
 
 * åpne terminal og kjør kommandoen `mvn spring-boot:run`
-* åpne ny terminal kjør kommandoen
+* for sanity check, åpne ny terminal kjør kommandoen
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
        --data '{"sanityCheck":true,"ingressesForTags":["<ingress.som.testes@tag>"]}' \
+       http://localhost:8080/bidrag-cucumber-cloud/run
+  ```
+* for fullstendig test, åpne ny terminal og kjør kommandoen
+  ```
+  curl -H "Content-Type: application/json" \
+       --request POST \
+       --data '{"testUsername":"<z123456>","ingressesForTags":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 
@@ -189,10 +192,17 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 ###### Kjør spring-boot i IntelliJ
 
 * start spring-boot applikasjonen med IntelliJ
-* åpne ny terminal kjør kommandoen
+* for sanity check: åpne ny terminal kjør kommandoen
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
        --data '{"sanityCheck":true,"ingressesForTags":["<ingress.som.testes@tag>"]}' \
+       http://localhost:8080/bidrag-cucumber-cloud/run
+  ```
+* for fullstendig test, åpne ny terminal og kjør kommandoen
+  ```
+  curl -H "Content-Type: application/json" \
+       --request POST \
+       --data '{"testUsername":"<z123456>","ingressesForTags":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
