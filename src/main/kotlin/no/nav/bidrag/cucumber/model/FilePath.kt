@@ -1,4 +1,4 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -10,8 +10,8 @@ data class FilePath(val fileName: String) {
 
     internal fun findFile() = File(".")
         .walkBottomUp()
-        .filter { it.name == fileName }
         .filterNot { it.absolutePath.contains("/target/") }
+        .filter { it.name.contains(".path") }
         .find { isFileName(it) } ?: throw IllegalStateException("Cannot find $fileName located in ${File(".").absolutePath}")
 
     private fun isFileName(file: File): Boolean {
