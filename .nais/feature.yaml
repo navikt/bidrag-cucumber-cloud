@@ -1,4 +1,6 @@
 name: bidrag-cucumber-cloud-feature
 ingresses:
   - https://bidrag-cucumber-cloud-feature/dev.intern.nav.no
-outbound-bidrag-sak: bidrag-sak-feature
+access:
+  outbound:
+    bidrag-sak: bidrag-sak-feature
