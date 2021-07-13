@@ -1,11 +1,15 @@
 package no.nav.bidrag.cucumber.controller
 
 import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.TestFailedException
 import no.nav.bidrag.cucumber.service.TestService
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -98,5 +102,45 @@ internal class CucumberControllerMockBeanTest {
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
         verify(testServiceMock).run(CucumberTests(securityToken = "xyz..."))
+    }
+
+    @Test
+    fun `skal ha HttpStatus 406 når testing med cucumber feiler`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        whenever(testServiceMock.run(CucumberTests())).thenThrow(TestFailedException("not ok"))
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run", HttpEntity("{}", headers), Void::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
+            {
+                val warning = testResponse.headers[HttpHeaders.WARNING]?.first() ?: fail("fant ingen feilmelding fra WARNING-header")
+                assertThat(warning).`as`("warning").isEqualTo("TestFailedException: not ok")
+            }
+        )
+    }
+
+    @Test
+    fun `skal ha HttpStatus 500 ved uventet exception`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        whenever(testServiceMock.run(CucumberTests())).thenThrow(IllegalStateException("something fishy happened"))
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run", HttpEntity("{}", headers), Void::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR) },
+            {
+                val warning = testResponse.headers[HttpHeaders.WARNING]?.first() ?: fail("fant ingen feilmelding fra WARNING-header")
+                assertThat(warning).`as`("warning").isEqualTo("IllegalStateException: something fishy happened")
+            }
+        )
     }
 }

@@ -146,14 +146,18 @@ Den simpleste formen er å bruke maven
 ```
 mvn exec:java                                        \
     -DSANITY_CHECK=true                              \
+    -DSANITY_CHECK=true                              \
+    -DTEST_USER="<azure bruker ala z123456>          \
+    -DSECURITY_TOKEN="<abc...xyz>                    \
     -DINGRESSES_FOR_TAGS=<ingress@tag1,ingress@tag2> \
     -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
 
 **NB**
 
-* Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil kjøre en fullskala test av applikasjon uten sikkerhet.
-* Med maven kan man ikke kjøre med testbruker og manuelt generert sikkerhetstoken (bare sanity check eller test av app uten sikkerhet).
+* Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil kjøre en fullskala test.
+* Når `-DSANITY_CHECK=true` vil det være unødvendig å bruke `-DTEST_USER` og `-DSECURITY_TOKEN`.
+* Når `-DSANITY_CHECK=false` (eller ikke er med) må man ha med `-DTEST_USER` og `-DSECURITY_TOKEN`.
 
 ###### Kjøring med maven og spring-boot
 
@@ -209,3 +213,13 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
        --data '{"testUsername":"<z123456>","ingressesForTags":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
+
+##### Kjøring med swagger
+
+###### lokalhost
+
+1. Start spring-boot applikasjon
+2. Gå til url: http://localhost:8080/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
+3. Ekspander endpoint `/run`
+4. Trykk på "Try it out"
+5. 

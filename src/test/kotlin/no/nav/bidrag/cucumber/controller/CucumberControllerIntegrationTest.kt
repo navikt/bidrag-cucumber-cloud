@@ -42,7 +42,7 @@ internal class CucumberControllerIntegrationTest {
             Void::class.java
         )
 
-        assertThat(testResponse.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+        assertThat(testResponse.statusCode).isEqualTo(HttpStatus.NOT_ACCEPTABLE)
     }
 
     @Test

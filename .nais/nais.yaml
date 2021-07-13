@@ -6,6 +6,10 @@ metadata:
   name: {{ name }}
   namespace: bidrag
 spec:
+  accessPolicy:
+    outbound:
+      rules:
+        - application: {{ access.outbound.bidrag-sak }}
   azure:
     application:
       enabled: true
@@ -34,5 +38,5 @@ spec:
       memory: 512Mi
   ingresses:
   {{#each ingresses as |url|}}
-    - {{url}}
+     - {{url}}
   {{/each}}
