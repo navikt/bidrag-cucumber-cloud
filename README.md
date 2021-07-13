@@ -146,7 +146,6 @@ Den simpleste formen er å bruke maven
 ```
 mvn exec:java                                        \
     -DSANITY_CHECK=true                              \
-    -DSANITY_CHECK=true                              \
     -DTEST_USER="<azure bruker ala z123456>          \
     -DSECURITY_TOKEN="<abc...xyz>                    \
     -DINGRESSES_FOR_TAGS=<ingress@tag1,ingress@tag2> \
