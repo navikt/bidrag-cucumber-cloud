@@ -9,9 +9,8 @@ Nais applikasjon som kjører integrasjonstester for applikasjoner som bruker Azu
 
 ## beskrivelse
 
-Funksjonelle tester av bidrag nais applikasjoner som er designet for å kunne kjøres på en laptop som har innstallert naisdevice. Dette vil først og
-fremst gjelde applikasjoner som er deployet i google-cloud. Når applikasjonen ikke er satt opp med sikkerhet, kan det også kjøres fullverdige tester
-så lenge dette gjøres via et naisdevice.
+Funksjonelle tester av bidrag nais applikasjoner som er designet for å kunne kjøres på en laptop som har innstallert naisdevice og vil gjelde
+applikasjoner med azure i google cloud såfremt on-prem
 
 ### Teknisk beskrivelse
 
@@ -221,4 +220,4 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 2. Gå til url: http://localhost:8080/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
 3. Ekspander endpoint `/run`
 4. Trykk på "Try it out"
-5. 
+5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
