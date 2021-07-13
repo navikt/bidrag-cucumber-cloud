@@ -120,6 +120,7 @@ json | Beskrivelse | Kommentar
 #### Miljøvariabler for kjøring lokalt
 
 `SECURITY_TOKEN` - manuelt generert sikkerhetstoken for testbruker, Den kan også sendes med json til test-endpoint når testing foregår via spring-boot
+
 `SANITY_CHECK=true` - for tjenester som har implementert sikkerhet, så kan denne settes slik at selve sjekken bare logges til konsoll og ikke feiler.
 Den kan også sendes med json til test-endpoint når testing foregår via spring-boot
 
@@ -149,8 +150,10 @@ mvn exec:java                                        \
     -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
 
-**NB!**
-Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil kjøre en fullskala test av applikasjon uten sikkerhet.
+**NB**
+
+* Fjern `-DSANITY_CHECK` (eller sett den til `-DSANITY_CHECH=false`) hvis du vil kjøre en fullskala test av applikasjon uten sikkerhet.
+* Med maven kan man ikke kjøre med testbruker og manuelt generert sikkerhetstoken (bare sanity check eller test av app uten sikkerhet).
 
 ###### Kjøring med maven og spring-boot
 
