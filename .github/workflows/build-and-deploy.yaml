@@ -56,13 +56,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy scheduled job to dev-gcp
     needs: build
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v2
         with:
           path: deploy
       - name: Deploy scheduled job to dev-gcp
-        if: github.ref == 'refs/heads/main'
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
