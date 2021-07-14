@@ -221,3 +221,7 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 3. Ekspander endpoint `/run`
 4. Trykk på "Try it out"
 5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
+6. Press `Exexute`
+
+**NB!**
+Testen kan feile selv om `sanityCheck=true`. Det betyr at ingressen har feil...
