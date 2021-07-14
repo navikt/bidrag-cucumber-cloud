@@ -17,7 +17,6 @@ import org.springframework.http.MediaType
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("CucumberController (integration test)")
-@Disabled("assumption not working?")
 internal class CucumberControllerIntegrationTest {
 
     @Autowired
