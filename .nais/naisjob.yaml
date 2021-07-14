@@ -13,4 +13,4 @@ spec:
     - "POST"
     - "http://127.0.0.1:4191/shutdown"
   image: {{ image }}
-  schedule: '30 3 0 0 0'
+  schedule: '30 3 * * *'
