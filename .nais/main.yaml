@@ -1,6 +1,5 @@
 name: bidrag-cucumber-cloud
 ingresses:
-  - https://bidrag-cucumber-cloud.dev.intern.nav.no
   - https://bidrag-cucumber-cloud.ekstern.dev.nav.no
 access:
   outbound:
