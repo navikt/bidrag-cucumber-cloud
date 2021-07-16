@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber.controller
 
+import no.nav.bidrag.cucumber.TestUtil
 import no.nav.bidrag.cucumber.model.CucumberTests
 import no.nav.bidrag.cucumber.model.TestFailedException
 import no.nav.bidrag.cucumber.service.TestService
@@ -140,6 +141,38 @@ internal class CucumberControllerMockBeanTest {
             {
                 val warning = testResponse.headers[HttpHeaders.WARNING]?.first() ?: fail("fant ingen feilmelding fra WARNING-header")
                 assertThat(warning).`as`("warning").isEqualTo("IllegalStateException: something fishy happened")
+            }
+        )
+    }
+
+    @Test
+    fun `skal angi testbruker for testing`() {
+        TestUtil.assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                 |"testUsername":"z993902",
+                 |"sanityCheck":true
+                }
+                """.trimMargin().trim(), headers
+            ),
+            Void::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
+            {
+                verify(testServiceMock).run(
+                    CucumberTests(
+                        sanityCheck = true, testUsername = "z993902", ingressesForTags = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
+                    )
+                )
             }
         )
     }

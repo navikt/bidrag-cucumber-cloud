@@ -65,31 +65,4 @@ internal class CucumberControllerIntegrationTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
     }
-
-    @Test
-    fun `skal angi testbruker for testing`() {
-        assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
-
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
-                {
-                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                 |"testUsername":"z993902",
-                 |"sanityCheck":true
-                }
-                """.trimMargin().trim(), headers
-            ),
-            Void::class.java
-        )
-
-        assertAll(
-            { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
-            { assertThat(Environment.testUsername).isEqualTo("z993902") },
-            { assertThat(Environment.testUsernameUppercase()).isEqualTo("Z993902") }
-        )
-    }
 }
