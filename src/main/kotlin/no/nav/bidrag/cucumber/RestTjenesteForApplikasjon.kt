@@ -1,12 +1,10 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
-import no.nav.bidrag.cucumber.model.IngressesAndTags
 import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.ssl.SSLContexts
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
@@ -14,17 +12,11 @@ import org.springframework.web.util.UriTemplateHandler
 import java.net.URI
 import java.security.cert.X509Certificate
 
-internal class RestTjenesteForApplikasjon(ingressesAndTags: IngressesAndTags) {
-    init {
-        internalIngressesAndTags = ingressesAndTags
-    }
+internal class RestTjenesteForApplikasjon() {
 
     companion object {
-        private var internalIngressesAndTags: IngressesAndTags? = null
         private val LOGGER = LoggerFactory.getLogger(RestTjenesteForApplikasjon::class.java)
         private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
-
-        private fun fetchCachedIngressesAndTags() = internalIngressesAndTags ?: IngressesAndTags(Environment.ingressesForTags)
 
         fun hentEllerKonfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
             return REST_TJENESTE_TIL_APPLIKASJON.computeIfAbsent(applicationName) { konfigurer(applicationName) }
@@ -32,7 +24,7 @@ internal class RestTjenesteForApplikasjon(ingressesAndTags: IngressesAndTags) {
 
         private fun konfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
-            val ingress = fetchCachedIngressesAndTags().fetchIngress(applicationName)
+            val ingress = Environment.fetchIngress(applicationName)
 
             val applicationUrl = if (!ingress.endsWith('/') && !applicationName.startsWith('/')) {
                 "$ingress/$applicationName/"
@@ -81,10 +73,6 @@ internal class RestTjenesteForApplikasjon(ingressesAndTags: IngressesAndTags) {
             requestFactory.httpClient = httpClient
 
             return requestFactory
-        }
-
-        fun clearIngressCache() {
-            fetchCachedIngressesAndTags().clearIngressCache()
         }
 
         private class BaseUrlTemplateHandler(val baseUrl: String) : UriTemplateHandler {
