@@ -1,9 +1,7 @@
 package no.nav.bidrag.cucumber.controller
 
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -64,5 +62,31 @@ internal class CucumberControllerIntegrationTest {
         )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
+    }
+
+    @Test
+    fun `skal hente ut cucumber tekst fra kjøring`() {
+        assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                 |"sanityCheck":true
+                }
+                """.trimMargin().trim(), headers
+            ),
+            String::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).`as`("status").isEqualTo(HttpStatus.OK) },
+            { assertThat(testResponse.body).`as`("body").contains("Scenarios").contains("Steps").contains("passed") }
+
+        )
     }
 }

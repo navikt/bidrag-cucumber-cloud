@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import no.nav.bidrag.cucumber.model.CucumberTests
 import no.nav.bidrag.cucumber.service.TestService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,7 +25,7 @@ class CucumberController(private val testService: TestService) {
             ApiResponse(responseCode = "500", description = "En uventet feil oppstod i bidrag-cucumber-cloud")
         ]
     )
-    fun run(@RequestBody cucumberTests: CucumberTests) {
-        testService.run(cucumberTests)
+    fun run(@RequestBody cucumberTests: CucumberTests): ResponseEntity<String> {
+        return ResponseEntity(testService.run(cucumberTests), HttpStatus.OK)
     }
 }

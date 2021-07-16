@@ -19,6 +19,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import java.io.ByteArrayOutputStream
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("CucumberController (mock bean test)")
@@ -110,7 +111,7 @@ internal class CucumberControllerMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        whenever(testServiceMock.run(CucumberTests())).thenThrow(TestFailedException("not ok"))
+        whenever(testServiceMock.run(CucumberTests())).thenThrow(TestFailedException("not ok", ByteArrayOutputStream()))
 
         val testResponse = testRestTemplate.postForEntity(
             "/run", HttpEntity("{}", headers), Void::class.java
