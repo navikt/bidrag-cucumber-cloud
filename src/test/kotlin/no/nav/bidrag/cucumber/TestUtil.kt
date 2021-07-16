@@ -18,7 +18,7 @@ object TestUtil {
 
         while (!future.isDone) {
             if (start.plusSeconds(1).isAfter(LocalDateTime.now())) {
-                Thread.yield()
+                Thread.sleep(400)
             } else {
                 assumeThat(HttpStatus.I_AM_A_TEAPOT).isEqualTo(HttpStatus.OK)
             }
