@@ -4,6 +4,7 @@ import io.cucumber.core.cli.Main
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -12,7 +13,7 @@ import java.io.PrintStream
 import java.nio.charset.Charset
 
 @Service
-class TestService {
+class TestService(private val suppressStackTraceText: SuppressStackTraceText) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(TestService::class.java)
     }
@@ -27,23 +28,22 @@ class TestService {
         val result = runCucumberTests(tags)
 
         Environment.resetTestEnvironment()
+        val suppressedStackText = suppressStackTraceText.suppress(sysOut.toString(Charset.defaultCharset()))
 
         if (result != 0.toByte()) {
             val message = "Kjøring av cucumber var mislykket (tags: $tags)!"
             LOGGER.error(message)
-            throw TestFailedException(message, sysOut)
+            throw TestFailedException(message, suppressedStackText)
         }
 
-        return sysOut.toString(Charset.defaultCharset())
+        return suppressedStackText
     }
 
     private fun runCucumberTests(tags: String): Byte {
         if (tags.isBlank()) throw IllegalStateException("Ingen tags som kan brukes")
 
-        val result = Main.run(
+        return Main.run(
             ABSOLUTE_CLOUD_PATH, "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
         )
-
-        return result
     }
 }

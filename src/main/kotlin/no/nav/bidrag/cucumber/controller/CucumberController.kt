@@ -20,9 +20,8 @@ class CucumberController(private val testService: TestService) {
     @Operation(summary = "Run cucumber tests determined by input")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Angitte tester utført uten feil"),
-            ApiResponse(responseCode = "406", description = "Testkjøring med cucumber feilet"),
-            ApiResponse(responseCode = "500", description = "En uventet feil oppstod i bidrag-cucumber-cloud")
+            ApiResponse(responseCode = "200", description = "Angitte tester kjørt uten feil"),
+            ApiResponse(responseCode = "406", description = "Testkjøring med cucumber feilet")
         ]
     )
     fun run(@RequestBody cucumberTests: CucumberTests): ResponseEntity<String> {

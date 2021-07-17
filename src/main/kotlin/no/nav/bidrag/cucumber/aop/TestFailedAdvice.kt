@@ -16,7 +16,7 @@ class TestFailedAdvice {
     fun handleTestFailedException(testFailedException: TestFailedException) = ResponseEntity
         .status(HttpStatus.NOT_ACCEPTABLE)
         .header(HttpHeaders.WARNING, warningFrom(testFailedException))
-        .body(testFailedException.hentSysOutTekst())
+        .body(testFailedException.sysOutText)
 
     @ResponseBody
     @ExceptionHandler
