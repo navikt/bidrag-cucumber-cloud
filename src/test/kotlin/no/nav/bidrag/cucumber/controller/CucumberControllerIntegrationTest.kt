@@ -86,7 +86,6 @@ internal class CucumberControllerIntegrationTest {
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status").isEqualTo(HttpStatus.OK) },
             { assertThat(testResponse.body).`as`("body").contains("Scenarios").contains("Steps").contains("passed") }
-
         )
     }
 }

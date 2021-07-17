@@ -71,7 +71,7 @@ jobs:
 
   deploy-nais-app:
     runs-on: ubuntu-latest
-    name: Deploy bidrag-cucumber-cloud testapplication to dev-gcp
+    name: Deploy bidrag-cucumber-cloud
     needs: build
 
     steps:
@@ -95,11 +95,29 @@ jobs:
           RESOURCE: deploy/.nais/nais.yaml
           VARS: deploy/.nais/feature.yaml
 
+  run-cucumber-tests:
+    runs-on: ubuntu-latest
+    name: Run cucumber tests
+    needs: deploy-nais-app
+
+    steps:
+      - run: echo "INGRESS=https://bidrag-cucumber-cloud.ekstern.dev.nav.no" >> $GITHUB_ENV
+        if: github.ref == 'refs/heads/main'
+      - run: echo "INGRESS=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+        if: github.ref != 'refs/heads/main'
+      - run: |
+          curl -H "Content-Type: application/json" \
+               --request POST \
+               --data '{"ingressesForTags":[
+                   "${{ env.INGRESS }}@bidrag-cucumber-cloud"
+                 ]}' \
+               ${{ env.INGRESS }}/bidrag-cucumber-cloud/run
+
   bump_dev_version:
     runs-on: ubuntu-latest
     name: Bump SNAPSHOT version
     if: github.ref == 'refs/heads/main'
-    needs: deploy-nais-app
+    needs: run-cucumber-tests
 
     steps:
       - uses: actions/checkout@v2
