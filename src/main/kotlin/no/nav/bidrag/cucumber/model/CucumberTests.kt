@@ -29,16 +29,16 @@ data class CucumberTests(
     }
 
     fun fetchTags(): String {
-        val value = fetchIngressesForTagsAsString()
+        val ingressesForTagsString = fetchIngressesForTagsAsString()
 
-        val tagstring = value.split(',')
+        val tags = ingressesForTagsString.split(',')
             .joinToString(prefix = "(", postfix = " and $NOT_IGNORED)", separator = " and $NOT_IGNORED) or (") {
                 it.substring(it.indexOf('@'))
             }
 
-        LOGGER.info("Created '$tagstring' from '$value'")
+        LOGGER.info("Created '$tags' from '$ingressesForTagsString'")
 
-        return tagstring
+        return tags
     }
 
     fun initTestEnvironment() {

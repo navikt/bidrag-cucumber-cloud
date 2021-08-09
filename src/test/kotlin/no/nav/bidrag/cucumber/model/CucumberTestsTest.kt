@@ -9,8 +9,7 @@ internal class CucumberTestsTest {
 
     @Test
     fun `skal ha verdien false som streng når sanityCheck er null`() {
-        val cucumberTests = CucumberTests()
-        cucumberTests.sanityCheck = null
+        val cucumberTests = CucumberTests(sanityCheck = null)
 
         assertThat(cucumberTests.getSanityCheck()).isEqualTo("false")
     }
