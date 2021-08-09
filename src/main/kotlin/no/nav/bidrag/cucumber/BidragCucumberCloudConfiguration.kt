@@ -6,6 +6,7 @@ import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.CorrelationIdFilter
 import no.nav.bidrag.cucumber.aop.ExceptionLoggerAspect
 import no.nav.bidrag.cucumber.aop.TestFailedAdvice
+import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.sikkerhet.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,6 +28,9 @@ class BidragCucumberCloudConfiguration {
     fun openAPI() = OpenAPI().info(
         Info().title("bidrag-cucumber-cloud").description("Funksjonelle tester for azure ad applikasjoner").version("v1")
     )
+
+    @Bean
+    fun suppressStackTraceText() = SuppressStackTraceText()
 
     @Bean
     fun correlationIdFilter() = CorrelationIdFilter()

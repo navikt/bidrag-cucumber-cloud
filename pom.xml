@@ -21,10 +21,10 @@
     <!-- dependency management -->
     <apache-httpcomponenents.version>4.5.13</apache-httpcomponenents.version>
     <bidrag-commons.version>0.5.8</bidrag-commons.version>
-    <cucumber.version>6.10.4</cucumber.version>
+    <cucumber.version>6.11.0</cucumber.version>
     <json-path.version>2.6.0</json-path.version>
     <mockito-kotlin.version>3.2.0</mockito-kotlin.version>
-    <springdoc-openapi-ui>1.5.9</springdoc-openapi-ui>
+    <springdoc-openapi-ui.version>1.5.10</springdoc-openapi-ui.version>
     <snakeyaml.version>1.29</snakeyaml.version>
 
     <!-- build -->
@@ -131,12 +131,12 @@
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
-      <version>${springdoc-openapi-ui}</version>
+      <version>${springdoc-openapi-ui.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-kotlin</artifactId>
-      <version>${springdoc-openapi-ui}</version>
+      <version>${springdoc-openapi-ui.version}</version>
     </dependency>
 
     <!-- junit & assertions-->

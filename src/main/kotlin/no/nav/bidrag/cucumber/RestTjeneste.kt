@@ -28,8 +28,10 @@ open class RestTjeneste(
     fun hentHttpHeaders(): HttpHeaders = responseEntity.headers
     fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
     fun hentResponse(): String? = responseEntity.body
-    fun hentResponseSomMap() =
-        if (responseEntity.body != null) ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any> else HashMap()
+    fun hentResponseSomMap() = if (responseEntity.statusCode == HttpStatus.OK && responseEntity.body != null)
+        ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any>
+    else
+        HashMap()
 
     fun exchangeGet(endpointUrl: String): ResponseEntity<String?> {
         debugFullUrl = rest.baseUrl + endpointUrl

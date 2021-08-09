@@ -12,4 +12,4 @@ Egenskap: bidrag-cucumber-cloud
     Når jeg kaller helsetjenesten
     Så skal http status være 200
     Og header 'content-type' skal være 'application/json'
-      Og responsen skal inneholde 'status' = 'UP'
+    Og responsen skal inneholde 'status' = 'UP'
