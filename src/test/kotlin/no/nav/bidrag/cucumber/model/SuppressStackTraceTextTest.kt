@@ -45,11 +45,11 @@ ${"\t"}at no.nav.bidrag.cucumber.cloud.FellesEgenskaper._init_(FellesEgenskaper.
 
     @Test
     fun `will not suppress stack trace line which of a nav class`() {
-        assertThat(suppressStackTraceText.doNotSuppress("\tat no.nav")).isTrue
+        assertThat(suppressStackTraceText.doNotSuppress("\tat no.nav.something")).isTrue
     }
 
     @Test
-    fun `will not suppress stack trace lines from feature files`() {
-        assertThat(suppressStackTraceText.doNotSuppress("\tat some file.feature:")).isTrue
+    fun `will not suppress stack trace lines with nav file path`() {
+        assertThat(suppressStackTraceText.doNotSuppress("\tat some file path /no/nav/some.feature")).isTrue
     }
 }

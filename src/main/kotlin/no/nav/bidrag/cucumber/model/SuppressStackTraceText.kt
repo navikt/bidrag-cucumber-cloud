@@ -11,11 +11,11 @@ class SuppressStackTraceText {
 
     internal fun doNotSuppress(line: String): Boolean {
         if (line.startsWith("\tat ")) {
-            if (line.contains("no.nav")) {
+            if (line.contains("no.nav.")) {
                 return true
             }
 
-            if (line.contains(".feature:")) {
+            if (line.contains("/no/nav/")) {
                 return true
             }
 
