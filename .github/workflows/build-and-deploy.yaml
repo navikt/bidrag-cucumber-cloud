@@ -52,24 +52,7 @@ jobs:
           echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
           docker image push ${IMAGE}
 
-  deploy-naisjob:
-    runs-on: ubuntu-latest
-    name: Deploy scheduled job to dev-gcp
-    needs: build
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          path: deploy
-      - name: Deploy scheduled job to dev-gcp
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: deploy/.nais/naisjob.yaml
-
-  deploy-nais-app:
+  deploy:
     runs-on: ubuntu-latest
     name: Deploy bidrag-cucumber-cloud
     needs: build
@@ -98,7 +81,7 @@ jobs:
   run-cucumber-tests:
     runs-on: ubuntu-latest
     name: Run cucumber tests
-    needs: deploy-nais-app
+    needs: deploy
 
     steps:
       - run: echo "INGRESS=https://bidrag-cucumber-cloud.ekstern.dev.nav.no" >> $GITHUB_ENV
