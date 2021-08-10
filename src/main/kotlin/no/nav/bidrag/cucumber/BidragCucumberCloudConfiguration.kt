@@ -24,8 +24,7 @@ class BidragCucumberCloudConfiguration {
     fun restTemplate() = RestTemplate()
 
     @Bean
-    @Suppress("HasPlatformType")
-    fun openAPI() = OpenAPI().info(
+    fun openAPI(): OpenAPI = OpenAPI().info(
         Info().title("bidrag-cucumber-cloud").description("Funksjonelle tester for azure ad applikasjoner").version("v1")
     )
 
