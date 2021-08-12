@@ -13,7 +13,5 @@ internal const val TEST_AUTH = "TEST_AUTH"
 internal const val TEST_USER = "TEST_USER"
 internal const val SANITY_CHECK = "SANITY_CHECK"
 
-// constants for internal caches stored in system properties
-internal const val INGRESSES_AND_TAGS = "INGRESSES_AND_TAGS"
-
 internal val ABSOLUTE_CLOUD_PATH = FilePath("cloud-features.path").findFolderPath()
+internal const val CORRELATION_ID = "correlationId"
