@@ -10,6 +10,8 @@ spec:
     outbound:
       rules:
         - application: {{ access.outbound.bidrag-sak }}
+          clusted: dev-fss
+          namespace: bidrag
   azure:
     application:
       enabled: true
