@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber
 
-
 import io.cucumber.java8.Scenario
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -16,6 +16,7 @@ class ScenarioManager {
         fun use(scenario: Scenario) {
             this.scenario = scenario
             correlationIdForScenario = createCorrelationIdValue()
+            MDC.put(CORRELATION_ID, correlationIdForScenario)
         }
 
         fun reset(scenario: Scenario) {
@@ -26,6 +27,7 @@ class ScenarioManager {
 
             this.scenario = null
             correlationIdForScenario = createCorrelationIdValue("outside-scenario")
+            MDC.clear()
         }
 
         private fun createCorrelationIdValue(label: String = "bcc"): String {
@@ -45,6 +47,7 @@ class ScenarioManager {
                 scenario != null -> {
                     val title = logLevel.produceMessageTitle(messageTitle)
                     scenario!!.log("$title<p>\n$message\n</p>")
+                    LOGGER.info(message)
                 }
                 logLevel == LogLevel.INFO -> {
                     LOGGER.info("Outside scenario: $message")

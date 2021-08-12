@@ -61,13 +61,6 @@ open class RestTjeneste(
         return headers
     }
 
-    private fun headerWithAlias(): MultiValueMap<String, String> {
-        val httpHeaders = HttpHeaders()
-        httpHeaders.add("ERROR_REST_SERVICE", applicationName)
-
-        return httpHeaders
-    }
-
     fun exchangePost(endpointUrl: String, json: String) {
         val jsonEntity = httpEntity(endpointUrl, json)
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
