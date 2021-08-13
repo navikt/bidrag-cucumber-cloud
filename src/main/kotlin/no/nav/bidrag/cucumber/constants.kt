@@ -13,5 +13,8 @@ internal const val TEST_AUTH = "TEST_AUTH"
 internal const val TEST_USER = "TEST_USER"
 internal const val SANITY_CHECK = "SANITY_CHECK"
 
+// spring configuration
+internal const val PROFILE_LIVE = "LIVE"
+
 internal val ABSOLUTE_CLOUD_PATH = FilePath("cloud-features.path").findFolderPath()
 internal const val CORRELATION_ID = "correlationId"
