@@ -12,7 +12,7 @@ import org.springframework.web.util.UriTemplateHandler
 import java.net.URI
 import java.security.cert.X509Certificate
 
-internal class RestTjenesteForApplikasjon() {
+internal class RestTjenesteForApplikasjon {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(RestTjenesteForApplikasjon::class.java)
@@ -25,14 +25,25 @@ internal class RestTjenesteForApplikasjon() {
         private fun konfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
             val ingress = Environment.fetchIngress(applicationName)
+            val applicationUrl = joinIngressAndApplicationName(ingress, applicationName)
 
+            return konfigurerSikkerhet(applicationName, applicationUrl)
+        }
+
+        private fun joinIngressAndApplicationName(ingress: String, applicationName: String): String {
             val applicationUrl = if (!ingress.endsWith('/') && !applicationName.startsWith('/')) {
                 "$ingress/$applicationName/"
             } else {
-                "$ingress$applicationName/"
+                if (ingress.endsWith('/') && !applicationName.startsWith('/')) {
+                    "$ingress$applicationName/"
+                } else if (!ingress.endsWith('/') && applicationName.startsWith('/')) {
+                    "$ingress$applicationName/"
+                } else {
+                    "$ingress/$applicationName/"
+                }
             }
 
-            return konfigurerSikkerhet(applicationName, applicationUrl)
+            return applicationUrl
         }
 
         private fun konfigurerSikkerhet(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {

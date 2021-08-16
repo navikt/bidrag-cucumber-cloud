@@ -88,7 +88,7 @@ Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lok
 
 ```json
 {
-  "ingressesForTags": [
+  "ingressesForApps": [
     "<ingress>@app.a>",
     "<ingress>@app.b>",
     "<ingress>@app.c>"
@@ -113,7 +113,7 @@ som input til testen. Følgende azure data blir brukt til å hente sikkerhetstok
 
 json | Beskrivelse | Kommentar
 ---|---|---
-`ingressesForTags` | kommaseparert liste over ingress og nais-applikasjon som testes| Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b
+`ingressesForApps` | kommaseparert liste over ingress og nais-applikasjon som testes| Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b
 `testUser` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check, men må brukes med `securityToken` (hvis kjøring lokalt).
 
 #### Miljøvariabler for kjøring lokalt
@@ -147,7 +147,7 @@ mvn exec:java                                        \
     -DSANITY_CHECK=true                              \
     -DTEST_USER="<azure bruker ala z123456>          \
     -DSECURITY_TOKEN="<abc...xyz>                    \
-    -DINGRESSES_FOR_TAGS=<ingress@tag1,ingress@tag2> \
+    -DINGRESSES_FOR_APPS=<ingress@app1,ingress@app2> \
     -Dexec.mainClass=no.nav.bidrag.cucumber.BidragCucumberCloud
 ```
 
@@ -164,14 +164,14 @@ mvn exec:java                                        \
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
-       --data '{"sanityCheck":true,"ingressesForTags":["<ingress.som.testes@tag>"]}' \
+       --data '{"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag>"]}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
-       --data '{"testUsername":"<z123456>","ingressesForTags":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
+       --data '{"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 
@@ -186,7 +186,7 @@ ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (Int
 * en feature: høyreklikk på feature-fil, eks `sak.feature`prosjektet og velg `Run 'Feature: ...'`
 
 **NB!**
-Husk å legg inn miljøvariablene `SANITY_CHECK` og `INGRESSES_FOR_TAGS` i `Edit Configurations...` under `Run`-drop down menyen...
+Husk å legg inn miljøvariablene `SANITY_CHECK` og `INGRESSES_FOR_APPS` i `Edit Configurations...` under `Run`-drop down menyen...
 
 ###### Lagre features som er kjørt
 
@@ -201,14 +201,14 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
-       --data '{"sanityCheck":true,"ingressesForTags":["<ingress.som.testes@tag>"]}' \
+       --data '{"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag>"]}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
-       --data '{"testUsername":"<z123456>","ingressesForTags":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
+       --data '{"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 

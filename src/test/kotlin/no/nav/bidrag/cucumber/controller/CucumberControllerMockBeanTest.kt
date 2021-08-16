@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber.controller
 
+import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.TestUtil
 import no.nav.bidrag.cucumber.model.CucumberTests
 import no.nav.bidrag.cucumber.model.TestFailedException
@@ -20,7 +21,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("CucumberController (mock bean test)")
 internal class CucumberControllerMockBeanTest {
 
@@ -49,7 +50,7 @@ internal class CucumberControllerMockBeanTest {
             HttpEntity(
                 """
                 {
-                 |"ingressesForTags":["ingress@tag"]
+                  "ingressesForApps":["ingress@tag"]
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -71,7 +72,7 @@ internal class CucumberControllerMockBeanTest {
             HttpEntity(
                 """
                 {
-                 |"sanityCheck":true
+                  "sanityCheck":true
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -93,7 +94,7 @@ internal class CucumberControllerMockBeanTest {
             HttpEntity(
                 """
                 {
-                 |"securityToken":"xyz..."
+                  "securityToken":"xyz..."
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -156,9 +157,9 @@ internal class CucumberControllerMockBeanTest {
             HttpEntity(
                 """
                 {
-                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                 |"testUsername":"z993902",
-                 |"sanityCheck":true
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                  "testUsername":"z993902",
+                  "sanityCheck":true
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -170,7 +171,36 @@ internal class CucumberControllerMockBeanTest {
             {
                 verify(testServiceMock).run(
                     CucumberTests(
-                        sanityCheck = true, testUsername = "z993902", ingressesForTags = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
+                        sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
+                    )
+                )
+            }
+        )
+    }
+
+    @Test
+    fun `skal sende enkle tags i tillegg til ingress`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                  "ingressesForApps":["https://some-ingress@some-app"],
+                  "tags":["@some-tag"]
+                }
+                """.trimMargin().trim(), headers
+            ), Void::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
+            {
+                verify(testServiceMock).run(
+                    CucumberTests(
+                        ingressesForApps = listOf("https://some-ingress@some-app"), tags = listOf("@some-tag")
                     )
                 )
             }

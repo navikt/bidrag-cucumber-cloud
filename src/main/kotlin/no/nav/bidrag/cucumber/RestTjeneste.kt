@@ -10,22 +10,19 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.util.MultiValueMap
 import org.springframework.web.client.HttpStatusCodeException
 import org.springframework.web.client.RestTemplate
 
 @Suppress("UNCHECKED_CAST")
 open class RestTjeneste(
-    private val applicationName: String,
     internal val rest: ResttjenesteMedBaseUrl
 ) {
     private lateinit var debugFullUrl: String
     private lateinit var responseEntity: ResponseEntity<String?>
 
-    constructor(naisApplication: String) : this(naisApplication, RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
+    constructor(naisApplication: String) : this(RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
     fun hentEndpointUrl() = debugFullUrl
-    fun hentHttpHeaders(): HttpHeaders = responseEntity.headers
     fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
     fun hentResponse(): String? = responseEntity.body
     fun hentResponseSomMap() = if (responseEntity.statusCode == HttpStatus.OK && responseEntity.body != null)

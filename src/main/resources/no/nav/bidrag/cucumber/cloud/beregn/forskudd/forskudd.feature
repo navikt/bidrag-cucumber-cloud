@@ -3,7 +3,6 @@
 Egenskap: bidrag-beregn-forskudd-rest
 
   Tester REST API til endepunkt i bidrag-beregn-forskudd-rest.
-  URL hentes fra json-property, ingressesForTags.
 
   Bakgrunn: Rest-tjeneste.
     Gitt nais applikasjon 'bidrag-beregn-forskudd-rest'

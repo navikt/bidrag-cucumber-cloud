@@ -78,9 +78,9 @@ jobs:
           RESOURCE: deploy/.nais/nais.yaml
           VARS: deploy/.nais/feature.yaml
 
-  run-cucumber-tests:
+  run-cucumber-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
-    name: Run cucumber tests
+    name: Run cucumber tests for bidrag-cucumber-cloud
     needs: deploy
 
     steps:
@@ -91,8 +91,23 @@ jobs:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"ingressesForTags":[
-                   "${{ env.INGRESS }}@bidrag-cucumber-cloud"
+               --data '{"ingressesForApps":[
+                   "${{ env.INGRESS }}@tag:bidrag-cucumber-cloud"
+                 ]}' \
+               ${{ env.INGRESS }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka 200)
+
+  run-cucumber-tests-for-bidrag-arbeidsflyt:
+    runs-on: ubuntu-latest
+    name: Run cucumber tests for bidrag-arbeidsflyt
+    needs: deploy
+
+    steps:
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"tags":["@bidrag-arbeidsflyt"],"ingressesForApps":[
+                   "https://oppgave.dev-fss-pub.nais.io/@oppgave"
                  ]}' \
                ${{ env.INGRESS }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka 200)

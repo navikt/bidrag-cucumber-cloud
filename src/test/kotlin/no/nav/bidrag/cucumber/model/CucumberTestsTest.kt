@@ -15,9 +15,25 @@ internal class CucumberTestsTest {
     }
 
     @Test
-    fun `skal hente tags basert på ingressesForTags`() {
-        val cucumberTests = CucumberTests(ingressesForTags = listOf("https://somewhere.out.there@my-tag"))
+    fun `skal hente tags basert på ingressesForApps`() {
+        val cucumberTests = CucumberTests(ingressesForApps = listOf("https://somewhere.out.there@tag:my-tag"))
 
         assertThat(cucumberTests.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("(@my-tag and not @ignored)")
+    }
+
+    @Test
+    fun `skal også bruke tags som ikke er listet i ingressesForApps`() {
+        val cucumberTests = CucumberTests(ingressesForApps = listOf("https://somewhere.out.there@tag:my-app"), tags = listOf("@my-tag"))
+
+        assertThat(cucumberTests.fetchTags()).`as`("cucumberTests.fetchTags")
+            .isEqualTo("(@my-app and not @ignored) or (@my-tag and not @ignored)")
+    }
+
+    @Test
+    fun `skal bare plukke tags fra ingressesForApps`() {
+        val cucumberTests = CucumberTests(ingressesForApps = listOf("somewhere@tag:my-app", "here@this-app"))
+
+        assertThat(cucumberTests.fetchTags()).`as`("cucumberTests.fetchTags")
+            .isEqualTo("(@my-app and not @ignored)")
     }
 }

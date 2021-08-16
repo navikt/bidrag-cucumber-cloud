@@ -11,7 +11,7 @@ internal class Environment(cucumberTests: CucumberTests) {
 
         val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: unknownProperty(AZURE_APP_CLIENT_ID)
         val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: unknownProperty(AZURE_APP_CLIENT_SECRET)
-        val ingressesForTags: String get() = cucumberTests?.fetchIngressesForTagsAsString() ?: fetchNonNull(INGRESSES_FOR_TAGS)
+        val alleIngresserForApper: String get() = cucumberTests?.fetchIngressesForAppsAsString() ?: fetchNonNull(INGRESSES_FOR_APPS)
         val isSanityCheck: Boolean get() = cucumberTests?.sanityCheck ?: fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
         val testUsername: String? get() = cucumberTests?.testUsername ?: fetchPropertyOrEnvironment(TEST_USER)
         val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthForTestUser()) ?: unknownProperty(testAuthForTestUser())
@@ -38,17 +38,30 @@ internal class Environment(cucumberTests: CucumberTests) {
         }
 
         private fun readIngresses() {
-            ingressesForTags.split(',').forEach { string: String ->
+            alleIngresserForApper.split(',').forEach { string: String ->
                 if (string.contains('@')) {
-                    LOGGER.info("Lager ingress av $string")
-                    val ingress = string.split('@')[0]
-                    val app = string.split('@')[1]
-
+                    val (ingress, app) = splitIngressAndApplication(string)
                     ingressesForApps[app] = ingress
                 } else {
                     LOGGER.error("kunne ikke lage ingress av $string")
                 }
             }
+        }
+
+        private fun splitIngressAndApplication(string: String): Pair<String, String> {
+            val ingress = string.split('@')[0]
+            val ingressApp = string.split('@')[1]
+            val app: String
+
+            if (ingressApp.startsWith("tag:")) {
+                app = ingressApp.substring(4)
+            } else {
+                app = ingressApp
+            }
+
+            LOGGER.info("Lager ingress av $string ($ingressApp vs $app)")
+
+            return Pair(ingress, app)
         }
 
         fun resetTestEnvironment() {

@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber.controller
 
+import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -13,7 +14,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("CucumberController (integration test)")
 internal class CucumberControllerIntegrationTest {
 
@@ -32,7 +33,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"]
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"]
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -53,8 +54,8 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                 |"sanityCheck":true
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"],
+                  "sanityCheck":true
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -75,8 +76,8 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                 |"ingressesForTags":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                 |"sanityCheck":true
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"],
+                  "sanityCheck":true
                 }
                 """.trimMargin().trim(), headers
             ),
