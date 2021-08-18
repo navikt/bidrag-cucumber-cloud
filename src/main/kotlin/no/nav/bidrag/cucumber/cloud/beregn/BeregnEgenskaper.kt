@@ -3,7 +3,7 @@ package no.nav.bidrag.cucumber.cloud.beregn
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
-import no.nav.bidrag.cucumber.model.BidragCucumberData
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -20,11 +20,11 @@ class BeregnEgenskaper : No {
             val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
             val json = jsonFile.readText(Charsets.UTF_8)
 
-            BidragCucumberData.restTjeneste.exchangePost(endpoint, json)
+            hentRestTjeneste().exchangePost(endpoint, json)
         }
 
         Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
-            val documentContext = JsonPath.parse(BidragCucumberData.restTjeneste.hentResponse())
+            val documentContext = JsonPath.parse(hentRestTjeneste().hentResponse())
             var resultatBelop = documentContext.read<Any>(sti).toString()
 
             if (resultatBelop.endsWith(".0")) {
@@ -35,7 +35,7 @@ class BeregnEgenskaper : No {
         }
 
         Og("responsen skal inneholde resultatkoden {string} under stien {string}") { resultatkode: String, sti: String ->
-            val documentContext = JsonPath.parse(BidragCucumberData.restTjeneste.hentResponse())
+            val documentContext = JsonPath.parse(hentRestTjeneste().hentResponse())
             val kode = documentContext.read<Any>(sti).toString()
 
             assertThat(kode).isEqualTo(resultatkode)

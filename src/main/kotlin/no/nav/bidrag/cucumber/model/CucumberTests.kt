@@ -61,8 +61,8 @@ data class CucumberTests(
         return if (tagsFromIngresses.isBlank()) transformToString(tags) else " or ${transformToString(tags)}"
     }
 
-    internal fun initTestEnvironment() {
-        Environment.resetTestEnvironment()
-        Environment(this)
+    internal fun initCucumberEnvironment() {
+        Environment.resetCucumberEnvironment()
+        Environment.initCucumberEnvironment(this)
     }
 }

@@ -3,13 +3,19 @@
 Egenskap: bidrag-arbeidsflyt
 
   Tester nais applikasjon bidrag-arbeidsflyt
-  URLer til tags hentes fra json-property, ingressesForTags
+  Applikasjonen reagerer på kafka hendelser og manipulerer oppgaver etter hendelse
 
-  Bakgrunn: NAIS applikasjon.
-    Gitt nais applikasjon 'bidrag-arbeidsflyt'
+  Bakgrunn: En oppgave lagret via oppgave api
+    Gitt nais applikasjon 'oppgave'
+    Og at en oppgave opprettes med journalpostId 1010101010 og tema 'BID'
 
-  Scenario: Sjekk at health endpoint er operativt
-    Når jeg kaller helsetjenesten
-    Så skal http status være 200
-    Og header 'content-type' skal være 'application/json'
-    Og responsen skal inneholde 'status' = 'UP'
+  Scenario: Ikke ferdigstill oppgaver når journalpost bytter til internt fagområde (BID -> FAR og vice versa)
+    Når det opprettes en journalposthendelse - 'AVVIK_ENDRE_FAGOMRADE' - for endring av fagområde til 'FAR'
+    Og jeg søker etter oppgave
+    Så skal jeg finne oppgaven i søkeresultatet
+
+  Scenario: Ferdigstill oppgaver når journalpost bytter til eksternt fagområde
+    Når det opprettes en journalposthendelse - 'AVVIK_ENDRE_FAGOMRADE' - for endring av fagområde til 'AAREG'
+    Og jeg søker etter oppgave
+    Så skal jeg ikke finne oppgaven i søkeresultatet
+

@@ -1,0 +1,26 @@
+package no.nav.bidrag.cucumber.cloud
+
+import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.RestTjeneste
+import org.slf4j.LoggerFactory
+
+object FellesEgenskaperService {
+    private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
+    private val RESTTJENESTER = ThreadLocal<RestTjeneste>()
+
+    fun assertWhenNotSanityCheck(assertion: Assertion, verify: (input: Assertion) -> Unit) {
+        if (Environment.isSanityCheck) {
+            LOGGER.info("No assertion: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
+        } else {
+            verify(assertion)
+        }
+    }
+
+    fun settOppNaisApp(naisApplikasjon: String) {
+        RESTTJENESTER.set(RestTjeneste(naisApplikasjon))
+    }
+
+    fun hentRestTjeneste() = RESTTJENESTER.get() ?: throw IllegalStateException("Ingen resttjeneste for tråd. Har du satt opp ingressesForApps?")
+
+    data class Assertion(val message: String, val value: Any?, val expectation: Any?)
+}

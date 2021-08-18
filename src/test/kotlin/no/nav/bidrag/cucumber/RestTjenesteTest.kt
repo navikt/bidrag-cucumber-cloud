@@ -13,7 +13,7 @@ internal class RestTjenesteTest {
             ingressesForApps = listOf("https://somewhere.com/@nais-app", "https://somewhere.else.com@annen-nais-app")
         )
 
-        cucumberTests.initTestEnvironment()
+        cucumberTests.initCucumberEnvironment()
 
         val restTjeneste = RestTjeneste("nais-app")
         val annenRestTjeneste = RestTjeneste("annen-nais-app")
@@ -30,7 +30,7 @@ internal class RestTjenesteTest {
             ingressesForApps = listOf("https://somewhere.com/@tag:nais-tag", "https://somewhere.else.com@tag:annen-nais-tag")
         )
 
-        cucumberTests.initTestEnvironment()
+        cucumberTests.initCucumberEnvironment()
 
         val restTjeneste = RestTjeneste("nais-tag")
         val annenRestTjeneste = RestTjeneste("annen-nais-tag")

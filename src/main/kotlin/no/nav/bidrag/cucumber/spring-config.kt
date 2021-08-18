@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import no.nav.bidrag.commons.ExceptionLogger
@@ -49,6 +50,9 @@ class SpringConfig {
 class LiveSpringConfig {
 
     @Bean
-    fun jornalpostKafkaHendelseProducer(kafkaTemplate: KafkaTemplate<String, String>, @Value("\${TOPIC_JOURNALPOST}") topic: String) =
-        JournalpostKafkaHendelseProducer(kafkaTemplate = kafkaTemplate, topic = topic)
+    fun jornalpostKafkaHendelseProducer(
+        kafkaTemplate: KafkaTemplate<String, String>,
+        @Value("\${TOPIC_JOURNALPOST}") topic: String,
+        objectMapper: ObjectMapper
+    ) = JournalpostKafkaHendelseProducer(kafkaTemplate = kafkaTemplate, topic = topic, objectMapper = objectMapper)
 }

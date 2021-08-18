@@ -4,7 +4,7 @@ import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.controller.CucumberController
 import no.nav.bidrag.cucumber.model.CucumberTests
-import no.nav.bidrag.cucumber.service.TestService
+import no.nav.bidrag.cucumber.service.CucumberService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
@@ -29,7 +29,7 @@ internal class ExceptionLoggerAspectTest {
     private lateinit var exceptionLoggerMock: ExceptionLogger
 
     @MockBean
-    private lateinit var testServiceMock: TestService
+    private lateinit var cucumberServiceMock: CucumberService
 
     @Test
     fun `skal logge eventuelle exception når feil oppstår i controller`() {
@@ -37,7 +37,7 @@ internal class ExceptionLoggerAspectTest {
         headers.contentType = MediaType.APPLICATION_JSON
 
         val illegalStateException = IllegalStateException("something fishy happened")
-        whenever(testServiceMock.run(CucumberTests())).thenThrow(illegalStateException)
+        whenever(cucumberServiceMock.run(CucumberTests())).thenThrow(illegalStateException)
 
         testRestTemplate.postForEntity("/run", HttpEntity("{}", headers), Void::class.java)
 
