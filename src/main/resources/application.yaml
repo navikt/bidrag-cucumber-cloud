@@ -9,3 +9,6 @@ server:
 
 springdoc:
   packages-to-scan: no.nav.bidrag.cucumber.controller
+
+# Dummy value in order to start local app
+TOPIC_JOURNALPOST: bidrag.journalpost

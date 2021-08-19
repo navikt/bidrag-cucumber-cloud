@@ -3,7 +3,6 @@
 Egenskap: bidrag-beregn-saertilskudd-rest
 
   Tester REST API til endepunkt i bidrag-beregn-saertilskudd-rest.
-  URL hentes fra json-property, ingressesForTags.
 
   Bakgrunn: Rest-tjeneste.
     Gitt nais applikasjon 'bidrag-beregn-saertilskudd-rest'

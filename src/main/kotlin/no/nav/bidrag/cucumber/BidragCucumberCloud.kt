@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber
 
 import org.slf4j.LoggerFactory
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 
 @SpringBootApplication
 class BidragCucumberCloud {
@@ -11,7 +11,16 @@ class BidragCucumberCloud {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            runApplication<BidragCucumberCloud>(*args)
+
+            val profile = if (args.isEmpty()) PROFILE_LIVE else {
+                LOGGER.info("Starter med profil (argument): $args")
+                args[0]
+            }
+
+            val app = SpringApplication(BidragCucumberCloud::class.java)
+
+            app.setAdditionalProfiles(profile)
+            app.run(*args)
         }
     }
 }

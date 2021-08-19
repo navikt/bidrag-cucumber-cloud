@@ -6,6 +6,7 @@ on:
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
+  INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
 
 jobs:
   build:
@@ -78,30 +79,84 @@ jobs:
           RESOURCE: deploy/.nais/nais.yaml
           VARS: deploy/.nais/feature.yaml
 
-  run-cucumber-tests:
+  run-cucumber-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
-    name: Run cucumber tests
+    name: "Run tests: bidrag-cucumber-cloud"
     needs: deploy
 
     steps:
-      - run: echo "INGRESS=https://bidrag-cucumber-cloud.ekstern.dev.nav.no" >> $GITHUB_ENV
-        if: github.ref == 'refs/heads/main'
-      - run: echo "INGRESS=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
         if: github.ref != 'refs/heads/main'
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"ingressesForTags":[
-                   "${{ env.INGRESS }}@bidrag-cucumber-cloud"
+               --data '{"ingressesForApps":[
+                   "${{ env.INGRESS_CUCUMBER }}@tag:bidrag-cucumber-cloud"
                  ]}' \
-               ${{ env.INGRESS }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka 200)
+
+  run-cucumber-tests-for-bidrag-arbeidsflyt:
+    runs-on: ubuntu-latest
+    name: "Run tests: bidrag-arbeidsflyt"
+    needs: deploy
+
+    env:
+      INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
+
+    steps:
+      - name: feature ingresses
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "INGRESS_OPPGAVE=https://oppgave-q1.dev-fss-pub.nais.io" >> $GITHUB_ENV
+          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"tags":["@bidrag-arbeidsflyt"],"sanityCheck":true,"ingressesForApps":[
+                   "${{ env.INGRESS_OPPGAVE }}/@oppgave"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka 200)
+
+  run-cucumber-tests-for-bidrag-beregn:
+    runs-on: ubuntu-latest
+    name: "Run tests: bidrag-beregn-*"
+    needs: deploy
+    if:  github.ref == 'refs/heads/run/when/zero-trust/enabled'
+
+    env:
+      INGRESS_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.adeo.no
+      INGRESS_FORSKUDD: https://bidrag-beregn-forskudd-rest.dev.adeo.no
+      INGRESS_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.dev.adeo.no
+
+    steps:
+      - name: feature ingresses
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "INGRESS_BARNEBIDRAG=https://bidrag-beregn-barnebidrag-rest-feature.dev.adeo.no" >> $GITHUB_ENV
+          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_FORSKUDD=https://bidrag-beregn-forskudd-rest-feature.dev.adeo.no" >> $GITHUB_ENV
+          echo "INGRESS_SAERTILSKUDD=https://bidrag-beregn-saertilskudd-rest-feature.dev.adeo.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"ingressesForApps":[
+                   "${{ env.INGRESS_BARNEBIDRAG }}@tag:bidrag-beregn-barnebidrag-rest",
+                   "${{ env.INGRESS_FORSKUDD }}@tag:bidrag-beregn-forskudd-rest",
+                   "${{ env.INGRESS_SAERTILSKUDD }}@tag:bidrag-beregn-saertilskudd-rest"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka 200)
 
   bump_dev_version:
     runs-on: ubuntu-latest
     name: Bump SNAPSHOT version
     if: github.ref == 'refs/heads/main'
-    needs: run-cucumber-tests
+    needs:
+      - run-cucumber-tests-for-cucumber-cloud
+      - run-cucumber-tests-for-bidrag-arbeidsflyt
+      - run-cucumber-tests-for-bidrag-beregn
 
     steps:
       - uses: actions/checkout@v2

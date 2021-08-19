@@ -3,7 +3,6 @@
 Egenskap: bidrag-beregn-barnebidrag-rest
 
   Tester REST API til endepunkt i bidrag-beregn-barnebidrag-rest.
-  URL hentes fra json-property, ingressesForTags.
 
   Bakgrunn: Rest-tjeneste.
     Gitt nais applikasjon 'bidrag-beregn-barnebidrag-rest'

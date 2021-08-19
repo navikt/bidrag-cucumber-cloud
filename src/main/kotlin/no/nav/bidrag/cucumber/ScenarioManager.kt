@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import io.cucumber.java8.Scenario
+import no.nav.bidrag.commons.CorrelationId
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.time.LocalDate
@@ -15,13 +16,17 @@ class ScenarioManager {
 
         fun use(scenario: Scenario) {
             this.scenario = scenario
+            initCorrelationId()
+        }
+
+        internal fun initCorrelationId() {
             correlationIdForScenario = createCorrelationIdValue()
             MDC.put(CORRELATION_ID, correlationIdForScenario)
         }
 
         fun reset(scenario: Scenario) {
             val noScenario = scenario.name != null && scenario.name.isNotBlank()
-            val scenarioString = if (noScenario) "'${scenario.name}'" else "nameless scenario from ${scenario.uri}"
+            val scenarioString = if (noScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
 
             LOGGER.info("Finished $scenarioString")
 
@@ -31,7 +36,7 @@ class ScenarioManager {
         }
 
         private fun createCorrelationIdValue(label: String = "bcc"): String {
-            return "$label-${java.lang.Long.toHexString(System.currentTimeMillis())}"
+            return CorrelationId.generateTimestamped(label).get()
         }
 
         fun log(message: String) {

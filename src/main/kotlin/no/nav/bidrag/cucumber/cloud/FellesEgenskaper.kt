@@ -1,61 +1,46 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.model.Assertion
-import no.nav.bidrag.cucumber.model.BidragCucumberData
-import no.nav.bidrag.cucumber.Environment
-import no.nav.bidrag.cucumber.RestTjeneste
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
 import org.assertj.core.api.Assertions.assertThat
-import org.slf4j.LoggerFactory
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import java.util.EnumSet
 
 class FellesEgenskaper : No {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
-
-        fun assertOrSanityCheck(assertion: Assertion) {
-            if (Environment.isSanityCheck) {
-                LOGGER.info("No assertion: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
-            } else {
-                assertion.check()
-            }
-        }
-    }
 
     init {
-        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> BidragCucumberData.restTjeneste = RestTjeneste(naisApplikasjon) }
+        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> FellesEgenskaperService.settOppNaisApp(naisApplikasjon) }
 
         Så("skal http status være {int}") { enHttpStatus: Int ->
-            assertOrSanityCheck(
+            FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
-                    "HttpStatus for ${BidragCucumberData.restTjeneste.hentEndpointUrl()}",
-                    BidragCucumberData.restTjeneste.hentHttpStatus(),
+                    "HttpStatus for ${hentRestTjeneste().hentFullUrl()}",
+                    hentRestTjeneste().hentHttpStatus(),
                     HttpStatus.valueOf(enHttpStatus)
-                )
+                ), this::harForventetHttpStatus
             )
         }
 
         Og("responsen skal inneholde {string} = {string}") { key: String, value: String ->
-            val responseObject = BidragCucumberData.restTjeneste.hentResponseSomMap()
+            val responseObject = hentRestTjeneste().hentResponseSomMap()
             val verdiFraResponse = responseObject[key]?.toString()
 
             assertThat(verdiFraResponse).`as`("json response").isEqualTo(value)
         }
 
         Når("det gjøres et kall til {string}") { endpointUrl: String ->
-            BidragCucumberData.restTjeneste.exchangeGet(endpointUrl)
+            hentRestTjeneste().exchangeGet(endpointUrl)
         }
 
         Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
-            assertThat(BidragCucumberData.restTjeneste.hentHttpStatus())
-                .`as`("HttpStatus for " + BidragCucumberData.restTjeneste.hentEndpointUrl())
+            assertThat(hentRestTjeneste().hentHttpStatus())
+                .`as`("HttpStatus for " + hentRestTjeneste().hentFullUrl())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
         }
+    }
 
-        Når("det mangler sikkerhetstoken i HttpRequest") {
-            BidragCucumberData.restTjeneste.removeHeaderGenerator(HttpHeaders.AUTHORIZATION)
-        }
+    fun harForventetHttpStatus(assertion: Assertion) {
+        assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
     }
 }

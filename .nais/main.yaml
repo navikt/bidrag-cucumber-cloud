@@ -4,3 +4,4 @@ ingresses:
 access:
   outbound:
     bidrag-sak: bidrag-sak
+kafka-topic-journalpost: bidrag.journalpost

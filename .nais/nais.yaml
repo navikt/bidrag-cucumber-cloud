@@ -18,6 +18,8 @@ spec:
   envFrom:
     - secret: test-auth-z992903
   image: {{ image }}
+  kafka:
+    pool: nav-dev
   liveness:
     path: /bidrag-cucumber-cloud/actuator/health
     initialDelay: 35
@@ -42,3 +44,6 @@ spec:
   {{#each ingresses as |url|}}
      - {{url}}
   {{/each}}
+  env:
+    - name: TOPIC_JOURNALPOST
+      value: {{ kafka-topic-journalpost }}

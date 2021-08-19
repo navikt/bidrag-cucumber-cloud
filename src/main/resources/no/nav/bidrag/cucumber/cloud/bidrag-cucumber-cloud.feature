@@ -3,7 +3,6 @@
 Egenskap: bidrag-cucumber-cloud
 
   Tester REST API med swagger i bidrag-cucumber-cloud
-  URLer til tags hentes fra json-property, ingressesForTags
 
   Bakgrunn: Rest-tjeneste.
     Gitt nais applikasjon 'bidrag-cucumber-cloud'

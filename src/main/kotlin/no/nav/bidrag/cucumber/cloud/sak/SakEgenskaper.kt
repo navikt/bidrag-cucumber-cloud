@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.sak
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.model.BidragCucumberData
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 
 class SakEgenskaper : No {
 
@@ -13,7 +13,7 @@ class SakEgenskaper : No {
         }
 
         Når("jeg henter denne saken") {
-            BidragCucumberData.restTjeneste.exchangeGet("sak/$saksnummer")
+            hentRestTjeneste().exchangeGet("sak/$saksnummer")
         }
     }
 }

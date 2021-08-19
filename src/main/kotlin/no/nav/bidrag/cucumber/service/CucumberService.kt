@@ -1,8 +1,11 @@
 package no.nav.bidrag.cucumber.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.cucumber.core.cli.Main
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.hendelse.HendelseProducer
+import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTests
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
@@ -13,13 +16,18 @@ import java.io.PrintStream
 import java.nio.charset.Charset
 
 @Service
-class TestService(private val suppressStackTraceText: SuppressStackTraceText) {
+class CucumberService(private val suppressStackTraceText: SuppressStackTraceText, hendelseProducer: HendelseProducer, objectMapper: ObjectMapper) {
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(TestService::class.java)
+        private val LOGGER = LoggerFactory.getLogger(CucumberService::class.java)
     }
 
-    internal fun run(cucumberTests: CucumberTests) : String {
-        cucumberTests.initTestEnvironment()
+    init {
+        BidragCucumberSingletons.objectMapper = objectMapper
+        BidragCucumberSingletons.hendelseProducer = hendelseProducer
+    }
+
+    internal fun run(cucumberTests: CucumberTests): String {
+        Environment.initCucumberEnvironment(cucumberTests)
 
         val tags = cucumberTests.fetchTags()
         val sysOut = ByteArrayOutputStream()
@@ -27,7 +35,7 @@ class TestService(private val suppressStackTraceText: SuppressStackTraceText) {
         System.setOut(PrintStream(sysOut))
         val result = runCucumberTests(tags)
 
-        Environment.resetTestEnvironment()
+        Environment.resetCucumberEnvironment()
         val suppressedStackText = suppressStackTraceText.suppress(sysOut.toString(Charset.defaultCharset()))
 
         if (result != 0.toByte()) {
