@@ -15,11 +15,11 @@ import java.security.cert.X509Certificate
 internal class RestTjenesteForApplikasjon {
 
     companion object {
-        private val LOGGER = LoggerFactory.getLogger(RestTjenesteForApplikasjon::class.java)
-        private val REST_TJENESTE_TIL_APPLIKASJON: MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> = HashMap()
+        private val LOGGER = LoggerFactory.getLogger(RestTjenesteForApplikasjonAtThreadLevel::class.java)
+        private val REST_TJENESTE_FOR_APPLIKASJON = RestTjenesteForApplikasjonAtThreadLevel()
 
         fun hentEllerKonfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
-            return REST_TJENESTE_TIL_APPLIKASJON.computeIfAbsent(applicationName) { konfigurer(applicationName) }
+            return REST_TJENESTE_FOR_APPLIKASJON.hentEllerKonfigurer(applicationName) { konfigurer(applicationName) }
         }
 
         private fun konfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
@@ -31,19 +31,9 @@ internal class RestTjenesteForApplikasjon {
         }
 
         private fun joinIngressAndApplicationName(ingress: String, applicationName: String): String {
-            val applicationUrl = if (!ingress.endsWith('/') && !applicationName.startsWith('/')) {
-                "$ingress/$applicationName/"
-            } else {
-                if (ingress.endsWith('/') && !applicationName.startsWith('/')) {
-                    "$ingress$applicationName/"
-                } else if (!ingress.endsWith('/') && applicationName.startsWith('/')) {
-                    "$ingress$applicationName/"
-                } else {
-                    "$ingress/$applicationName/"
-                }
-            }
+            val ingressUrl = if (ingress.endsWith('/')) ingress.removeSuffix("/") else ingress
 
-            return applicationUrl
+            return "$ingressUrl/$applicationName"
         }
 
         private fun konfigurerSikkerhet(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
@@ -114,6 +104,23 @@ internal class RestTjenesteForApplikasjon {
 
                 return URI.create(baseUrl + uriTemplate)
             }
+        }
+    }
+
+    class RestTjenesteForApplikasjonAtThreadLevel {
+        private val resttjenester = ThreadLocal<MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl>>()
+
+        fun hentEllerKonfigurer(applicationName: String, konfigurer: () -> RestTjeneste.ResttjenesteMedBaseUrl): RestTjeneste.ResttjenesteMedBaseUrl {
+            val tradensResttjenester = hentEllerLag()
+            return tradensResttjenester.computeIfAbsent(applicationName) { konfigurer() }
+        }
+
+        private fun hentEllerLag(): MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> {
+            if (resttjenester.get() == null) {
+                resttjenester.set(HashMap())
+            }
+
+            return resttjenester.get()
         }
     }
 }
