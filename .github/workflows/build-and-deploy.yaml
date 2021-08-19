@@ -123,6 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-beregn-*"
     needs: deploy
+    if:  github.ref == 'refs/heads/run/when/zero-trust/enabled'
 
     env:
       INGRESS_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.adeo.no
