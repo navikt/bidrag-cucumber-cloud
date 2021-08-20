@@ -21,13 +21,19 @@ open class RestTjeneste(
 
     constructor(naisApplication: String) : this(RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
-    fun hentFullUrl() = fullUrl.get()
+    fun hentFullUrlMedEventuellWarning() = "${fullUrl.get()}${appendWarningWhenExists()}"
     fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
     fun hentResponse(): String? = responseEntity.body
     fun hentResponseSomMap() = if (responseEntity.statusCode == HttpStatus.OK && responseEntity.body != null)
         ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any>
     else
         HashMap()
+
+    private fun appendWarningWhenExists(): String {
+        val warnings = responseEntity.headers[HttpHeaders.WARNING] ?: emptyList()
+
+        return if (warnings.isNotEmpty()) " - ${warnings.get(0)}" else ""
+    }
 
     fun exchangeGet(endpointUrl: String): ResponseEntity<String?> {
         fullUrl = FullUrl(rest.baseUrl, endpointUrl)

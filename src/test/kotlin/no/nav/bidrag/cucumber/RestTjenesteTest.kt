@@ -4,6 +4,17 @@ import no.nav.bidrag.cucumber.model.CucumberTests
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.mockito.Mockito.anyString
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.client.RestTemplate
 
 internal class RestTjenesteTest {
 
@@ -39,5 +50,39 @@ internal class RestTjenesteTest {
             { assertThat(restTjeneste.rest.baseUrl).`as`("tjeneste-app").isEqualTo("https://somewhere.com/nais-tag") },
             { assertThat(annenRestTjeneste.rest.baseUrl).`as`("annen-tjeneste").isEqualTo("https://somewhere.else.com/annen-nais-tag") }
         )
+    }
+
+    @Test
+    fun `skal hente full url uten advarsel`() {
+        ScenarioManager.initCorrelationId()
+        val restTemplateMock = mock(RestTemplate::class.java)
+        val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
+
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
+            .thenReturn(ResponseEntity.ok().build())
+
+        restTjeneste.exchangeGet("/out/there")
+
+        val urlMedWarn = restTjeneste.hentFullUrlMedEventuellWarning()
+
+        assertThat(urlMedWarn).`as`("full url").isEqualTo("https://somewhere/out/there")
+    }
+
+    @Test
+    fun `skal ha WARNING fra HttpHeaders når rest tjeneste sender med dette som header`() {
+        ScenarioManager.initCorrelationId()
+        val restTemplateMock = mock(RestTemplate::class.java)
+        val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
+        val headers = HttpHeaders(LinkedMultiValueMap(mapOf(HttpHeaders.WARNING to listOf("the truth will emerge!"))))
+
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
+            .thenReturn(ResponseEntity.internalServerError().headers(headers).build())
+
+        restTjeneste.exchangeGet("/out/there")
+
+        val urlMedWarn = restTjeneste.hentFullUrlMedEventuellWarning()
+
+        assertThat(urlMedWarn).`as`("url med warning fra header")
+            .isEqualTo("https://somewhere/out/there - the truth will emerge!")
     }
 }

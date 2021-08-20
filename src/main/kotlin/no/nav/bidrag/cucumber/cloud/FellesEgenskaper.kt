@@ -15,7 +15,7 @@ class FellesEgenskaper : No {
         Så("skal http status være {int}") { enHttpStatus: Int ->
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
-                    "HttpStatus for ${hentRestTjeneste().hentFullUrl()}",
+                    "HttpStatus for ${hentRestTjeneste().hentFullUrlMedEventuellWarning()}",
                     hentRestTjeneste().hentHttpStatus(),
                     HttpStatus.valueOf(enHttpStatus)
                 ), this::harForventetHttpStatus
@@ -35,12 +35,12 @@ class FellesEgenskaper : No {
 
         Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
             assertThat(hentRestTjeneste().hentHttpStatus())
-                .`as`("HttpStatus for " + hentRestTjeneste().hentFullUrl())
+                .`as`("HttpStatus for " + hentRestTjeneste().hentFullUrlMedEventuellWarning())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
         }
     }
 
-    fun harForventetHttpStatus(assertion: Assertion) {
+    private fun harForventetHttpStatus(assertion: Assertion) {
         assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
     }
 }
