@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import org.slf4j.LoggerFactory
 import java.time.LocalDate
 
 /**
@@ -10,6 +11,7 @@ import java.time.LocalDate
  */
 object ArbeidsflytEgenskaperService {
     internal val JOURNALPOST_IDs = ThreadLocal<String>()
+    private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaperService::class.java)
 
     fun opprettOppgave(journalpostId: Long, tema: String) {
         JOURNALPOST_IDs.set("$tema-$journalpostId")
@@ -29,13 +31,13 @@ object ArbeidsflytEgenskaperService {
     }
 
     fun opprettJournalpostHendelse(hendelse: String, detaljer: Map<String, String>) {
-        BidragCucumberSingletons.publishWhenNotSanityCheck(
+        BidragCucumberSingletons.hendelseProducer?.publish(
             JournalpostHendelse(
                 journalpostId = JOURNALPOST_IDs.get(),
                 hendelse = hendelse,
                 detaljer = detaljer
             )
-        )
+        ) ?: LOGGER.warn("Cannot publish $hendelse when spring context is not initialized")
 
         Thread.sleep(500) // for å sørge for at kafka melding blir behandlet i bidrag-arbeidsflyt
     }
