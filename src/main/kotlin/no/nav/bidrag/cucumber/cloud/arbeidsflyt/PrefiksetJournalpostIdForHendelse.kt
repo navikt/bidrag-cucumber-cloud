@@ -16,8 +16,8 @@ class PrefiksetJournalpostIdForHendelse {
     fun hent(hendelse: Hendelse, tema: String) = PREFIKSET_ID_FOR_HENDELER.get()[hendelse]?.get(tema) ?: throw IllegalStateException(
         "Ingen journalpostId konfigurert for $hendelse på tema $tema: ${PREFIKSET_ID_FOR_HENDELER.get()}"
     )
-}
 
-enum class Hendelse {
-    AVVIK_ENDRE_FAGOMRADE
+    enum class Hendelse {
+        AVVIK_ENDRE_FAGOMRADE
+    }
 }

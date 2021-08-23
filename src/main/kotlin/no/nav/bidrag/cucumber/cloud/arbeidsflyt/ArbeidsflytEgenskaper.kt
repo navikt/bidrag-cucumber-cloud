@@ -6,6 +6,7 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaperEndreFagomradeService.opprettJournalpostHendelse
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaperEndreFagomradeService.sokOppgaveForHendelse
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import org.assertj.core.api.Assertions.assertThat
 
 class ArbeidsflytEgenskaper : No {

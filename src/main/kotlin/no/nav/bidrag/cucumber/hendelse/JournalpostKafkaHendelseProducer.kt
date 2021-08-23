@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaper
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.Hendelse
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime

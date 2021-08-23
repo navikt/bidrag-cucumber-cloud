@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.ScenarioManager
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import org.junit.jupiter.api.BeforeEach
