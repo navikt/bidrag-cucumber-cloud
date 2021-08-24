@@ -4,4 +4,5 @@ ingresses:
 access:
   outbound:
     bidrag-sak: bidrag-sak
+    oppgave: oppgave.dev-fss-pub.nais.io
 kafka-topic-journalpost: bidrag.journalpost
