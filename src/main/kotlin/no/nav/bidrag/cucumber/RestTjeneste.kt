@@ -43,7 +43,7 @@ open class RestTjeneste(
         exchange(HttpEntity(null, header), endpointUrl, HttpMethod.GET)
 
         ScenarioManager.log(
-            if (responseEntity?.body != null) "response with json and status ${responseEntity!!.statusCode}"
+            if (responseEntity?.body != null) "response with body and status ${responseEntity!!.statusCode}"
             else if (responseEntity == null) "no response entity" else "no response body with status ${responseEntity!!.statusCode}"
         )
 
