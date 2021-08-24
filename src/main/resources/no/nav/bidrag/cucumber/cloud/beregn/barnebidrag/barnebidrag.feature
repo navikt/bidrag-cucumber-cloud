@@ -14,8 +14,8 @@ Egenskap: bidrag-beregn-barnebidrag-rest
   Scenario: beregn barnebidrag
     Når jeg bruker endpoint '/beregn/barnebidrag' med json fra 'barnebidrag/barnebidrag_eksempel.json'
     Så skal http status være 200
-    Og responsen skal inneholde beløpet '3490' under stien '$.beregnBarnebidragResultat.resultatPeriodeListe[0].resultatBeregningListe[0].resultatBelop'
-    Og responsen skal inneholde resultatkoden 'KOSTNADSBEREGNET_BIDRAG' under stien '$.beregnBarnebidragResultat.resultatPeriodeListe[0].resultatBeregningListe[0].resultatKode'
+    Og responsen skal inneholde beløpet '3490' under stien '$.beregnetBarnebidragPeriodeListe[0].resultat.belop'
+    Og responsen skal inneholde resultatkoden 'KOSTNADSBEREGNET_BIDRAG' under stien '$.beregnetBarnebidragPeriodeListe[0].resultat.kode'
 
   Scenario: beregn barnebidrag med forholdsmessig fordeling
     Når jeg bruker endpoint '/beregn/forholdsmessigfordeling' med json fra 'barnebidrag/forholdsmessig_fordeling_eksempel.json'
