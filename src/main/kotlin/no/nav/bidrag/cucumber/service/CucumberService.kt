@@ -39,7 +39,7 @@ class CucumberService(private val suppressStackTraceText: SuppressStackTraceText
         val suppressedStackText = suppressStackTraceText.suppress(sysOut.toString(Charset.defaultCharset()))
 
         if (result != 0.toByte()) {
-            val message = "Kjøring av cucumber var mislykket (tags: $tags)!"
+            val message = "Cucumber tests failed! (tags: $tags)!"
             LOGGER.error(message)
             throw TestFailedException(message, suppressedStackText)
         }
