@@ -86,7 +86,7 @@ open class RestTjeneste(
             ScenarioManager.log("$httpMethod: $fullUrl")
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
         } catch (e: HttpStatusCodeException) {
-            ScenarioManager.errorLog("$httpMethod FEILET! $e")
+            ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e")
             responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
 
             if (Environment.isNotSanityCheck()) {
