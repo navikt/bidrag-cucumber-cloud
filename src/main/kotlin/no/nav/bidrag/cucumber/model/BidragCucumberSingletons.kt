@@ -8,4 +8,5 @@ import no.nav.bidrag.cucumber.hendelse.HendelseProducer
  */
 internal object BidragCucumberSingletons {
     var hendelseProducer: HendelseProducer? = null
+    var objectMapper: ObjectMapper? = null
 }

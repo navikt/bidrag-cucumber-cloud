@@ -1,32 +1,61 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import no.nav.bidrag.cucumber.BidragCucumberCloud
+import no.nav.bidrag.cucumber.RestTjeneste
+import no.nav.bidrag.cucumber.RestTjenesteForApplikasjon
 import no.nav.bidrag.cucumber.ScenarioManager
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
+import no.nav.bidrag.cucumber.model.CucumberTests
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyString
+import org.mockito.Mockito.never
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
+import org.springframework.web.client.RestTemplate
 
 @DisplayName("ArbeidsflytEgenskaperEndreFagomradeService")
 @SpringBootTest(classes = [BidragCucumberCloud::class])
 internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
 
+    private val baseUrl = "https://base"
     private val hendelse = Hendelse.AVVIK_ENDRE_FAGOMRADE
     private val journalpostId: Long = 1010101010
+    private val naisApplikasjon: String = "oppgave"
     private val tema = "BID"
 
     @MockBean
     private lateinit var hendelseProducerMock: HendelseProducer
 
+    @MockBean
+    private lateinit var restTemplateMock: RestTemplate
+
     @BeforeEach
     fun `opprett prefikset journalpostId for hendelse`() {
         ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.opprett(hendelse, journalpostId, tema)
+    }
+
+    @BeforeEach
+    fun konfigurerNaisApplikasjonForOppgave() {
+        CucumberTests(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
+
+        val restTjenesteMedBaseUrl = RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, baseUrl)
+
+        RestTjenesteForApplikasjon.RestTjenesteForApplikasjonThreadLocal().hentEllerKonfigurer(naisApplikasjon) { restTjenesteMedBaseUrl }
+        FellesEgenskaperService.settOppNaisApp(naisApplikasjon)
     }
 
     @BeforeEach
@@ -44,17 +73,41 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
     }
 
     @Test
-    fun `skal ikke opprette oppgave for hendelse når den eksisterer fra før`() {
-        fail("wip")
+    fun `skal opprette oppgave`() {
+        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
+            .thenReturn(ResponseEntity.ok().build())
+        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
+            .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
+
+        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(Hendelse.AVVIK_ENDRE_FAGOMRADE, journalpostId, tema)
+
+        verify(restTemplateMock).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
 
     @Test
-    fun `skal opprette oppgave for hendelse`() {
-        fail("wip")
+    fun `skal ikke opprette oppgave når den eksisterer fra før`() {
+        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
+            .thenReturn(ResponseEntity.ok().build())
+        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
+            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1"}]}""")
+        )
+
+        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(Hendelse.AVVIK_ENDRE_FAGOMRADE, journalpostId, tema)
+
+        verify(restTemplateMock, never()).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
 
     @Test
-    fun `når oppgave finnes for hendelse, skal oppgaven patches slik at den stemmer er klar for testing på hendelsen`() {
-        fail("wip")
+    fun `skal sette sette status til UNDER_BEHANDLING på oppgave som eksisterer fra før`() {
+        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
+            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}""")
+        )
+
+        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(Hendelse.AVVIK_ENDRE_FAGOMRADE, journalpostId, tema)
+        @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java) as ArgumentCaptor<HttpEntity<String>>
+
+        verify(restTemplateMock).exchange(eq("/api/v1/oppgaver/1001"), eq(HttpMethod.PATCH), httpEntityCaptor.capture(), eq(String::class.java))
+
+        assertThat(httpEntityCaptor.value.body).isEqualTo(""""{"versjon":"1","tema":"BID","status":"UNDER_BEHANDLING"}""")
     }
 }

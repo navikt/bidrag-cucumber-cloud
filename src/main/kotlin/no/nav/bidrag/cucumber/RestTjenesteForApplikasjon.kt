@@ -105,7 +105,10 @@ internal object RestTjenesteForApplikasjon {
     }
 
     class RestTjenesteForApplikasjonThreadLocal {
-        private val resttjenester = ThreadLocal<MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl>>()
+        companion object {
+            @JvmStatic
+            private val REST_TJENESTER = ThreadLocal<MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl>>()
+        }
 
         fun hentEllerKonfigurer(applicationName: String, konfigurer: () -> RestTjeneste.ResttjenesteMedBaseUrl): RestTjeneste.ResttjenesteMedBaseUrl {
             val tradensResttjenester = hentEllerLag()
@@ -113,11 +116,11 @@ internal object RestTjenesteForApplikasjon {
         }
 
         private fun hentEllerLag(): MutableMap<String, RestTjeneste.ResttjenesteMedBaseUrl> {
-            if (resttjenester.get() == null) {
-                resttjenester.set(HashMap())
+            if (REST_TJENESTER.get() == null) {
+                REST_TJENESTER.set(HashMap())
             }
 
-            return resttjenester.get()
+            return REST_TJENESTER.get()
         }
     }
 }

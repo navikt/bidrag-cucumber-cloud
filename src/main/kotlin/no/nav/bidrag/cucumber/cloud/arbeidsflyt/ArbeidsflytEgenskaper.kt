@@ -34,7 +34,7 @@ class ArbeidsflytEgenskaper : No {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     message = "Søkeresultatet skal være 1",
-                    value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreff"],
+                    value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
                     expectation = 1
                 ),
                 this::harForventetAntallTreff
@@ -45,7 +45,7 @@ class ArbeidsflytEgenskaper : No {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     "Søkeresultatet skal være 0",
-                    FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreff"],
+                    FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
                     0
                 ),
                 this::harForventetAntallTreff

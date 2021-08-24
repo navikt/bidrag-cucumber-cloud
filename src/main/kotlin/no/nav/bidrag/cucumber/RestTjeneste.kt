@@ -17,22 +17,22 @@ open class RestTjeneste(
     internal val rest: ResttjenesteMedBaseUrl
 ) {
     private lateinit var fullUrl: FullUrl
-    private lateinit var responseEntity: ResponseEntity<String?>
+    internal var responseEntity: ResponseEntity<String?>? = null
 
     constructor(naisApplication: String) : this(RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
     fun hentFullUrlMedEventuellWarning() = "${fullUrl.get()}${appendWarningWhenExists()}"
-    fun hentHttpStatus(): HttpStatus = responseEntity.statusCode
-    fun hentResponse(): String? = responseEntity.body
-    fun hentResponseSomMap() = if (responseEntity.statusCode == HttpStatus.OK && responseEntity.body != null)
-        ObjectMapper().readValue(responseEntity.body, Map::class.java) as Map<String, Any>
+    fun hentHttpStatus(): HttpStatus = responseEntity?.statusCode ?: HttpStatus.I_AM_A_TEAPOT
+    fun hentResponse(): String? = responseEntity?.body
+    fun hentResponseSomMap() = if (responseEntity?.statusCode == HttpStatus.OK && responseEntity?.body != null)
+        ObjectMapper().readValue(responseEntity!!.body, Map::class.java) as Map<String, Any>
     else
         HashMap()
 
     private fun appendWarningWhenExists(): String {
-        val warnings = responseEntity.headers[HttpHeaders.WARNING] ?: emptyList()
+        val warnings = responseEntity?.headers?.get(HttpHeaders.WARNING) ?: emptyList()
 
-        return if (warnings.isNotEmpty()) " - ${warnings.get(0)}" else ""
+        return if (warnings.isNotEmpty()) " - ${warnings[0]}" else ""
     }
 
     fun exchangeGet(endpointUrl: String): ResponseEntity<String?> {
@@ -43,11 +43,11 @@ open class RestTjeneste(
         exchange(HttpEntity(null, header), endpointUrl, HttpMethod.GET)
 
         ScenarioManager.log(
-            if (responseEntity.body != null) "response with json and status ${responseEntity.statusCode}"
-            else "no response body with status ${responseEntity.statusCode}"
+            if (responseEntity?.body != null) "response with json and status ${responseEntity!!.statusCode}"
+            else if (responseEntity == null) "no response entity" else "no response body with status ${responseEntity!!.statusCode}"
         )
 
-        return responseEntity
+        return responseEntity ?: ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build()
     }
 
     private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
@@ -66,6 +66,11 @@ open class RestTjeneste(
     fun exchangePost(endpointUrl: String, json: String) {
         val jsonEntity = httpEntity(endpointUrl, json)
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
+    }
+
+    fun exchangePatch(endpointUrl: String, json: String) {
+        val jsonEntity = httpEntity(endpointUrl, json)
+        exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
     }
 
     private fun httpEntity(endpointUrl: String, json: String): HttpEntity<String> {
