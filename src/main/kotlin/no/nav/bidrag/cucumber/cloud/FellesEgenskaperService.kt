@@ -5,12 +5,15 @@ import no.nav.bidrag.cucumber.RestTjeneste
 import org.slf4j.LoggerFactory
 
 object FellesEgenskaperService {
+    @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
+
+    @JvmStatic
     private val RESTTJENESTER = ThreadLocal<RestTjeneste>()
 
     fun assertWhenNotSanityCheck(assertion: Assertion, verify: (input: Assertion) -> Unit) {
         if (Environment.isSanityCheck) {
-            LOGGER.info("No assertion: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
+            LOGGER.info("Sanity check: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
         } else {
             verify(assertion)
         }

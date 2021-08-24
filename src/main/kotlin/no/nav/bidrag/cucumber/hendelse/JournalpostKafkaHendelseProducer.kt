@@ -4,18 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaper
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
+
+private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
 
 class JournalpostKafkaHendelseProducer(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val topic: String,
     private val objectMapper: ObjectMapper
 ) : HendelseProducer {
-    companion object {
-        private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
-    }
 
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
@@ -31,7 +32,6 @@ class JournalpostKafkaHendelseProducer(
 }
 
 interface HendelseProducer {
-
     fun publish(journalpostHendelse: JournalpostHendelse)
 }
 
@@ -41,6 +41,12 @@ data class JournalpostHendelse(
     val sporing: Sporingsdata = Sporingsdata(CorrelationId.fetchCorrelationIdForThread()),
     val detaljer: Map<String, String?> = emptyMap()
 ) {
+    constructor(detaljer: Map<String, String>, hendelse: Hendelse, tema: String) : this(
+        detaljer = detaljer,
+        journalpostId = ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.hent(hendelse, tema),
+        hendelse = hendelse.name
+    )
+
     init {
         sporing.brukerident = Environment.testUsername
     }

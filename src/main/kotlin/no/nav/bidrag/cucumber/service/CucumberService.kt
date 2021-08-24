@@ -16,13 +16,14 @@ import java.io.PrintStream
 import java.nio.charset.Charset
 
 @Service
-class CucumberService(private val suppressStackTraceText: SuppressStackTraceText, hendelseProducer: HendelseProducer) {
+class CucumberService(private val suppressStackTraceText: SuppressStackTraceText, hendelseProducer: HendelseProducer, objectMapper: ObjectMapper) {
     companion object {
         private val LOGGER = LoggerFactory.getLogger(CucumberService::class.java)
     }
 
     init {
         BidragCucumberSingletons.hendelseProducer = hendelseProducer
+        BidragCucumberSingletons.objectMapper = objectMapper
     }
 
     internal fun run(cucumberTests: CucumberTests): String {

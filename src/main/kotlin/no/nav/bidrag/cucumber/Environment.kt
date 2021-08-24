@@ -4,8 +4,13 @@ import no.nav.bidrag.cucumber.model.CucumberTests
 import org.slf4j.LoggerFactory
 
 internal object Environment {
+    @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(Environment::class.java)
+
+    @JvmStatic
     private val CUCUMBER_TESTS = ThreadLocal<CucumberTests>()
+
+    @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
 
     val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: unknownProperty(AZURE_APP_CLIENT_ID)
