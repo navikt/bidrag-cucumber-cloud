@@ -8,6 +8,8 @@ metadata:
 spec:
   accessPolicy:
     outbound:
+      external:
+        - host: {{ access.outbound.oppgave }}
       rules:
         - application: {{ access.outbound.bidrag-sak }}
           clusted: dev-fss
