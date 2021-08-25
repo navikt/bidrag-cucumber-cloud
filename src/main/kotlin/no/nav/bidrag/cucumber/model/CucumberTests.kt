@@ -61,6 +61,11 @@ data class CucumberTests(
 
         val values = ArrayList(ingressesForApps)
         values.addAll(tags)
+
+        if (stringedTags.isEmpty()) {
+            throw IllegalStateException("Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser og prefiks app med 'tag:'")
+        }
+
         LOGGER.info("Created '$stringedTags' from $values")
 
         return stringedTags
