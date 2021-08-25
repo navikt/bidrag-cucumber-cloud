@@ -113,7 +113,7 @@ jobs:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"tags":["@bidrag-arbeidsflyt"],"sanityCheck":true,"ingressesForApps":[
+               --data '{"tags":["@bidrag-arbeidsflyt"],"sanityCheck":true,"testUsername":"z992903","ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}/@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result

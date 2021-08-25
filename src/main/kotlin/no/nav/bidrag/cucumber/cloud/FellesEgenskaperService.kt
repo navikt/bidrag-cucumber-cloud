@@ -20,6 +20,7 @@ object FellesEgenskaperService {
     }
 
     fun settOppNaisApp(naisApplikasjon: String) {
+        LOGGER.info("Setter opp $naisApplikasjon")
         RESTTJENESTER.set(RestTjeneste(naisApplikasjon))
     }
 
