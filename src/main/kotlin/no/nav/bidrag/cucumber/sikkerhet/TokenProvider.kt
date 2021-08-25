@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate
 
 class TokenProvider(private val provider: Provider) {
     companion object {
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(TokenProvider::class.java)
     }
 

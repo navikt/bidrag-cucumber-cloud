@@ -10,13 +10,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
 
-private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
 
 class JournalpostKafkaHendelseProducer(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val topic: String,
     private val objectMapper: ObjectMapper
 ) : HendelseProducer {
+    companion object {
+        @JvmStatic
+        private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
+    }
 
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {

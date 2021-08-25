@@ -5,6 +5,7 @@ import java.io.File
 
 data class FilePath(val fileName: String) {
     companion object {
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(FilePath::class.java)
     }
 
