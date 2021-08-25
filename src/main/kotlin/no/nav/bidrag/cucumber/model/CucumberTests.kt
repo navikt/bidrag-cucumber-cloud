@@ -1,8 +1,11 @@
 package no.nav.bidrag.cucumber.model
 
 import io.swagger.v3.oas.annotations.media.Schema
+import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import org.slf4j.LoggerFactory
+import java.io.File
+import java.io.InputStream
 
 @Schema(description = "Dto med data for en testkjøring (som gjøres av `io.cucumber.core.cli.Main`)")
 data class CucumberTests(
@@ -15,6 +18,19 @@ data class CucumberTests(
     companion object {
         const val NOT_IGNORED = "not @ignored"
         private val LOGGER = LoggerFactory.getLogger(CucumberTests::class.java)
+        private val FEATURE_FILES = File(ABSOLUTE_CLOUD_PATH)
+            .walkBottomUp()
+            .filter { it.isFile }
+            .filter { it.name.endsWith(".feature") }
+            .toList()
+
+        private val NAMES_OF_FEATURE_FILES = FEATURE_FILES.joinToString(separator = ", ") { it.name }
+
+        private fun isTagPresent(file: File, tag: String): Boolean {
+            val inputStream: InputStream = file.inputStream()
+            return inputStream.bufferedReader().use { it.readText() }
+                .contains(tag)
+        }
     }
 
     fun getSanityCheck() = sanityCheck?.toString() ?: "false"
@@ -45,13 +61,25 @@ data class CucumberTests(
         return stringedTags
     }
 
-    fun transformToString(tags: List<String>): String {
+    private fun transformToString(tags: List<String>): String {
         if (tags.isEmpty()) {
             return ""
         }
 
+        tags.forEach { isFeatureTag(it) }
+
         return tags.joinToString(prefix = "(", postfix = " and $NOT_IGNORED)", separator = " and $NOT_IGNORED) or (")
     }
+
+    private fun isFeatureTag(tag: String) {
+        if (isTagPresentInFeatureFile(tag)) {
+            throw IllegalStateException("$tag er ukjent blant $NAMES_OF_FEATURE_FILES")
+        }
+    }
+
+    private fun isTagPresentInFeatureFile(tag: String) = FEATURE_FILES.stream()
+        .filter { file: File -> isTagPresent(file, tag) }
+        .findFirst().isEmpty
 
     private fun joinWithTagList(tagsFromIngresses: String): String {
         if (tags.isEmpty()) {

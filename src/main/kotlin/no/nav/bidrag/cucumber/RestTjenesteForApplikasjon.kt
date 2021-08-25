@@ -44,7 +44,7 @@ internal object RestTjenesteForApplikasjon {
             httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureBearerToken() }
         } else {
             val message = if (Environment.isSanityCheck) {
-                "No security provided when running sanity check on $applicationName"
+                "No security needed when running sanity check on $applicationName"
             } else {
                 "No user to provide security for when accessing $applicationName"
             }

@@ -155,7 +155,7 @@ jobs:
     needs:
       - run-cucumber-tests-for-cucumber-cloud
       - run-cucumber-tests-for-bidrag-arbeidsflyt
-#      - run-cucumber-tests-for-bidrag-beregn
+      - run-cucumber-tests-for-bidrag-beregn
 
     steps:
       - uses: actions/checkout@v2
