@@ -29,7 +29,7 @@ class TokenProvider(private val provider: Provider) {
         map.add("grant_type", "password")
         map.add("scope", "openid ${Environment.clientId}/.default")
         map.add("username", Environment.tenantUsername)
-        map.add("password", Environment.testUserAuth)
+        map.add("password", if (Environment.isNotSanityCheck()) Environment.testUserAuth else "sanity-check")
 
         LOGGER.info("> url    : $azureAdUrl")
         LOGGER.info("> headers: $httpHeaders")
@@ -56,7 +56,13 @@ class TokenProvider(private val provider: Provider) {
 
     class DefaultProvider(private val restTemplate: RestTemplate) : Provider {
         override fun postForEntity(azureAdUrl: String, httpEntity: HttpEntity<*>): ResponseEntity<Token?> {
-            return restTemplate.postForEntity(azureAdUrl, httpEntity, Token::class.java)
+            if (Environment.isNotSanityCheck()) {
+                LOGGER.info("Hent azure token fra $azureAdUrl")
+                return restTemplate.postForEntity(azureAdUrl, httpEntity, Token::class.java)
+            }
+
+            LOGGER.info("Henter ikke security taoken ved sanity check")
+            return ResponseEntity.badRequest().build()
         }
     }
 }

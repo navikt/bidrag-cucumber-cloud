@@ -13,13 +13,13 @@ internal object Environment {
     @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
 
-    val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: unknownProperty(AZURE_APP_CLIENT_ID)
-    val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: unknownProperty(AZURE_APP_CLIENT_SECRET)
-    val alleIngresserForApper: String get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchNonNull(INGRESSES_FOR_APPS)
+    private val alleIngresserForApper: String get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchNonNull(INGRESSES_FOR_APPS)
+    val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: "unknown-AZURE_APP_CLIENT_ID"
+    val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: "unknown-AZURE_APP_CLIENT_SECRET"
     val isSanityCheck: Boolean get() = CUCUMBER_TESTS.get()?.sanityCheck ?: fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
     val testUsername: String? get() = CUCUMBER_TESTS.get()?.testUsername ?: fetchPropertyOrEnvironment(TEST_USER)
     val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthForTestUser()) ?: unknownProperty(testAuthForTestUser())
-    val tenant: String get() = fetchPropertyOrEnvironment(AZURE_APP_TENANT_ID) ?: unknownProperty(AZURE_APP_TENANT_ID)
+    val tenant: String get() = fetchPropertyOrEnvironment(AZURE_APP_TENANT_ID) ?: "unknown-AZURE_APP_TENANT_ID"
     val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
 
     fun isNotSanityCheck() = !isSanityCheck
@@ -64,12 +64,11 @@ internal object Environment {
     private fun splitIngressAndApplication(string: String): Pair<String, String> {
         val ingress = string.split('@')[0]
         val ingressApp = string.split('@')[1]
-        val app: String
 
-        if (ingressApp.startsWith("tag:")) {
-            app = ingressApp.substring(4)
+        val app = if (ingressApp.startsWith("tag:")) {
+            ingressApp.substring(4)
         } else {
-            app = ingressApp
+            ingressApp
         }
 
         LOGGER.info("Lager ingress av $string (${somStreng(ingressApp, app)})")

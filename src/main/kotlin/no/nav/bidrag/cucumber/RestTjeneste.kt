@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -18,6 +19,11 @@ open class RestTjeneste(
 ) {
     private lateinit var fullUrl: FullUrl
     internal var responseEntity: ResponseEntity<String?>? = null
+
+    companion object {
+        @JvmStatic
+        private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
+    }
 
     constructor(naisApplication: String) : this(RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
@@ -82,16 +88,21 @@ open class RestTjeneste(
     }
 
     private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
-        try {
-            ScenarioManager.log("$httpMethod: $fullUrl")
-            responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
-        } catch (e: HttpStatusCodeException) {
-            ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e")
-            responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+        ScenarioManager.log("$httpMethod: $fullUrl")
 
-            if (Environment.isNotSanityCheck()) {
-                throw e
+        if (Environment.isNotSanityCheck() || Environment.isSanityCheck && Environment.isTestUserPresent()) {
+            try {
+                responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
+            } catch (e: HttpStatusCodeException) {
+                ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e")
+                responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+
+                if (Environment.isNotSanityCheck()) {
+                    throw e
+                }
             }
+        } else {
+            LOGGER.info("Ikke nødvendig å kontakte endpoint uten testbruker ved sanity check!")
         }
     }
 
