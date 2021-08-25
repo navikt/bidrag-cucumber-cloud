@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
  * Service class in order to loosely couple logic from cucumber infrastructure
  */
 object ArbeidsflytEgenskaperEndreFagomradeService {
+    @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaperEndreFagomradeService::class.java)
 
     fun opprettOppgave(hendelse: Hendelse, journalpostId: Long, tema: String) {

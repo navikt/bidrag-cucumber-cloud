@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter
 
 class ScenarioManager {
     companion object {
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(ScenarioManager::class.java)
 
         private lateinit var correlationIdForScenario: String

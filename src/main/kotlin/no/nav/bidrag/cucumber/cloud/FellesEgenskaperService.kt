@@ -13,7 +13,7 @@ object FellesEgenskaperService {
 
     fun assertWhenNotSanityCheck(assertion: Assertion, verify: (input: Assertion) -> Unit) {
         if (Environment.isSanityCheck) {
-            LOGGER.info("Sanity check: ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
+            LOGGER.info("Sanity check - ${assertion.message}: '${assertion.value}', wanted: '${assertion.expectation}'")
         } else {
             verify(assertion)
         }

@@ -17,13 +17,18 @@ data class CucumberTests(
 ) {
     companion object {
         const val NOT_IGNORED = "not @ignored"
+
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(CucumberTests::class.java)
+
+        @JvmStatic
         private val FEATURE_FILES = File(ABSOLUTE_CLOUD_PATH)
             .walkBottomUp()
             .filter { it.isFile }
             .filter { it.name.endsWith(".feature") }
             .toList()
 
+        @JvmStatic
         private val NAMES_OF_FEATURE_FILES = FEATURE_FILES.joinToString(separator = ", ") { it.name }
 
         private fun isTagPresent(file: File, tag: String): Boolean {

@@ -1,18 +1,14 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
+import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory
-import org.apache.http.impl.client.HttpClients
-import org.apache.http.ssl.SSLContexts
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.web.util.UriTemplateHandler
 import java.net.URI
-import java.security.cert.X509Certificate
 
 internal object RestTjenesteForApplikasjon {
+    @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(RestTjenesteForApplikasjon::class.java)
     private val REST_TJENESTE_FOR_APPLIKASJON = RestTjenesteForApplikasjonThreadLocal()
 
@@ -36,8 +32,7 @@ internal object RestTjenesteForApplikasjon {
 
     private fun konfigurerSikkerhet(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
-        val httpComponentsClientHttpRequestFactory = hentHttpRequestFactorySomIgnorererHttps()
-        val httpHeaderRestTemplate = HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
+        val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         if (Environment.isNotSanityCheck() && Environment.isTestUserPresent()) {
@@ -53,25 +48,6 @@ internal object RestTjenesteForApplikasjon {
         }
 
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
-    }
-
-    private fun hentHttpRequestFactorySomIgnorererHttps(): HttpComponentsClientHttpRequestFactory {
-        val acceptingTrustStrategy = { _: Array<X509Certificate>, _: String -> true }
-        val sslContext = SSLContexts.custom()
-            .loadTrustMaterial(null, acceptingTrustStrategy)
-            .build()
-
-        val csf = SSLConnectionSocketFactory(sslContext)
-
-        val httpClient = HttpClients.custom()
-            .setSSLSocketFactory(csf)
-            .build()
-
-        val requestFactory = HttpComponentsClientHttpRequestFactory()
-
-        requestFactory.httpClient = httpClient
-
-        return requestFactory
     }
 
     private class BaseUrlTemplateHandler(val baseUrl: String) : UriTemplateHandler {

@@ -10,20 +10,28 @@ import no.nav.bidrag.cucumber.model.CucumberTests
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.nio.charset.Charset
 
 @Service
-class CucumberService(private val suppressStackTraceText: SuppressStackTraceText, hendelseProducer: HendelseProducer, objectMapper: ObjectMapper) {
+class CucumberService(
+    private val suppressStackTraceText: SuppressStackTraceText,
+    applicationContext: ApplicationContext,
+    hendelseProducer: HendelseProducer,
+    objectMapper: ObjectMapper
+) {
     companion object {
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(CucumberService::class.java)
     }
 
     init {
         BidragCucumberSingletons.hendelseProducer = hendelseProducer
         BidragCucumberSingletons.objectMapper = objectMapper
+        BidragCucumberSingletons.addContextFromSpring(applicationContext)
     }
 
     internal fun run(cucumberTests: CucumberTests): String {

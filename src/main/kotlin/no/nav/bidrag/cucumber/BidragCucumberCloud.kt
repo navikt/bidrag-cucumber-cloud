@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @SpringBootApplication
 class BidragCucumberCloud {
     companion object {
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(BidragCucumberCloud::class.java)
 
         @JvmStatic

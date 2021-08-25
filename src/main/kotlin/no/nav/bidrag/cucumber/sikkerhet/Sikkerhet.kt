@@ -7,8 +7,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.web.client.RestTemplate
 
 internal object Sikkerhet {
+    @JvmStatic
     private val AZURE_AD_URL = "${AZURE_LOGIN_ENDPOINT}/${Environment.tenant}/oauth2/v2.0/token"
+
+    @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(Sikkerhet::class.java)
+
     private val tokenProvider = TokenProvider(RestTemplate())
 
     internal fun fetchAzureBearerToken(): String {

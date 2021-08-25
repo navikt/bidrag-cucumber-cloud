@@ -10,7 +10,10 @@ import java.io.File
 
 class BeregnEgenskaper : No {
     companion object {
+        @JvmStatic
         private val BEREGN_RESOURCES = "$ABSOLUTE_CLOUD_PATH/beregn"
+
+        @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
     }
 
