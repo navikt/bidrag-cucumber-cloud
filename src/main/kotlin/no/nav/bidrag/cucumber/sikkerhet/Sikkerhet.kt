@@ -18,9 +18,9 @@ internal object Sikkerhet {
     internal fun fetchAzureBearerToken(): String {
         try {
             return if (Environment.isNotSecurityTokenProvided()) {
-                fetchBearerToken(tokenProvider.fetchAzureToken(AZURE_AD_URL))
+                bearerTokenOf(tokenProvider.fetchAzureToken(AZURE_AD_URL))
             } else {
-                fetchBearerToken(Environment.fetch(SECURITY_TOKEN)!!)
+                bearerTokenOf(Environment.fetch(SECURITY_TOKEN)!!)
             }
         } catch (e: RuntimeException) {
             val exception = "${e.javaClass.name}: ${e.message} - ${e.stackTrace.first { it.fileName != null && it.fileName!!.endsWith("kt") }}"
@@ -29,5 +29,5 @@ internal object Sikkerhet {
         }
     }
 
-    private fun fetchBearerToken(token: String) = "Bearer $token"
+    private fun bearerTokenOf(token: String) = "Bearer $token"
 }

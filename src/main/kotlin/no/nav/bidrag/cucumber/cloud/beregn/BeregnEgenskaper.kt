@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.cloud.beregn
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
@@ -27,21 +28,49 @@ class BeregnEgenskaper : No {
         }
 
         Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
-            val documentContext = JsonPath.parse(hentRestTjeneste().hentResponse())
-            var resultatBelop = documentContext.read<Any>(sti).toString()
+            val response = hentRestTjeneste().hentResponse()
+            var resultatBelop = if (response != null) {
+                val documentContext = JsonPath.parse(response)
+                documentContext.read<Any>(sti).toString()
+            } else {
+                "-1"
+            }
 
             if (resultatBelop.endsWith(".0")) {
                 resultatBelop = resultatBelop.removeSuffix(".0")
             }
 
-            assertThat(resultatBelop).isEqualTo(belop)
+            FellesEgenskaperService.assertWhenNotSanityCheck(
+                FellesEgenskaperService.Assertion(
+                    message = "Resultatbeløp",
+                    value = resultatBelop,
+                    expectation = belop
+                ),
+                this::harForventetResultat
+            )
         }
 
         Og("responsen skal inneholde resultatkoden {string} under stien {string}") { resultatkode: String, sti: String ->
-            val documentContext = JsonPath.parse(hentRestTjeneste().hentResponse())
-            val kode = documentContext.read<Any>(sti).toString()
+            val response = hentRestTjeneste().hentResponse()
+            val kode = if (response != null) {
+                val documentContext = JsonPath.parse(response)
+                documentContext.read<Any>(sti).toString()
+            } else {
+                "null"
+            }
 
-            assertThat(kode).isEqualTo(resultatkode)
+            FellesEgenskaperService.assertWhenNotSanityCheck(
+                FellesEgenskaperService.Assertion(
+                    message = "Resultatkode",
+                    value = resultatkode,
+                    expectation = kode
+                ),
+                this::harForventetResultat
+            )
         }
+    }
+
+    private fun harForventetResultat(assertion: FellesEgenskaperService.Assertion) {
+        assertThat(assertion.expectation).`as`(assertion.message).isEqualTo(1)
     }
 }

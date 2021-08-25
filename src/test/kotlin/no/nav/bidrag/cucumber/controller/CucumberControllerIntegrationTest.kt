@@ -5,7 +5,6 @@ import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -84,9 +83,29 @@ internal class CucumberControllerIntegrationTest {
             String::class.java
         )
 
-        assertAll(
-            { assertThat(testResponse.statusCode).`as`("status").isEqualTo(HttpStatus.OK) },
-            { assertThat(testResponse.body).`as`("body").contains("Scenarios").contains("Steps").contains("passed") }
+        assertThat(testResponse.body).`as`("body").contains("Scenarios").contains("Steps").contains("passed")
+    }
+
+    @Test
+    fun `skal ikke feile når det er sanity check selv om det sendes med brukernavn til en testbruker`() {
+        assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"],
+                  "sanityCheck":true,
+                  "testUsername":"z992903"
+                }
+                """.trimMargin().trim(), headers
+            ),
+            String::class.java
         )
+
+        assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.OK)
     }
 }

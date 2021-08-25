@@ -48,4 +48,12 @@ internal class CucumberTestsTest {
             .withMessageContaining("@not-available er ukjent")
             .withMessageContaining("bidrag-cucumber-cloud.feature")
     }
+
+    @Test
+    fun `skal feile hvis det ikke finnes noen tags`() {
+        val cucumberTests = CucumberTests(ingressesForApps = listOf("shit@not-available"), tags = emptyList())
+
+        assertThatIllegalStateException().isThrownBy { cucumberTests.fetchTags() }
+            .withMessage("Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser og prefiks app med 'tag:'")
+    }
 }
