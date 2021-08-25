@@ -11,7 +11,7 @@ data class FilePath(val fileName: String) {
     internal fun findFile() = File(".")
         .walkBottomUp()
         .filterNot { it.absolutePath.contains("/target/") }
-        .filter { it.name.contains(".path") }
+        .filter { it.name.endsWith(".path") }
         .find { isFileName(it) } ?: throw IllegalStateException("Cannot find $fileName located in ${File(".").absolutePath}")
 
     private fun isFileName(file: File): Boolean {
