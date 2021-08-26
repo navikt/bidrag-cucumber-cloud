@@ -17,14 +17,16 @@ internal object RestTjenesteForApplikasjon {
     }
 
     private fun konfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
-
-        val ingress = Environment.fetchIngress(applicationName)
-        val applicationUrl = joinIngressAndApplicationName(ingress, applicationName)
-
-        return konfigurerSikkerhet(applicationName, applicationUrl)
+        return konfigurerSikkerhet(applicationName, konfigurerApplikasjonUrl(applicationName))
     }
 
-    private fun joinIngressAndApplicationName(ingress: String, applicationName: String): String {
+    internal fun konfigurerApplikasjonUrl(applicationName: String): String {
+        val ingress = Environment.fetchIngress(applicationName)
+
+        if (Environment.isNoContextPathForApp(applicationName)) {
+            return ingress
+        }
+
         val ingressUrl = if (ingress.endsWith('/')) ingress.removeSuffix("/") else ingress
 
         return "$ingressUrl/$applicationName"

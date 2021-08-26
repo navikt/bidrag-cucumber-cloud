@@ -14,12 +14,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.never
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpEntity
@@ -74,9 +74,9 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
 
     @Test
     fun `skal opprette oppgave`() {
-        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().build())
-        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
 
         ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(Hendelse.AVVIK_ENDRE_FAGOMRADE, journalpostId, tema)
@@ -86,9 +86,9 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
 
     @Test
     fun `skal ikke opprette oppgave når den eksisterer fra før`() {
-        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().build())
-        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1"}]}""")
         )
 
@@ -99,7 +99,7 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
 
     @Test
     fun `skal sette sette status til UNDER_BEHANDLING på oppgave som eksisterer fra før`() {
-        `when`(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}""")
         )
 

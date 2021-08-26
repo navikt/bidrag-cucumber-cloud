@@ -95,4 +95,14 @@ internal object Environment {
         CUCUMBER_TESTS.remove()
         INGRESS_FOR_APP.remove()
     }
+
+    fun isNoContextPathForApp(applicationName: String): Boolean {
+        val isNoContextPath = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) != null) {
+            fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
+        } else {
+            CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
+        }
+
+        return isNoContextPath ?: false
+    }
 }
