@@ -71,17 +71,9 @@ internal object Environment {
             ingressApp
         }
 
-        LOGGER.info("Lager ingress av $string (${somStreng(ingressApp, app)})")
+        LOGGER.info("Ingress til nais applikasjon: $app -> $string")
 
         return Pair(ingress, app)
-    }
-
-    private fun somStreng(ingressApp: String, app: String): String {
-        if (ingressApp != app) {
-            return "$ingressApp vs $app"
-        }
-
-        return app
     }
 
     fun initCucumberEnvironment(cucumberTests: CucumberTests) {
@@ -96,13 +88,13 @@ internal object Environment {
         INGRESS_FOR_APP.remove()
     }
 
-    fun isNoContextPathForApp(applicationName: String): Boolean {
-        val isNoContextPath = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) != null) {
-            fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
-        } else {
+    fun isNotontextPathForApp(applicationName: String): Boolean {
+        val noContextPath = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {
             CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
+        } else {
+            fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
         }
 
-        return isNoContextPath ?: false
+        return noContextPath ?: false
     }
 }

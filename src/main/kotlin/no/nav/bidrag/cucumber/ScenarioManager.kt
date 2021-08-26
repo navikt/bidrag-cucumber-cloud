@@ -49,17 +49,17 @@ class ScenarioManager {
         }
 
         private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
-            when {
-                scenario != null -> {
-                    val title = logLevel.produceMessageTitle(messageTitle)
-                    scenario!!.log("$title<p>\n$message\n</p>")
-                    LOGGER.info(message)
-                }
-                logLevel == LogLevel.INFO -> {
-                    LOGGER.info("Outside scenario: $message")
-                }
-                else -> {
-                    LOGGER.error("Outside scenario: $message")
+            if (scenario != null) {
+                scenario!!.log(logLevel.produceLogMessage(messageTitle, message))
+            } else {
+                when (logLevel) {
+                    LogLevel.INFO -> {
+                        LOGGER.info("Outside scenario: $message")
+                    }
+
+                    LogLevel.ERROR -> {
+                        LOGGER.error("Outside scenario: $message")
+                    }
                 }
             }
         }
@@ -84,14 +84,14 @@ class ScenarioManager {
         private enum class LogLevel {
             INFO, ERROR;
 
-            fun produceMessageTitle(messageTitle: String?) = if (messageTitle != null && this == INFO)
-                "<h5>$messageTitle</h5>\n"
-            else if (messageTitle != null && this == ERROR)
-                "<h5>An error occured: $messageTitle</h5>\n"
-            else if (this == ERROR)
-                "<h5>An error occured!</h5>\n"
-            else
-                ""
+            fun produceLogMessage(messageTitle: String?, message: String) = when (this) {
+                INFO -> {
+                    if (messageTitle != null) "$messageTitle: $message" else message
+                }
+                ERROR -> {
+                    if (messageTitle != null) "An error accured! - $messageTitle: $message" else "An error occured! $message"
+                }
+            }
         }
     }
 }
