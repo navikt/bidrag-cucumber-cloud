@@ -201,14 +201,14 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
-       --data '{"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag>"]}' \
+       --data '{"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag:tagnavn>"]}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
   ```
   curl -H "Content-Type: application/json" \
        --request POST \
-       --data '{"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
+       --data '{"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag:tagnavn>"],"securityToken"="<security token (uten Bearer)}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 
@@ -222,6 +222,3 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 4. Trykk på "Try it out"
 5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
 6. Press `Execute`
-
-**NB!**
-Testen kan feile selv om `sanityCheck=true`. Det betyr at ingressen har feil...
