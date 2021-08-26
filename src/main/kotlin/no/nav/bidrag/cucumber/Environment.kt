@@ -71,7 +71,7 @@ internal object Environment {
             ingressApp
         }
 
-        LOGGER.info("Ingress til nais applikasjon: $app -> $string")
+        LOGGER.info("Ingress@naisApp: $string")
 
         return Pair(ingress, app)
     }

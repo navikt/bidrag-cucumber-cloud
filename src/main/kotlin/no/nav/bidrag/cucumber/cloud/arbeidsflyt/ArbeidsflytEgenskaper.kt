@@ -13,7 +13,6 @@ class ArbeidsflytEgenskaper : No {
 
     companion object {
         internal val prefiksetJournalpostIdForHendelse = PrefiksetJournalpostIdForHendelse()
-        fun hentId(hendelse: Hendelse, tema: String) = prefiksetJournalpostIdForHendelse.hent(hendelse, tema)
     }
 
     init {
@@ -33,9 +32,9 @@ class ArbeidsflytEgenskaper : No {
         Så("skal jeg finne oppgaven i søkeresultatet") {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
-                    message = "Søkeresultatet skal være 1",
+                    message = "Forventet å finne oppgaven",
                     value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = 1
+                    expectation = "1"
                 ),
                 this::harForventetAntallTreff
             )
@@ -44,9 +43,9 @@ class ArbeidsflytEgenskaper : No {
         Så("skal jeg ikke finne oppgaven i søkeresultatet") {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
-                    "Søkeresultatet skal være 0",
+                    "Forventet ikke å finne oppgaven",
                     FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    0
+                    "0"
                 ),
                 this::harForventetAntallTreff
             )
