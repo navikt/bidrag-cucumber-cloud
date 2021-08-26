@@ -25,7 +25,12 @@ internal object Sikkerhet {
         } catch (e: RuntimeException) {
             val exception = "${e.javaClass.name}: ${e.message} - ${e.stackTrace.first { it.fileName != null && it.fileName!!.endsWith("kt") }}"
             LOGGER.error("Feil ved henting av online id token, $exception")
-            throw e
+
+            if (Environment.isNotSanityCheck()) {
+                throw e
+            }
+
+            return "na-sanity-check"
         }
     }
 
