@@ -13,7 +13,9 @@ internal object Environment {
     @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
 
-    private val alleIngresserForApper: String get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchNonNull(INGRESSES_FOR_APPS)
+    private val alleIngresserForApper: String
+        get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchPropertyOrEnvironment(INGRESSES_FOR_APPS)
+
     val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: "unknown-AZURE_APP_CLIENT_ID"
     val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: "unknown-AZURE_APP_CLIENT_SECRET"
     val isSanityCheck: Boolean get() = CUCUMBER_TESTS.get()?.sanityCheck ?: fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
