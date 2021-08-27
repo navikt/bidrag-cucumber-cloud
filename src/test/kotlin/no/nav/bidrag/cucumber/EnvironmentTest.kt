@@ -1,6 +1,6 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test
 internal class EnvironmentTest {
     @Test
     fun `skal hente passord basert på testUsername`() {
-        val cucumberTests = CucumberTests(testUsername = "jactor-rises")
-        cucumberTests.initCucumberEnvironment()
+        val cucumberTestsDto = CucumberTestsDto(testUsername = "jactor-rises")
+        cucumberTestsDto.initCucumberEnvironment()
 
         System.setProperty("TEST_AUTH_JACTOR-RISES", "007")
         assertThat(Environment.testUserAuth).isEqualTo("007")
@@ -18,12 +18,12 @@ internal class EnvironmentTest {
 
     @Test
     fun `skal hente sanity check`() {
-        val cucumberTests = CucumberTests(sanityCheck = true)
-        cucumberTests.initCucumberEnvironment()
+        val cucumberTestsDto = CucumberTestsDto(sanityCheck = true)
+        cucumberTestsDto.initCucumberEnvironment()
 
         assertThat(Environment.isSanityCheck).isTrue
 
-        cucumberTests.sanityCheck = false
+        cucumberTestsDto.sanityCheck = false
         assertThat(Environment.isSanityCheck).isFalse
     }
 }

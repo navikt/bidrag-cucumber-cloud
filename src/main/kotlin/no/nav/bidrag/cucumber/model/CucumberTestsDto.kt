@@ -8,19 +8,19 @@ import java.io.File
 import java.io.InputStream
 
 @Schema(description = "Dto med data for en testkjøring (som gjøres av `io.cucumber.core.cli.Main`)")
-data class CucumberTests(
+data class CucumberTestsDto(
     @Schema(description = "liste med ingress@nais-app (kan også være en tag i en test, ingress som brukes for en gitt nais applikasjon)") var ingressesForApps: List<String> = emptyList(),
     @Schema(description = "Nais applikasjoner som ikke skal bruke applikasjonsnavnet som \"context path\" etter ingressen") var noContextPathForApps: List<String> = emptyList(),
     @Schema(description = "Om testkjøringen er en sanity check av *.feature-filer. Feiler ikke ved assertions, bare feil ved I/O") var sanityCheck: Boolean? = false,
-    @Schema(description = "Security token (on behalf of ad-token) som skal brukes ved lokal kjøring") var securityToken: String? = null,
+    @Schema(description = "Security (azure) token som skal brukes ved lokal kjøring") var securityToken: String? = null,
     @Schema(description = "liste med tags som skal testes uten å oppgi ingress") var tags: List<String> = emptyList(),
     @Schema(description = "Brukernavn (navident/saksbehandler) for testkjøring, eks: z123456") var testUsername: String? = null
 ) {
     companion object {
-        const val NOT_IGNORED = "not @ignored"
+        private const val NOT_IGNORED = "not @ignored"
 
         @JvmStatic
-        private val LOGGER = LoggerFactory.getLogger(CucumberTests::class.java)
+        private val LOGGER = LoggerFactory.getLogger(CucumberTestsDto::class.java)
 
         @JvmStatic
         private val FEATURE_FILES = File(ABSOLUTE_CLOUD_PATH)
@@ -104,4 +104,16 @@ data class CucumberTests(
         Environment.resetCucumberEnvironment()
         Environment.initCucumberEnvironment(this)
     }
+
+    internal fun warningLogDifferences() {
+        @Suppress("NullableBooleanElvis")
+        if (isNotEqual(sanityCheck ?: false, Environment.isSanityCheck)) warningForDifference("sanityCheck", sanityCheck, Environment.isSanityCheck)
+        if (isNotEqual(testUsername, Environment.tenantUsername)) warningForDifference("testUsername", testUsername, Environment.tenantUsername)
+    }
+
+    private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue == envValue
+
+    private fun warningForDifference(name: String, property: Any?, envValue: Any?) = LOGGER.warn(
+        "$property vs $envValue: (${this.javaClass.simpleName}/$name vs ${Environment::class.java.simpleName}.$name)"
+    )
 }
