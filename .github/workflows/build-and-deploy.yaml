@@ -96,6 +96,29 @@ jobs:
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka not http status code = 200)
 
+  run-cucumber-tests-for-bidrag-sak:
+    runs-on: ubuntu-latest
+    name: "Run tests: bidrag-sak"
+    needs: deploy
+
+    env:
+      INGRESS_SAK: https://bidrag-sak.dev-fss-pub.nais.io
+
+    steps:
+      - name: feature ingresses
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "INGRESS_SAK=https://bidrag-sak-feature-feature.dev-fss-pub.nais.io" >> $GITHUB_ENV
+          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"tags":["@bidrag-sak"],"testUsername":"z992903","ingressesForApps":[
+                   "${{ env.SAK }}/@tag:bidrag-sak"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka not http status code = 200)
+
   run-cucumber-tests-for-bidrag-arbeidsflyt:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-arbeidsflyt"

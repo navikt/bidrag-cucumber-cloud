@@ -86,10 +86,10 @@ class ScenarioManager {
 
             fun produceLogMessage(messageTitle: String?, message: String) = when (this) {
                 INFO -> {
-                    if (messageTitle != null) "$messageTitle: $message" else message
+                    if (messageTitle != null) "$messageTitle:\n$message\n" else "$message\n"
                 }
                 ERROR -> {
-                    if (messageTitle != null) "An error accured! - $messageTitle: $message" else "An error occured! $message"
+                    if (messageTitle != null) "An error accured!\n$messageTitle:\n$message\n" else "An error occured!\n$message\n"
                 }
             }
         }

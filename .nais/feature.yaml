@@ -3,6 +3,6 @@ ingresses:
   - https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no
 access:
   outbound:
-    bidrag-sak: bidrag-sak-feature
+    bidrag-sak: bidrag-sak-feature.dev-fss-pub.nais.io
     oppgave: oppgave-q1.dev-fss-pub.nais.io
 kafka-topic-journalpost: bidrag.journalpost-feature
