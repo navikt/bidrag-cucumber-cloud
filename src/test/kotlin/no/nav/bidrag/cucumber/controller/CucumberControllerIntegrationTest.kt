@@ -32,7 +32,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"]
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"]
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -53,7 +53,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"],
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
                   "sanityCheck":true
                 }
                 """.trimMargin().trim(), headers
@@ -75,7 +75,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"],
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
                   "sanityCheck":true
                 }
                 """.trimMargin().trim(), headers
@@ -97,7 +97,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-sak"],
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
                   "sanityCheck":true,
                   "testUsername":"z992903"
                 }

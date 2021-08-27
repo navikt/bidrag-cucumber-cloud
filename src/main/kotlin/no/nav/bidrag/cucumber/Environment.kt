@@ -13,7 +13,9 @@ internal object Environment {
     @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
 
-    private val alleIngresserForApper: String get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchNonNull(INGRESSES_FOR_APPS)
+    private val alleIngresserForApper: String
+        get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchPropertyOrEnvironment(INGRESSES_FOR_APPS)
+
     val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: "unknown-AZURE_APP_CLIENT_ID"
     val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: "unknown-AZURE_APP_CLIENT_SECRET"
     val isSanityCheck: Boolean get() = CUCUMBER_TESTS.get()?.sanityCheck ?: fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
@@ -27,7 +29,6 @@ internal object Environment {
     fun isTestUserPresent() = testUsername != null
     fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
 
-    private fun fetchNonNull(@Suppress("SameParameterValue") key: String) = fetchPropertyOrEnvironment(key) ?: unknownProperty(key)
     private fun fetchPropertyOrEnvironment(key: String) = fetch(key) ?: System.getenv(key)
     private fun testAuthForTestUser() = TEST_AUTH + '_' + testUsernameUppercase()
     private fun testUsernameUppercase() = testUsername?.uppercase()
@@ -63,13 +64,8 @@ internal object Environment {
 
     private fun splitIngressAndApplication(string: String): Pair<String, String> {
         val ingress = string.split('@')[0]
-        val ingressApp = string.split('@')[1]
-
-        val app = if (ingressApp.startsWith("tag:")) {
-            ingressApp.substring(4)
-        } else {
-            ingressApp
-        }
+        val app = string.split('@')[1]
+            .replace("no-tag:", "")
 
         LOGGER.info("Ingress@naisApp: $string")
 

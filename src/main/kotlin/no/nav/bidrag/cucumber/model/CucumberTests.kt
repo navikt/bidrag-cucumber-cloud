@@ -53,9 +53,9 @@ data class CucumberTests(
 
     fun fetchTags(): String {
         val tagsFromApps = ingressesForApps
-            .filter { it.contains("@tag:") }
-            .map { it.substring(it.indexOf('@') + 5) }
-            .map { "@${it}" }
+            .filterNot { it.contains("@no-tag:") }
+            .map { it.split("@")[1] }
+            .map { "@$it" }
 
         val tagsFromIngresses = transformToString(tagsFromApps)
         val stringedTags = "$tagsFromIngresses${joinWithTagList(tagsFromIngresses)}"
@@ -64,7 +64,9 @@ data class CucumberTests(
         values.addAll(tags)
 
         if (stringedTags.isEmpty()) {
-            throw IllegalStateException("Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser og prefiks app med 'tag:'")
+            throw IllegalStateException(
+                "Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser som ikke har prefiksen 'no-tag:' etter @"
+            )
         }
 
         LOGGER.info("Created '$stringedTags' from $values")
