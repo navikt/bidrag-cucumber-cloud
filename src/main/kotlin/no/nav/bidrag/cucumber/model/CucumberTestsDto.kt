@@ -110,10 +110,10 @@ data class CucumberTestsDto(
     internal fun warningLogDifferences() {
         @Suppress("NullableBooleanElvis")
         if (isNotEqual(sanityCheck ?: false, Environment.isSanityCheck)) warningForDifference("sanityCheck", sanityCheck, Environment.isSanityCheck)
-        if (isNotEqual(testUsername, Environment.tenantUsername)) warningForDifference("testUsername", testUsername, Environment.tenantUsername)
+        if (isNotEqual(testUsername, Environment.tenantUsername)) warningForDifference("testUsername", testUsername, Environment.testUsername)
     }
 
-    private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue == envValue
+    private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue != envValue
 
     private fun warningForDifference(name: String, property: Any?, envValue: Any?) = LOGGER.warn(
         "$property vs $envValue: (${this.javaClass.simpleName}/$name vs ${Environment::class.java.simpleName}.$name)"

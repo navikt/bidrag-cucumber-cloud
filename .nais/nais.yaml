@@ -10,10 +10,7 @@ spec:
     outbound:
       external:
         - host: {{ access.outbound.oppgave }}
-      rules:
-        - application: {{ access.outbound.bidrag-sak }}
-          clusted: dev-fss
-          namespace: bidrag
+        - host: {{ access.outbound.bidrag-sak }}
   azure:
     application:
       enabled: true
