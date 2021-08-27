@@ -37,7 +37,7 @@ internal class RestTjenesteTest {
     @Test
     fun `gitt INGRESSES_FOR_APPS med verdi for applikasjon (konfigurert som er en tag), skal RestTjeneste konfigureres med tag-navnet`() {
         val cucumberTests = CucumberTests(
-            ingressesForApps = listOf("https://somewhere.com/@tag:nais-tag", "https://somewhere.else.com@tag:annen-nais-tag")
+            ingressesForApps = listOf("https://somewhere.com/@nais-tag", "https://somewhere.else.com@annen-nais-tag")
         )
 
         cucumberTests.initCucumberEnvironment()
