@@ -25,7 +25,7 @@ internal object Environment {
     val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
 
     fun isNotSanityCheck() = !isSanityCheck
-    fun isNotSecurityTokenProvided() = fetchPropertyOrEnvironment(SECURITY_TOKEN) == null
+    fun isNotSecurityTokenProvided() = fetchPropertyOrEnvironment(SECURITY_TOKEN) == null || CUCUMBER_TESTS.get()?.securityToken == null
     fun isTestUserPresent() = testUsername != null
     fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
 
@@ -86,13 +86,9 @@ internal object Environment {
         INGRESS_FOR_APP.remove()
     }
 
-    fun isNotontextPathForApp(applicationName: String): Boolean {
-        val noContextPath = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {
-            CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
-        } else {
-            fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
-        }
-
-        return noContextPath ?: false
-    }
+    fun isNoContextPathForApp(applicationName: String) = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {
+        CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
+    } else {
+        fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
+    } ?: false
 }

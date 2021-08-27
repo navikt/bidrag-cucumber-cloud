@@ -99,7 +99,7 @@ jobs:
   run-cucumber-tests-for-bidrag-sak:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-sak"
-    needs: run-cucumber-tests-for-cucumber-cloud
+    needs: deploy
 
     env:
       INGRESS_SAK: https://bidrag-sak.dev-fss-pub.nais.io
@@ -122,7 +122,7 @@ jobs:
   run-cucumber-tests-for-bidrag-arbeidsflyt:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-arbeidsflyt"
-    needs: run-cucumber-tests-for-bidrag-sak
+    needs: deploy
 
     env:
       INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
@@ -145,7 +145,7 @@ jobs:
   run-cucumber-tests-for-bidrag-beregn:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-beregn-*"
-    needs: run-cucumber-tests-for-bidrag-arbeidsflyt
+    needs: deploy
 
     env:
       INGRESS_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.adeo.no
@@ -179,6 +179,7 @@ jobs:
       - run-cucumber-tests-for-cucumber-cloud
       - run-cucumber-tests-for-bidrag-arbeidsflyt
       - run-cucumber-tests-for-bidrag-beregn
+      - run-cucumber-tests-for-bidrag-sak
 
     steps:
       - uses: actions/checkout@v2

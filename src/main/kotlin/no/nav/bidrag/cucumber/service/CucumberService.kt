@@ -34,6 +34,7 @@ class CucumberService(
         BidragCucumberSingletons.addContextFromSpring(applicationContext)
     }
 
+    @Synchronized
     internal fun run(cucumberTestsDto: CucumberTestsDto): String {
         Environment.initCucumberEnvironment(cucumberTestsDto)
 
