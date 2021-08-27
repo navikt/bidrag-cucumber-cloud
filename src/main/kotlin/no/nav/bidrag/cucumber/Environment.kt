@@ -29,7 +29,6 @@ internal object Environment {
     fun isTestUserPresent() = testUsername != null
     fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
 
-    private fun fetchNonNull(@Suppress("SameParameterValue") key: String) = fetchPropertyOrEnvironment(key) ?: unknownProperty(key)
     private fun fetchPropertyOrEnvironment(key: String) = fetch(key) ?: System.getenv(key)
     private fun testAuthForTestUser() = TEST_AUTH + '_' + testUsernameUppercase()
     private fun testUsernameUppercase() = testUsername?.uppercase()
@@ -65,13 +64,8 @@ internal object Environment {
 
     private fun splitIngressAndApplication(string: String): Pair<String, String> {
         val ingress = string.split('@')[0]
-        val ingressApp = string.split('@')[1]
-
-        val app = if (ingressApp.startsWith("tag:")) {
-            ingressApp.substring(4)
-        } else {
-            ingressApp
-        }
+        val app = string.split('@')[1]
+            .replace("no-tag:", "")
 
         LOGGER.info("Ingress@naisApp: $string")
 
