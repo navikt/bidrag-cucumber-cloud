@@ -108,7 +108,7 @@ jobs:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_SAK=https://bidrag-sak-feature-feature.dev-fss-pub.nais.io" >> $GITHUB_ENV
+          echo "INGRESS_SAK=https://bidrag-sak-feature.dev-fss-pub.nais.io" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
