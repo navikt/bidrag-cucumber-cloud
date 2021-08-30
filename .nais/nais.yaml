@@ -14,6 +14,7 @@ spec:
   azure:
     application:
       enabled: true
+      tenant: trygdeetaten.no
   envFrom:
     - secret: test-auth-z992903
   image: {{ image }}
@@ -41,7 +42,7 @@ spec:
       memory: 512Mi
   ingresses:
   {{#each ingresses as |url|}}
-     - {{url}}
+    - {{url}}
   {{/each}}
   env:
     - name: TOPIC_JOURNALPOST
