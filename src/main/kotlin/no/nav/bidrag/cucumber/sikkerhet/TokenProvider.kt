@@ -33,7 +33,7 @@ class TokenProvider(private val provider: Provider) {
 
         LOGGER.info("> url    : $azureAdUrl")
         LOGGER.info("> headers: $httpHeaders")
-        LOGGER.info("> map    : ${suppressPasswords(map)}")
+        LOGGER.info("> map    : ${suppressSensitive(map, setOf("password", "client_secret"))}")
 
         val request = HttpEntity(map, httpHeaders)
         val tokenJson = provider.postForEntity(azureAdUrl, request).body ?: throw IllegalStateException("Klarte ikke å hente token fra $azureAdUrl")
@@ -43,9 +43,9 @@ class TokenProvider(private val provider: Provider) {
         return tokenJson.token
     }
 
-    private fun suppressPasswords(map: MultiValueMap<String, String>): String {
-        val suppressed = HashMap<String, String?>()
-        map.keys.forEach { key -> suppressed[key] = if (key.uppercase() != "PASSWORD") map.getValue(key).toString() else "[***]" }
+    private fun suppressSensitive(map: MultiValueMap<String, String>, sensitives: Set<String>): String {
+        val suppressed = HashMap<String, String>()
+        map.keys.forEach { suppressed[it] = if (!sensitives.contains(it)) map.getValue(it).toString() else "[***]" }
 
         return suppressed.toString()
     }

@@ -1,6 +1,6 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import org.slf4j.LoggerFactory
 
 internal object Environment {
@@ -8,24 +8,24 @@ internal object Environment {
     private val LOGGER = LoggerFactory.getLogger(Environment::class.java)
 
     @JvmStatic
-    private val CUCUMBER_TESTS = ThreadLocal<CucumberTests>()
+    private val CUCUMBER_TESTS = ThreadLocal<CucumberTestsDto>()
 
     @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
 
-    private val alleIngresserForApper: String
-        get() = CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: fetchPropertyOrEnvironment(INGRESSES_FOR_APPS)
+    internal val alleIngresserForApper: String
+        get() = fetchPropertyOrEnvironment(INGRESSES_FOR_APPS) ?: CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: ""
 
     val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: "unknown-AZURE_APP_CLIENT_ID"
     val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: "unknown-AZURE_APP_CLIENT_SECRET"
-    val isSanityCheck: Boolean get() = CUCUMBER_TESTS.get()?.sanityCheck ?: fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: false
-    val testUsername: String? get() = CUCUMBER_TESTS.get()?.testUsername ?: fetchPropertyOrEnvironment(TEST_USER)
+    val isSanityCheck: Boolean get() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: CUCUMBER_TESTS.get()?.sanityCheck ?: false
+    val testUsername: String? get() = fetchPropertyOrEnvironment(TEST_USER) ?: CUCUMBER_TESTS.get()?.testUsername
     val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthForTestUser()) ?: unknownProperty(testAuthForTestUser())
     val tenant: String get() = fetchPropertyOrEnvironment(AZURE_APP_TENANT_ID) ?: "unknown-AZURE_APP_TENANT_ID"
     val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
 
     fun isNotSanityCheck() = !isSanityCheck
-    fun isNotSecurityTokenProvided() = fetchPropertyOrEnvironment(SECURITY_TOKEN) == null
+    fun isNotSecurityTokenProvided() = fetchPropertyOrEnvironment(SECURITY_TOKEN) == null || CUCUMBER_TESTS.get()?.securityToken == null
     fun isTestUserPresent() = testUsername != null
     fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
 
@@ -72,8 +72,10 @@ internal object Environment {
         return Pair(ingress, app)
     }
 
-    fun initCucumberEnvironment(cucumberTests: CucumberTests) {
-        CUCUMBER_TESTS.set(cucumberTests)
+    fun initCucumberEnvironment(cucumberTestsDto: CucumberTestsDto) {
+        LOGGER.info("Initializing environment for $cucumberTestsDto")
+        CUCUMBER_TESTS.set(cucumberTestsDto)
+        cucumberTestsDto.warningLogDifferences()
     }
 
     fun resetCucumberEnvironment() {
@@ -84,13 +86,9 @@ internal object Environment {
         INGRESS_FOR_APP.remove()
     }
 
-    fun isNotontextPathForApp(applicationName: String): Boolean {
-        val noContextPath = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {
-            CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
-        } else {
-            fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
-        }
-
-        return noContextPath ?: false
-    }
+    fun isNoContextPathForApp(applicationName: String) = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {
+        CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
+    } else {
+        fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
+    } ?: false
 }

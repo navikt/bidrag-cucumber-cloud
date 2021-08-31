@@ -13,7 +13,7 @@ class SakEgenskaper : No {
         }
 
         Når("jeg henter denne saken") {
-            hentRestTjeneste().exchangeGet("sak/$saksnummer")
+            hentRestTjeneste().exchangeGet("/sak/$saksnummer")
         }
     }
 }

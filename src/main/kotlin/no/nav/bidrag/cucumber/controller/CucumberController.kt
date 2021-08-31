@@ -3,7 +3,7 @@ package no.nav.bidrag.cucumber.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import no.nav.bidrag.cucumber.service.CucumberService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,7 +24,7 @@ class CucumberController(private val cucumberService: CucumberService) {
             ApiResponse(responseCode = "406", description = "Testkjøring med cucumber feilet")
         ]
     )
-    fun run(@RequestBody cucumberTests: CucumberTests): ResponseEntity<String> {
-        return ResponseEntity(cucumberService.run(cucumberTests), HttpStatus.OK)
+    fun run(@RequestBody cucumberTestsDto: CucumberTestsDto): ResponseEntity<String> {
+        return ResponseEntity(cucumberService.run(cucumberTestsDto), HttpStatus.OK)
     }
 }

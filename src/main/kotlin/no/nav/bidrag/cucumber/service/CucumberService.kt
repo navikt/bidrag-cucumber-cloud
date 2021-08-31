@@ -6,7 +6,7 @@ import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
 import org.slf4j.LoggerFactory
@@ -34,10 +34,11 @@ class CucumberService(
         BidragCucumberSingletons.addContextFromSpring(applicationContext)
     }
 
-    internal fun run(cucumberTests: CucumberTests): String {
-        Environment.initCucumberEnvironment(cucumberTests)
+    @Synchronized
+    internal fun run(cucumberTestsDto: CucumberTestsDto): String {
+        Environment.initCucumberEnvironment(cucumberTestsDto)
 
-        val tags = cucumberTests.fetchTags()
+        val tags = cucumberTestsDto.fetchTags()
         val sysOut = ByteArrayOutputStream()
 
         System.setOut(PrintStream(sysOut))

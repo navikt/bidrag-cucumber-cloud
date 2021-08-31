@@ -10,13 +10,11 @@ spec:
     outbound:
       external:
         - host: {{ access.outbound.oppgave }}
-      rules:
-        - application: {{ access.outbound.bidrag-sak }}
-          clusted: dev-fss
-          namespace: bidrag
+        - host: {{ access.outbound.bidrag-sak }}
   azure:
     application:
       enabled: true
+      tenant: trygdeetaten.no
   envFrom:
     - secret: test-auth-z992903
   image: {{ image }}
@@ -44,7 +42,7 @@ spec:
       memory: 512Mi
   ingresses:
   {{#each ingresses as |url|}}
-     - {{url}}
+    - {{url}}
   {{/each}}
   env:
     - name: TOPIC_JOURNALPOST

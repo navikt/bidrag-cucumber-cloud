@@ -8,7 +8,7 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
-import no.nav.bidrag.cucumber.model.CucumberTests
+import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -50,7 +50,7 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
 
     @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
-        CucumberTests(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
+        CucumberTestsDto(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
 
         val restTjenesteMedBaseUrl = RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, baseUrl)
 

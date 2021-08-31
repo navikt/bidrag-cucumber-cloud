@@ -23,7 +23,7 @@ internal object RestTjenesteForApplikasjon {
     internal fun konfigurerApplikasjonUrl(applicationName: String): String {
         val ingress = Environment.fetchIngress(applicationName)
 
-        if (Environment.isNotontextPathForApp(applicationName)) {
+        if (Environment.isNoContextPathForApp(applicationName)) {
             return ingress
         }
 
