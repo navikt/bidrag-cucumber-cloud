@@ -99,7 +99,14 @@ data class CucumberTestsDto(
             return ""
         }
 
-        return if (tagsFromIngresses.isBlank()) transformToString(tags) else " or ${transformToString(tags)}"
+        val uniqueTags = tags
+            .filterNot { tagsFromIngresses.contains(it) }
+
+        if (uniqueTags.isEmpty()) {
+            return ""
+        }
+
+        return if (tagsFromIngresses.isBlank()) transformToString(uniqueTags) else " or ${transformToString(uniqueTags)}"
     }
 
     internal fun initCucumberEnvironment() {
