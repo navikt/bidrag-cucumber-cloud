@@ -14,5 +14,5 @@ Egenskap: bidrag-beregn-saertilskudd-rest
   Scenario: beregn særtilskudd
     Når jeg bruker endpoint '/beregn/saertilskudd' med json fra 'saertilskudd/saertilskudd_eksempel.json'
     Så skal http status være 200
-    Og responsen skal inneholde beløpet '4242' under stien '$.beregnSaertilskuddResultat.resultatPeriodeListe[0].resultatBeregning.resultatBelop'
-    Og responsen skal inneholde resultatkoden 'SAERTILSKUDD_INNVILGET' under stien '$.beregnSaertilskuddResultat.resultatPeriodeListe[0].resultatBeregning.resultatKode'
+    Og responsen skal inneholde beløpet '4242' under stien '$.beregnetSaertilskuddPeriodeListe[0].resultat.belop'
+    Og responsen skal inneholde resultatkoden 'SAERTILSKUDD_INNVILGET' under stien '$.beregnetSaertilskuddPeriodeListe[0].resultat.kode'
