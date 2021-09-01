@@ -94,10 +94,10 @@ internal object BidragCucumberSingletons {
                 Scenarios: $total
                 Passed   : $passed
                 Failed   : $noOfFailed
-
-Failed scenarios:
-$failedScenariosString
-""".trimIndent()
+                
+                Failed scenarios:
+                $failedScenariosString
+                """.trimIndent()
         }
     }
 }

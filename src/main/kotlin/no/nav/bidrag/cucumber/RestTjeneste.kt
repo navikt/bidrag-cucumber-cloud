@@ -27,7 +27,7 @@ open class RestTjeneste(
 
     constructor(naisApplication: String) : this(RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
-    fun hentFullUrlMedEventuellWarning() = "${fullUrl.get()}${appendWarningWhenExists()}"
+    fun hentFullUrlMedEventuellWarning() = "$fullUrl${appendWarningWhenExists()}"
     fun hentHttpStatus(): HttpStatus = responseEntity?.statusCode ?: HttpStatus.I_AM_A_TEAPOT
     fun hentResponse(): String? = responseEntity?.body
     fun hentResponseSomMap() = if (responseEntity?.statusCode == HttpStatus.OK && responseEntity?.body != null)
@@ -107,17 +107,8 @@ open class RestTjeneste(
     }
 
     class ResttjenesteMedBaseUrl(val template: RestTemplate, val baseUrl: String)
-    internal data class FullUrl(val baseUrl: String, val endpointUrl: String) {
-        private val fullUrl: String
-
-        init {
-            val base = if (baseUrl.endsWith('/')) baseUrl.removeSuffix("/") else baseUrl
-            val enpoint = if (endpointUrl.startsWith('/')) endpointUrl.removePrefix("/") else endpointUrl
-
-            fullUrl = "$base/$enpoint"
-        }
-
-        fun get() = fullUrl
+    internal class FullUrl(baseUrl: String, endpointUrl: String) {
+        private val fullUrl: String = "$baseUrl$endpointUrl"
 
         override fun toString(): String {
             return fullUrl
