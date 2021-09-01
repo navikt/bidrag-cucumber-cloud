@@ -203,6 +203,7 @@ jobs:
       - run-cucumber-tests-for-bidrag-arbeidsflyt
       - run-cucumber-tests-for-bidrag-beregn
       - run-cucumber-tests-for-bidrag-sak
+      - run-cucumber-tests-for-bidrag-vedtak
 
     steps:
       - uses: actions/checkout@v2
