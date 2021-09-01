@@ -88,16 +88,17 @@ internal object BidragCucumberSingletons {
 
         fun get(): String {
             val noOfFailed = failedScenarios.size
-            val failedScenariosString = failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
+            val failedScenariosString = if (failedScenarios.isEmpty()) "" else "Failed scenarios:\n${
+                failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
+            }"
 
             return """
-                Scenarios: $total
-                Passed   : $passed
-                Failed   : $noOfFailed
-
-Failed scenarios:
+    Scenarios: $total
+    Passed   : $passed
+    Failed   : $noOfFailed
+ 
 $failedScenariosString
-""".trimIndent()
+"""
         }
     }
 }
