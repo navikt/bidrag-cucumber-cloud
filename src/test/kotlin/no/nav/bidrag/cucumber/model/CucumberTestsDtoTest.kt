@@ -2,7 +2,6 @@ package no.nav.bidrag.cucumber.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalStateException
-import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -56,5 +55,12 @@ internal class CucumberTestsDtoTest {
 
         assertThatIllegalStateException().isThrownBy { cucumberTestsDto.fetchTags() }
             .withMessage("Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser som ikke har prefiksen 'no-tag:' etter @")
+    }
+
+    @Test
+    fun `skal ikke hente ut tags dobbelt opp`() {
+        val cucumberTestsDto = CucumberTestsDto(ingressesForApps = listOf("https://somewhere.out.there@bidrag-sak"), tags = listOf("@bidrag-sak"))
+
+        assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("(@bidrag-sak and not @ignored)")
     }
 }

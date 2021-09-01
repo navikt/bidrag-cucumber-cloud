@@ -5,7 +5,11 @@ import java.util.EnumMap
 class PrefiksetJournalpostIdForHendelse {
     companion object {
         @JvmStatic
-        internal val PREFIKSET_ID_FOR_HENDELER = ThreadLocal<MutableMap<Hendelse, MutableMap<String, String>>>()
+        private val PREFIKSET_ID_FOR_HENDELER = ThreadLocal<MutableMap<Hendelse, MutableMap<String, String>>>()
+
+        fun fjernIdForHendelser() {
+            PREFIKSET_ID_FOR_HENDELER.remove()
+        }
     }
 
     fun opprett(hendelse: Hendelse, journalpostId: Long, tema: String): String {

@@ -3,11 +3,11 @@ package no.nav.bidrag.cucumber.controller
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatcher
 import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.eq
@@ -59,7 +59,34 @@ class CucumberControllerRestTemplateMockBeanTest {
 
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
-            { assertThat(urlCaptor.value).`as`("endpoint url").isEqualTo("/sak/1900000")           }
+            { assertThat(urlCaptor.value).`as`("endpoint url").isEqualTo("/sak/1900000") }
         )
+    }
+
+    @Test
+    fun `skal trekke ut logginnslag til egen bønne som brukes i http resultat`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                  "testUsername":"z992903","ingressesForApps":[
+                    "https://bidrag-sak-feature.dev-fss-pub.nais.io@bidrag-sak"
+                  ]
+                }
+                """.trimMargin().trim(), headers
+            ),
+            String::class.java
+        )
+
+        val testMessages = testResponse.body ?: "Ingen body i response: $testResponse"
+
+        val softly = SoftAssertions()
+        softly.assertThat(testMessages).contains("Link")
+        softly.assertThat(testMessages).contains("Scenario")
+        softly.assertAll()
     }
 }

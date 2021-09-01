@@ -6,20 +6,19 @@ import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.TestMessagesHolder
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
-import java.nio.charset.Charset
 
 @Service
 class CucumberService(
     private val suppressStackTraceText: SuppressStackTraceText,
     applicationContext: ApplicationContext,
+    testMessagesHolder: TestMessagesHolder,
     hendelseProducer: HendelseProducer,
     objectMapper: ObjectMapper
 ) {
@@ -31,21 +30,21 @@ class CucumberService(
     init {
         BidragCucumberSingletons.hendelseProducer = hendelseProducer
         BidragCucumberSingletons.objectMapper = objectMapper
-        BidragCucumberSingletons.addContextFromSpring(applicationContext)
+        BidragCucumberSingletons.setApplicationContext(applicationContext)
+        BidragCucumberSingletons.setTestMessagesHolder(testMessagesHolder)
     }
 
-    @Synchronized
     internal fun run(cucumberTestsDto: CucumberTestsDto): String {
         Environment.initCucumberEnvironment(cucumberTestsDto)
 
         val tags = cucumberTestsDto.fetchTags()
-        val sysOut = ByteArrayOutputStream()
-
-        System.setOut(PrintStream(sysOut))
         val result = runCucumberTests(tags)
 
+        val suppressedStackText = suppressStackTraceText.suppress(
+            BidragCucumberSingletons.fetchTestMessagesWithRunStats()
+        )
+
         Environment.resetCucumberEnvironment()
-        val suppressedStackText = suppressStackTraceText.suppress(sysOut.toString(Charset.defaultCharset()))
 
         if (result != 0.toByte()) {
             val message = "Cucumber tests failed! (tags: $tags)!"

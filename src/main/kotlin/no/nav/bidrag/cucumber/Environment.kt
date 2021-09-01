@@ -1,6 +1,10 @@
 package no.nav.bidrag.cucumber
 
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse
+import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.TestMessagesHolder
 import org.slf4j.LoggerFactory
 
 internal object Environment {
@@ -13,7 +17,7 @@ internal object Environment {
     @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
 
-    internal val alleIngresserForApper: String
+    private val alleIngresserForApper: String
         get() = fetchPropertyOrEnvironment(INGRESSES_FOR_APPS) ?: CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: ""
 
     val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: "unknown-AZURE_APP_CLIENT_ID"
@@ -78,12 +82,19 @@ internal object Environment {
         cucumberTestsDto.warningLogDifferences()
     }
 
+    /**
+     * removes thread specific data values
+     */
     fun resetCucumberEnvironment() {
         System.clearProperty(SANITY_CHECK)
         System.clearProperty(SECURITY_TOKEN)
         System.clearProperty(TEST_USER)
         CUCUMBER_TESTS.remove()
         INGRESS_FOR_APP.remove()
+        BidragCucumberSingletons.removeRunStats()
+        RestTjenesteForApplikasjon.removeAll()
+        FellesEgenskaperService.fjernResttjenester()
+        PrefiksetJournalpostIdForHendelse.fjernIdForHendelser()
     }
 
     fun isNoContextPathForApp(applicationName: String) = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {

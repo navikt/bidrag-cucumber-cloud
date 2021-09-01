@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.controller
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -83,7 +84,11 @@ internal class CucumberControllerIntegrationTest {
             String::class.java
         )
 
-        assertThat(testResponse.body).`as`("body").contains("Scenarios").contains("Steps").contains("passed")
+        val softly = SoftAssertions()
+        softly.assertThat(testResponse.body).`as`("body").contains("Scenarios")
+        softly.assertThat(testResponse.body).`as`("body").contains("Failed")
+        softly.assertThat(testResponse.body).`as`("body").contains("Passed")
+        softly.assertAll()
     }
 
     @Test

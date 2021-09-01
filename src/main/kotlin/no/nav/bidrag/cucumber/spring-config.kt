@@ -9,6 +9,7 @@ import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.aop.ExceptionLoggerAspect
 import no.nav.bidrag.cucumber.aop.TestFailedAdvice
 import no.nav.bidrag.cucumber.hendelse.JournalpostKafkaHendelseProducer
+import no.nav.bidrag.cucumber.model.TestMessagesHolder
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.sikkerhet.TokenProvider
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
@@ -22,8 +23,6 @@ import org.springframework.context.annotation.Scope
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriTemplateHandler
-import java.net.URI
 import java.security.cert.X509Certificate
 
 @Configuration
@@ -70,6 +69,9 @@ class SpringConfig {
 
         return requestFactory
     }
+
+    @Bean
+    fun testMessagesHolder() = TestMessagesHolder()
 }
 
 @Configuration

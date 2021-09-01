@@ -32,7 +32,7 @@ object ArbeidsflytEgenskaperEndreFagomradeService {
         val journalpostHendelse = JournalpostHendelse(detaljer, hendelse, tema)
 
         BidragCucumberSingletons.hendelseProducer?.publish(journalpostHendelse)
-            ?: LOGGER.warn(
+            ?: LOGGER.info(
                 "Cannot publish $hendelse ${
                     if (Environment.isSanityCheck) {
                         "while running sanity check!"

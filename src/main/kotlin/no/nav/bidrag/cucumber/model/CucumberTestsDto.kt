@@ -99,11 +99,17 @@ data class CucumberTestsDto(
             return ""
         }
 
-        return if (tagsFromIngresses.isBlank()) transformToString(tags) else " or ${transformToString(tags)}"
+        val uniqueTags = tags
+            .filterNot { tagsFromIngresses.contains(it) }
+
+        if (uniqueTags.isEmpty()) {
+            return ""
+        }
+
+        return if (tagsFromIngresses.isBlank()) transformToString(uniqueTags) else " or ${transformToString(uniqueTags)}"
     }
 
     internal fun initCucumberEnvironment() {
-        Environment.resetCucumberEnvironment()
         Environment.initCucumberEnvironment(this)
     }
 
@@ -115,7 +121,9 @@ data class CucumberTestsDto(
 
     private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue != envValue
 
-    private fun warningForDifference(name: String, property: Any?, envValue: Any?) = LOGGER.warn(
-        "$property vs $envValue: (${this.javaClass.simpleName}/$name vs ${Environment::class.java.simpleName}.$name)"
-    )
+    private fun warningForDifference(name: String, property: Any?, envValue: Any?) {
+        if (property == null && envValue != "null" || property != "null" && envValue == null) {
+            LOGGER.warn("$property vs $envValue: (${this.javaClass.simpleName}.$name vs ${Environment::class.java.simpleName} - $name)")
+        }
+    }
 }
