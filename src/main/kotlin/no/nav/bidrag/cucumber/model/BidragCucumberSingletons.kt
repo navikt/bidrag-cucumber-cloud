@@ -72,23 +72,32 @@ internal object BidragCucumberSingletons {
     private class RunStats {
         val failedScenarios: MutableList<String> = ArrayList()
         private var passed = 0
-        private var failed = 0
+        private var total = 0
 
         fun add(scenario: Scenario) {
+            total = total.inc()
+
             if (scenario.isFailed) {
-                failed = failed.inc()
-                failedScenarios.add(
-                    scenarioMessage(scenario).replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-                )
+                val namelessScenario = scenario.name == null || scenario.name.isBlank()
+
+                failedScenarios.add("${scenario.uri} # ${if (namelessScenario) "Nameless" else scenario.name}")
             } else {
                 passed = passed.inc()
             }
         }
 
-        fun get() = """
-            Scenarios: ${passed + failed}
-            Passed   : $passed
-            Failed   : $failed
-        """.trimIndent()
+        fun get(): String {
+            val noOfFailed = failedScenarios.size
+            val failedScenariosString = failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
+
+            return """
+                Scenarios: $total
+                Passed   : $passed
+                Failed   : $noOfFailed
+
+Failed scenarios:
+$failedScenariosString
+""".trimIndent()
+        }
     }
 }
