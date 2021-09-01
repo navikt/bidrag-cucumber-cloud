@@ -110,7 +110,6 @@ data class CucumberTestsDto(
     }
 
     internal fun initCucumberEnvironment() {
-        Environment.resetCucumberEnvironment()
         Environment.initCucumberEnvironment(this)
     }
 
@@ -122,7 +121,9 @@ data class CucumberTestsDto(
 
     private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue != envValue
 
-    private fun warningForDifference(name: String, property: Any?, envValue: Any?) = LOGGER.warn(
-        "$property vs $envValue: (${this.javaClass.simpleName}/$name vs ${Environment::class.java.simpleName}.$name)"
-    )
+    private fun warningForDifference(name: String, property: Any?, envValue: Any?) {
+        if (property == null && envValue != "null" || property != "null" && envValue == null) {
+            LOGGER.warn("$property vs $envValue: (${this.javaClass.simpleName}.$name vs ${Environment::class.java.simpleName} - $name)")
+        }
+    }
 }

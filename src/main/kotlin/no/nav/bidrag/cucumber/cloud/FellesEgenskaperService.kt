@@ -25,6 +25,7 @@ object FellesEgenskaperService {
     }
 
     fun hentRestTjeneste() = RESTTJENESTER.get() ?: throw IllegalStateException("Ingen resttjeneste for tråd. Har du satt opp ingressesForApps?")
+    fun fjernResttjenester() = RESTTJENESTER.remove()
 
     data class Assertion(val message: String, val value: Any?, val expectation: Any?)
 }

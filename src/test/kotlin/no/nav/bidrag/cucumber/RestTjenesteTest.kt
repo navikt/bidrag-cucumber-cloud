@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.mockito.Mockito.anyString
@@ -16,6 +17,11 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 
 internal class RestTjenesteTest {
+
+    @BeforeEach
+    fun `reset Cucumber environment`() {
+        Environment.resetCucumberEnvironment()
+    }
 
     @Test
     fun `gitt INGRESSES_FOR_APPS med verdi for applikasjon, skal RestTjeneste konfigureres med denne verdien`() {

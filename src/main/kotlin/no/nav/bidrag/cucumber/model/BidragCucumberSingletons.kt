@@ -1,27 +1,94 @@
 package no.nav.bidrag.cucumber.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.cucumber.java8.Scenario
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 
 /**
- * Singletons som er gyldige i en cucumber-kjøring og som er felles for ALLE egenskaper definert i en feature-filer
+ * Singletons som er gyldige i en cucumber-kjøring og som er felles for ALLE egenskaper definert i feature-filer
  */
 internal object BidragCucumberSingletons {
+    @JvmStatic
+    private val LOGGER = LoggerFactory.getLogger(BidragCucumberSingletons::class.java)
+
+    @JvmStatic
+    private val RUN_STATS = ThreadLocal<RunStats>()
+
     var hendelseProducer: HendelseProducer? = null
     var objectMapper: ObjectMapper? = null
     private var applicationContext: ApplicationContext? = null
-
-    fun addContextFromSpring(applicationContext: ApplicationContext) {
-        BidragCucumberSingletons.applicationContext = applicationContext
-    }
+    private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
 
     private fun doManualInit(): HttpHeaderRestTemplate {
         val httpComponentsClientHttpRequestFactory = SpringConfig().httpComponentsClientHttpRequestFactorySomIgnorererHttps()
         return HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
+    }
+
+    fun holdTestMessage(testMessage: String) {
+        testMessagesHolder?.hold(testMessage) ?: LOGGER.info(testMessage)
+    }
+
+    fun addRunStats(scenario: Scenario) = fetchRunStats()
+        .add(scenario)
+
+    fun scenarioMessage(scenario: Scenario): String {
+        val noScenario = scenario.name != null && scenario.name.isNotBlank()
+        return if (noScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
+    }
+
+    fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats().get()
+
+    private fun fetchTestMessages() = testMessagesHolder?.fetchTestMessages() ?: "ingen loggmeldinger er produsert!"
+
+    private fun fetchRunStats(): RunStats {
+        var runStats = RUN_STATS.get()
+
+        if (runStats == null) {
+            runStats = RunStats()
+            RUN_STATS.set(runStats)
+        }
+
+        return runStats
+    }
+
+    fun removeRunStats() {
+        RUN_STATS.remove()
+    }
+
+    fun setApplicationContext(applicationContext: ApplicationContext) {
+        BidragCucumberSingletons.applicationContext = applicationContext
+    }
+
+    fun setTestMessagesHolder(testMessagesHolder: TestMessagesHolder) {
+        BidragCucumberSingletons.testMessagesHolder = testMessagesHolder
+    }
+
+    private class RunStats {
+        val failedScenarios: MutableList<String> = ArrayList()
+        private var passed = 0
+        private var failed = 0
+
+        fun add(scenario: Scenario) {
+            if (scenario.isFailed) {
+                failed = failed.inc()
+                failedScenarios.add(
+                    scenarioMessage(scenario).replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                )
+            } else {
+                passed = passed.inc()
+            }
+        }
+
+        fun get() = """
+            Scenarios: ${passed + failed}
+            Passed   : $passed
+            Failed   : $failed
+        """.trimIndent()
     }
 }

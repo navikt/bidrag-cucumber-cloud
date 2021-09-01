@@ -46,6 +46,10 @@ internal object RestTjenesteForApplikasjon {
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
     }
 
+    fun removeAll() {
+        REST_TJENESTE_FOR_APPLIKASJON.removeAll()
+    }
+
     private class BaseUrlTemplateHandler(val baseUrl: String) : UriTemplateHandler {
         override fun expand(uriTemplate: String, uriVariables: MutableMap<String, *>): URI {
             if (uriVariables.isNotEmpty()) {
@@ -93,6 +97,10 @@ internal object RestTjenesteForApplikasjon {
             }
 
             return REST_TJENESTER.get()
+        }
+
+        fun removeAll() {
+            REST_TJENESTER.remove()
         }
     }
 }
