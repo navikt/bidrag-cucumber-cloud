@@ -14,7 +14,7 @@ spec:
   azure:
     application:
       enabled: true
-      tenant: nav.no
+      tenant: trygdeetaten.no
   envFrom:
     - secret: test-auth-z992903
   image: {{ image }}
