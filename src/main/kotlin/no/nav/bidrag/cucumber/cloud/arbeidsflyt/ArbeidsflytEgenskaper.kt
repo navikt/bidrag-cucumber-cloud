@@ -24,7 +24,6 @@ class ArbeidsflytEgenskaper : No {
             opprettJournalpostHendelse(Hendelse.valueOf(hendelse), mapOf("fagomrade" to tilFagomrade), fraFagomrade)
         }
 
-
         Når("jeg søker etter oppgave opprettet for {string} på tema {string}") { hendelse: String, tema: String ->
             sokOppgaveForHendelse(Hendelse.valueOf(hendelse), tema)
         }
@@ -34,20 +33,20 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet å finne oppgaven",
                     value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = "1"
+                    expectation = "1",
+                    verify = this::harForventetAntallTreff
                 ),
-                this::harForventetAntallTreff
             )
         }
 
         Så("skal jeg ikke finne oppgaven i søkeresultatet") {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
-                    "Forventet ikke å finne oppgaven",
-                    FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    "0"
+                    message = "Forventet ikke å finne oppgaven",
+                    value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
+                    expectation = "0",
+                    verify = this::harForventetAntallTreff
                 ),
-                this::harForventetAntallTreff
             )
         }
     }

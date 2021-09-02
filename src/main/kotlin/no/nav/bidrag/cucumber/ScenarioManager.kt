@@ -89,7 +89,7 @@ object ScenarioManager {
 
     fun createCorrelationIdLinkTitle() = "Link for correlation-id, $correlationIdForScenario"
     fun getCorrelationIdForScenario() = correlationIdForScenario
-    fun errorLog(message: String) = log(null, message, LogLevel.ERROR)
+    fun errorLog(message: String) = log("An error occured", message, LogLevel.ERROR)
 
     private enum class LogLevel {
         INFO, ERROR;
@@ -99,7 +99,7 @@ object ScenarioManager {
                 if (messageTitle != null) "$messageTitle:\n$message\n" else message
             }
             ERROR -> {
-                if (messageTitle != null) "An error accured!\n$messageTitle:\n$message\n" else "An error occured!\n$message"
+                if (messageTitle != null) "$messageTitle:\n$message\n" else message
             }
         }
     }

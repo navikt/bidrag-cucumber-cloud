@@ -41,9 +41,9 @@ class BeregnEgenskaper : No {
                 FellesEgenskaperService.Assertion(
                     message = "Resultatbeløp",
                     value = resultatBelop,
-                    expectation = belop
-                ),
-                this::harForventetResultat
+                    expectation = belop,
+                    verify = this::harForventetResultat
+                )
             )
         }
 
@@ -60,9 +60,9 @@ class BeregnEgenskaper : No {
                 FellesEgenskaperService.Assertion(
                     message = "Resultatkode",
                     value = resultatkode,
-                    expectation = kode
-                ),
-                this::harForventetResultat
+                    expectation = kode,
+                    verify = this::harForventetResultat
+                )
             )
         }
     }

@@ -2,30 +2,37 @@ package no.nav.bidrag.cucumber.cloud
 
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.RestTjeneste
-import org.slf4j.LoggerFactory
+import no.nav.bidrag.cucumber.ScenarioManager
+import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 
 object FellesEgenskaperService {
     @JvmStatic
-    private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
-
-    @JvmStatic
     private val RESTTJENESTER = ThreadLocal<RestTjeneste>()
 
-    fun assertWhenNotSanityCheck(assertion: Assertion, verify: (input: Assertion) -> Unit) {
+    fun assertWhenNotSanityCheck(assertion: Assertion) {
         if (Environment.isSanityCheck) {
-            LOGGER.info("Sanity check - ${assertion.message}: actual - '${assertion.value}', wanted - '${assertion.expectation}'")
+            ScenarioManager.log("Sanity check - ${assertion.message}: actual - '${assertion.value}', wanted - '${assertion.expectation}'")
         } else {
-            verify(assertion)
+            assertion.doVerify()
         }
     }
 
     fun settOppNaisApp(naisApplikasjon: String) {
-        LOGGER.info("Setter opp $naisApplikasjon")
+        ScenarioManager.log("Setter opp $naisApplikasjon")
         RESTTJENESTER.set(RestTjeneste(naisApplikasjon))
     }
 
     fun hentRestTjeneste() = RESTTJENESTER.get() ?: throw IllegalStateException("Ingen resttjeneste for tråd. Har du satt opp ingressesForApps?")
     fun fjernResttjenester() = RESTTJENESTER.remove()
 
-    data class Assertion(val message: String, val value: Any?, val expectation: Any?)
+    data class Assertion(val message: String, val value: Any?, val expectation: Any?, val verify: (input: Assertion) -> Unit) {
+        fun doVerify() {
+            try {
+                verify(this)
+            } catch (exception: Exception) {
+                BidragCucumberSingletons.holdExceptionForTest(exception)
+                throw exception
+            }
+        }
+    }
 }

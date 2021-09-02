@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.cucumber.java8.Scenario
+import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
@@ -17,6 +18,7 @@ internal object BidragCucumberSingletons {
     var hendelseProducer: HendelseProducer? = null
     var objectMapper: ObjectMapper? = null
     private var applicationContext: ApplicationContext? = null
+    private var exceptionLogger: ExceptionLogger? = null
     private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
@@ -57,6 +59,12 @@ internal object BidragCucumberSingletons {
         RUN_STATS.remove()
     }
 
+    fun holdExceptionForTest(exception: Exception) {
+        val messages = exceptionLogger?.logException(exception, BidragCucumberSingletons::class.java.simpleName) ?: emptyList()
+        testMessagesHolder?.hold(messages)
+        fetchRunStats().addExceptionLogging(messages)
+    }
+
     fun setApplicationContext(applicationContext: ApplicationContext) {
         BidragCucumberSingletons.applicationContext = applicationContext
     }
@@ -66,6 +74,7 @@ internal object BidragCucumberSingletons {
     }
 
     private class RunStats {
+        val exceptionMessages: MutableList<String> = ArrayList()
         val failedScenarios: MutableList<String> = ArrayList()
         private var passed = 0
         private var total = 0
@@ -86,7 +95,7 @@ internal object BidragCucumberSingletons {
             val noOfFailed = failedScenarios.size
             val failedScenariosString = if (failedScenarios.isEmpty()) "" else "Failed scenarios:\n${
                 failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
-            }"
+            }\n${if (exceptionMessages.isEmpty()) "No f" else "F"}ailure details!\n${exceptionMessages.joinToString(separator = "\n")}"
 
             return """
     Scenarios: $total
@@ -95,6 +104,10 @@ internal object BidragCucumberSingletons {
  
 $failedScenariosString
 """
+        }
+
+        fun addExceptionLogging(messages: List<String>) {
+            exceptionMessages.addAll(messages)
         }
 
         override fun toString(): String {

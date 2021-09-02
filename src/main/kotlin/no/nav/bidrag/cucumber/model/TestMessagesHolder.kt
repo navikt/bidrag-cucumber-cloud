@@ -1,5 +1,7 @@
 package no.nav.bidrag.cucumber.model
 
+import kotlin.math.log
+
 class TestMessagesHolder {
     companion object {
         @JvmStatic
@@ -24,4 +26,6 @@ class TestMessagesHolder {
 
         return TEST_MESSAGES_FOR_THREAD.get()!!
     }
+
+    fun hold(messages: List<String>) = messages.forEach { hold(it) }
 }
