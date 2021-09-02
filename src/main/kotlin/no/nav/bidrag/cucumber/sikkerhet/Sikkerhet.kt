@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.sikkerhet
 import no.nav.bidrag.cucumber.AZURE_LOGIN_ENDPOINT
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.SECURITY_TOKEN
+import no.nav.bidrag.cucumber.ScenarioManager
 import org.slf4j.LoggerFactory
 import org.springframework.web.client.RestTemplate
 
@@ -24,7 +25,7 @@ internal object Sikkerhet {
             }
         } catch (e: RuntimeException) {
             val exception = "${e.javaClass.name}: ${e.message} - ${e.stackTrace.first { it.fileName != null && it.fileName!!.endsWith("kt") }}"
-            LOGGER.error("Feil ved henting av online id token, $exception")
+            ScenarioManager.errorLog("Feil ved henting av online id token, $exception")
 
             if (Environment.isNotSanityCheck()) {
                 throw e

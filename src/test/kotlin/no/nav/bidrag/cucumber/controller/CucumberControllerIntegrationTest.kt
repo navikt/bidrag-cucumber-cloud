@@ -1,11 +1,13 @@
 package no.nav.bidrag.cucumber.controller
 
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
+import no.nav.bidrag.cucumber.TEST_AUTH
 import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -112,5 +114,29 @@ internal class CucumberControllerIntegrationTest {
         )
 
         assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.OK)
+    }
+
+    @Test
+    fun `skal logge eventuelle exception når det feiler under testing`() {
+        assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val testResponse = testRestTemplate.postForEntity(
+            "/run",
+            HttpEntity(
+                """
+                {
+                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"]
+                }
+                """.trimMargin().trim(), headers
+            ),
+            String::class.java
+        )
+
+        assertAll(
+            { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
+            { assertThat(testResponse.body).`as`("body").containsIgnoringCase("Failure details:") }
+        )
     }
 }

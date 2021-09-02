@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpStatus
 import java.util.EnumSet
@@ -17,8 +17,9 @@ class FellesEgenskaper : No {
                 Assertion(
                     "HttpStatus for ${hentRestTjeneste().hentFullUrlMedEventuellWarning()}",
                     hentRestTjeneste().hentHttpStatus(),
-                    HttpStatus.valueOf(enHttpStatus)
-                ), this::harForventetHttpStatus
+                    HttpStatus.valueOf(enHttpStatus),
+                    this::harForventetHttpStatus
+                )
             )
         }
 

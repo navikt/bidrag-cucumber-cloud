@@ -4,7 +4,6 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
-import no.nav.bidrag.cucumber.model.TestMessagesHolder
 import org.slf4j.LoggerFactory
 
 internal object Environment {
@@ -71,7 +70,7 @@ internal object Environment {
         val app = string.split('@')[1]
             .replace("no-tag:", "")
 
-        LOGGER.info("Ingress@naisApp: $string")
+        ScenarioManager.log("Ingress@naisApp: $string")
 
         return Pair(ingress, app)
     }

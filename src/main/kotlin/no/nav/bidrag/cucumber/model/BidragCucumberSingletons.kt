@@ -2,10 +2,10 @@ package no.nav.bidrag.cucumber.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.cucumber.java8.Scenario
+import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
-import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 
 /**
@@ -13,14 +13,12 @@ import org.springframework.context.ApplicationContext
  */
 internal object BidragCucumberSingletons {
     @JvmStatic
-    private val LOGGER = LoggerFactory.getLogger(BidragCucumberSingletons::class.java)
-
-    @JvmStatic
     private val RUN_STATS = ThreadLocal<RunStats>()
 
     var hendelseProducer: HendelseProducer? = null
     var objectMapper: ObjectMapper? = null
     private var applicationContext: ApplicationContext? = null
+    private var exceptionLogger: ExceptionLogger? = null
     private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
@@ -31,7 +29,7 @@ internal object BidragCucumberSingletons {
     }
 
     fun holdTestMessage(testMessage: String) {
-        testMessagesHolder?.hold(testMessage) ?: LOGGER.info(testMessage)
+        testMessagesHolder?.hold(testMessage)
     }
 
     fun addRunStats(scenario: Scenario) = fetchRunStats()
@@ -42,7 +40,7 @@ internal object BidragCucumberSingletons {
         return if (noScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
     }
 
-    fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats().get()
+    fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats()
 
     private fun fetchTestMessages() = testMessagesHolder?.fetchTestMessages() ?: "ingen loggmeldinger er produsert!"
 
@@ -61,6 +59,12 @@ internal object BidragCucumberSingletons {
         RUN_STATS.remove()
     }
 
+    fun holdExceptionForTest(exception: Exception) {
+        val messages = exceptionLogger?.logException(exception, BidragCucumberSingletons::class.java.simpleName) ?: emptyList()
+        testMessagesHolder?.hold(messages)
+        fetchRunStats().addExceptionLogging(messages)
+    }
+
     fun setApplicationContext(applicationContext: ApplicationContext) {
         BidragCucumberSingletons.applicationContext = applicationContext
     }
@@ -70,6 +74,7 @@ internal object BidragCucumberSingletons {
     }
 
     private class RunStats {
+        val exceptionMessages: MutableList<String> = ArrayList()
         val failedScenarios: MutableList<String> = ArrayList()
         private var passed = 0
         private var total = 0
@@ -90,7 +95,7 @@ internal object BidragCucumberSingletons {
             val noOfFailed = failedScenarios.size
             val failedScenariosString = if (failedScenarios.isEmpty()) "" else "Failed scenarios:\n${
                 failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
-            }"
+            }\n${if (exceptionMessages.isEmpty()) "No f" else "F"}ailure details!\n${exceptionMessages.joinToString(separator = "\n")}"
 
             return """
     Scenarios: $total
@@ -99,6 +104,14 @@ internal object BidragCucumberSingletons {
  
 $failedScenariosString
 """
+        }
+
+        fun addExceptionLogging(messages: List<String>) {
+            exceptionMessages.addAll(messages)
+        }
+
+        override fun toString(): String {
+            return get()
         }
     }
 }

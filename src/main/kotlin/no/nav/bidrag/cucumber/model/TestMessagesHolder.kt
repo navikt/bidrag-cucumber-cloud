@@ -1,12 +1,9 @@
 package no.nav.bidrag.cucumber.model
 
-import org.slf4j.LoggerFactory
+import kotlin.math.log
 
 class TestMessagesHolder {
     companion object {
-        @JvmStatic
-        private val LOGGER = LoggerFactory.getLogger(TestMessagesHolder::class.java)
-
         @JvmStatic
         private val TEST_MESSAGES_FOR_THREAD = ThreadLocal<MutableList<String>?>()
     }
@@ -20,7 +17,6 @@ class TestMessagesHolder {
 
     internal fun hold(testMessage: String) {
         hentMeldinger().add(testMessage)
-        LOGGER.info(testMessage)
     }
 
     private fun hentMeldinger(): MutableList<String> {
@@ -30,4 +26,6 @@ class TestMessagesHolder {
 
         return TEST_MESSAGES_FOR_THREAD.get()!!
     }
+
+    fun hold(messages: List<String>) = messages.forEach { hold(it) }
 }

@@ -51,20 +51,25 @@ object ScenarioManager {
     }
 
     private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
-        if (scenario != null) {
-            val logLevelMessage = logLevel.produceLogMessage(messageTitle, message)
+        val logLevelMessage = logLevel.produceLogMessage(messageTitle, message)
 
-            BidragCucumberSingletons.holdTestMessage(logLevelMessage)
+        if (scenario != null) {
             scenario!!.log(logLevelMessage)
         } else {
-            when (logLevel) {
-                LogLevel.INFO -> {
-                    LOGGER.info("Outside scenario: $message")
-                }
+            logOutsideScenario(logLevel, message)
+        }
 
-                LogLevel.ERROR -> {
-                    LOGGER.error("Outside scenario: $message")
-                }
+        BidragCucumberSingletons.holdTestMessage(logLevelMessage)
+    }
+
+    private fun logOutsideScenario(logLevel: LogLevel, message: String) {
+        when (logLevel) {
+            LogLevel.INFO -> {
+                LOGGER.info("Outside scenario: $message")
+            }
+
+            LogLevel.ERROR -> {
+                LOGGER.error("Outside scenario: $message")
             }
         }
     }
@@ -84,7 +89,7 @@ object ScenarioManager {
 
     fun createCorrelationIdLinkTitle() = "Link for correlation-id, $correlationIdForScenario"
     fun getCorrelationIdForScenario() = correlationIdForScenario
-    fun errorLog(message: String) = log(null, message, LogLevel.ERROR)
+    fun errorLog(message: String) = log("An error occured", message, LogLevel.ERROR)
 
     private enum class LogLevel {
         INFO, ERROR;
@@ -94,7 +99,7 @@ object ScenarioManager {
                 if (messageTitle != null) "$messageTitle:\n$message\n" else message
             }
             ERROR -> {
-                if (messageTitle != null) "An error accured!\n$messageTitle:\n$message\n" else "An error occured!\n$message"
+                if (messageTitle != null) "$messageTitle:\n$message\n" else message
             }
         }
     }

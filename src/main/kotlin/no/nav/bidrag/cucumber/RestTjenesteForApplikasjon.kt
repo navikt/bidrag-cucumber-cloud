@@ -40,7 +40,7 @@ internal object RestTjenesteForApplikasjon {
         if (Environment.isTestUserPresent()) {
             httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureBearerToken() }
         } else {
-            LOGGER.info("No user to provide security for when accessing $applicationName")
+            ScenarioManager.log("No user to provide security for when accessing $applicationName")
         }
 
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
