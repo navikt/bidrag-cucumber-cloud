@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.sikkerhet
 
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.ScenarioManager
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -38,7 +39,7 @@ class TokenProvider(private val provider: Provider) {
         val request = HttpEntity(map, httpHeaders)
         val tokenJson = provider.postForEntity(azureAdUrl, request).body ?: throw IllegalStateException("Klarte ikke å hente token fra $azureAdUrl")
 
-        LOGGER.info("Fetched id token for ${Environment.testUsername}")
+        ScenarioManager.log("Fetched id token for ${Environment.testUsername}")
 
         return tokenJson.token
     }
@@ -57,11 +58,11 @@ class TokenProvider(private val provider: Provider) {
     class DefaultProvider(private val restTemplate: RestTemplate) : Provider {
         override fun postForEntity(azureAdUrl: String, httpEntity: HttpEntity<*>): ResponseEntity<Token?> {
             if (Environment.isNotSanityCheck()) {
-                LOGGER.info("Hent azure token fra $azureAdUrl")
+                ScenarioManager.log("Hent azure token fra $azureAdUrl")
                 return restTemplate.postForEntity(azureAdUrl, httpEntity, Token::class.java)
             }
 
-            LOGGER.info("Henter ikke security taoken ved sanity check")
+            ScenarioManager.log("Henter ikke security taoken ved sanity check")
             return ResponseEntity.badRequest().build()
         }
     }

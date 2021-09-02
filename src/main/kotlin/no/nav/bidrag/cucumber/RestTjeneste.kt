@@ -3,7 +3,6 @@ package no.nav.bidrag.cucumber
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -19,11 +18,6 @@ open class RestTjeneste(
 ) {
     private lateinit var fullUrl: FullUrl
     internal var responseEntity: ResponseEntity<String?>? = null
-
-    companion object {
-        @JvmStatic
-        private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
-    }
 
     constructor(naisApplication: String) : this(RestTjenesteForApplikasjon.hentEllerKonfigurer(naisApplication))
 
@@ -102,7 +96,7 @@ open class RestTjeneste(
                 }
             }
         } else {
-            LOGGER.info("Ikke nødvendig å kontakte endpoint uten testbruker ved sanity check!")
+            ScenarioManager.log("Ikke nødvendig å kontakte endpoint uten testbruker ved sanity check!")
         }
     }
 

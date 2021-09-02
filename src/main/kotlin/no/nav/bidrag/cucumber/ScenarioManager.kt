@@ -51,20 +51,25 @@ object ScenarioManager {
     }
 
     private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
-        if (scenario != null) {
-            val logLevelMessage = logLevel.produceLogMessage(messageTitle, message)
+        val logLevelMessage = logLevel.produceLogMessage(messageTitle, message)
 
-            BidragCucumberSingletons.holdTestMessage(logLevelMessage)
+        if (scenario != null) {
             scenario!!.log(logLevelMessage)
         } else {
-            when (logLevel) {
-                LogLevel.INFO -> {
-                    LOGGER.info("Outside scenario: $message")
-                }
+            logOutsideScenario(logLevel, message)
+        }
 
-                LogLevel.ERROR -> {
-                    LOGGER.error("Outside scenario: $message")
-                }
+        BidragCucumberSingletons.holdTestMessage(logLevelMessage)
+    }
+
+    private fun logOutsideScenario(logLevel: LogLevel, message: String) {
+        when (logLevel) {
+            LogLevel.INFO -> {
+                LOGGER.info("Outside scenario: $message")
+            }
+
+            LogLevel.ERROR -> {
+                LOGGER.error("Outside scenario: $message")
             }
         }
     }

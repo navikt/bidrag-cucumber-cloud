@@ -5,16 +5,12 @@ import io.cucumber.java8.Scenario
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
-import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 
 /**
  * Singletons som er gyldige i en cucumber-kjøring og som er felles for ALLE egenskaper definert i feature-filer
  */
 internal object BidragCucumberSingletons {
-    @JvmStatic
-    private val LOGGER = LoggerFactory.getLogger(BidragCucumberSingletons::class.java)
-
     @JvmStatic
     private val RUN_STATS = ThreadLocal<RunStats>()
 
@@ -31,7 +27,7 @@ internal object BidragCucumberSingletons {
     }
 
     fun holdTestMessage(testMessage: String) {
-        testMessagesHolder?.hold(testMessage) ?: LOGGER.info(testMessage)
+        testMessagesHolder?.hold(testMessage)
     }
 
     fun addRunStats(scenario: Scenario) = fetchRunStats()
@@ -42,7 +38,7 @@ internal object BidragCucumberSingletons {
         return if (noScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
     }
 
-    fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats().get()
+    fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats()
 
     private fun fetchTestMessages() = testMessagesHolder?.fetchTestMessages() ?: "ingen loggmeldinger er produsert!"
 
@@ -99,6 +95,10 @@ internal object BidragCucumberSingletons {
  
 $failedScenariosString
 """
+        }
+
+        override fun toString(): String {
+            return get()
         }
     }
 }

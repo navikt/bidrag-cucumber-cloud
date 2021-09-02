@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaper
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
-import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
 
@@ -16,17 +16,13 @@ class JournalpostKafkaHendelseProducer(
     private val topic: String,
     private val objectMapper: ObjectMapper
 ) : HendelseProducer {
-    companion object {
-        @JvmStatic
-        private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
-    }
 
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
             if (Environment.isNotSanityCheck()) {
                 kafkaTemplate.send(topic, journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse))
             } else {
-                LOGGER.info("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
+                ScenarioManager.log("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
             }
         } catch (e: JsonProcessingException) {
             throw IllegalStateException(e.message, e)
