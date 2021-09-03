@@ -72,6 +72,7 @@ Nedenfor så vises de nødvendige input for kjøring (1 og 2):
 2. tag som bruker denne ingressen
   * hvis ingressen er for en applikasjon (og ikke en tag), brukes `ingress@no-tag:<nais applikasjon>`
   * det finnes en egen liste for å liste opp tags uten ingress for applikasjon, `tags`
+  * **PS!** det er standard at appnavn blir brukt som context path etter ingress. Hvis det ikke skal gjøres må `noContextPathForApps` også listes opp
 
 Dette er hva som må til for å kjøre testing av en applikasjon som ikke har sikkerhet. Hvis applikasjonen har sikkerhet implementert, må også en
 testbruker angies.
@@ -86,7 +87,8 @@ check" for å teste at den tekniske implementasjonen til cucumber er ok.
 4. securityToken
 5. sanityCheck=true
 
-Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck, tags og testUser er valgfri):
+Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck, tags og testUser er
+valgfri):
 
 ```json
 {
@@ -96,16 +98,17 @@ Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lok
     "<ingress>@no-tag:app.c>"
   ],
   "tags": ["<@tag.3>"],
+  "noContextPathForApps": ["<app.b>"],
   "testUser": "z123456",
   "sanityCheck": true,
-  "securityToken": "<token for testbruker>"
+  "securityToken": "<azure token for testbruker>"
 }
 ```
 
 #### Azure Ad data for fullstendig kjøring
 
 Lokalt på et naisdevice, vil sanity check av en cucumber test være alt som er mulig hvis ikke et sikkerhetstoken blir manuelt generert og sendt med
-som input til testen. Følgende azure data blir brukt til å hente sikkerhetstoken for test bruker:
+som input til testen. Følgende azure data blir brukt til å hente sikkerhetstoken for test bruker når sikkerhetstoken ikke er del av json:
 
 * `AZURE_APP_CLIENT_ID`: miljøvariabel fra kjørende nais applikasjon med azure
 * `AZURE_APP_CLIENT_SECRET`: miljøvariabel fra kjørende nais applikasjon med azure
