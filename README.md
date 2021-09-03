@@ -70,6 +70,8 @@ Nedenfor så vises de nødvendige input for kjøring (1 og 2):
 
 1. ingress som skal testes
 2. tag som bruker denne ingressen
+  * hvis ingressen er for en applikasjon (og ikke en tag), brukes `ingress@no-tag:<nais applikasjon>`
+  * det finnes en egen liste for å liste opp tags uten ingress for applikasjon, `tags`
 
 Dette er hva som må til for å kjøre testing av en applikasjon som ikke har sikkerhet. Hvis applikasjonen har sikkerhet implementert, må også en
 testbruker angies.
@@ -84,15 +86,16 @@ check" for å teste at den tekniske implementasjonen til cucumber er ok.
 4. securityToken
 5. sanityCheck=true
 
-Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck og testUser er valgfri):
+Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck, tags og testUser er valgfri):
 
 ```json
 {
   "ingressesForApps": [
-    "<ingress>@app.a>",
-    "<ingress>@app.b>",
-    "<ingress>@app.c>"
+    "<ingress>@app.a/tag.1>",
+    "<ingress>@app.b/tag.2>",
+    "<ingress>@no-tag:app.c>"
   ],
+  "tags": ["<@tag.3>"],
   "testUser": "z123456",
   "sanityCheck": true,
   "securityToken": "<token for testbruker>"
