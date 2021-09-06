@@ -1,42 +1,35 @@
 {
   "beregnDatoFra": "2020-08-01",
   "beregnDatoTil": "2021-01-01",
-  "bidragsevnePeriodeListe": [
+  "grunnlagListe": [
     {
-      "bidragsevneDatoFraTil": {
-        "periodeDatoFra": "2020-08-01",
-        "periodeDatoTil": "2021-01-01"
-      },
-      "bidragsevne25ProsentInntekt": 8333.33,
-      "bidragsevneBelop": 5655
-    }
-  ],
-  "beregnetBidragSakPeriodeListe": [
-    {
-      "beregnetBidragSaksnr": 1,
-      "beregnetBidragDatoFraTil": {
-        "periodeDatoFra": "2020-08-01",
-        "periodeDatoTil": "2021-01-01"
-      },
-      "beregnetBidragPerBarnListe": [
-        {
-          "barnPersonId": 1,
-          "bidragBelop": 3425
-        }
-      ]
+      "type": "Bidragsevne",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-01-01",
+        "belop": 5655,
+        "25ProsentInntekt": 8333.33
+      }
     },
     {
-      "beregnetBidragSaksnr": 2,
-      "beregnetBidragDatoFraTil": {
-        "periodeDatoFra": "2020-08-01",
-        "periodeDatoTil": "2021-01-01"
-      },
-      "beregnetBidragPerBarnListe": [
-        {
-          "barnPersonId": 2,
-          "bidragBelop": 5980
-        }
-      ]
+      "type": "Barnebidrag",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-01-01",
+        "sakNr": 1,
+        "soknadsbarnId": 1,
+        "belop": 3425
+      }
+    },
+    {
+      "type": "Barnebidrag",
+      "innhold": {
+        "datoFom": "2020-08-01",
+        "datoTil": "2021-01-01",
+        "sakNr": 2,
+        "soknadsbarnId": 2,
+        "belop": 5980
+      }
     }
   ]
 }
