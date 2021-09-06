@@ -26,12 +26,7 @@ class BeregnEgenskaper : No {
 
         Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
             val response = hentRestTjeneste().hentResponse()
-            var resultatBelop = if (response != null) {
-                val documentContext = JsonPath.parse(response)
-                documentContext.read<Any>(sti).toString()
-            } else {
-                "-1"
-            }
+            var resultatBelop = parseJson(response, sti) ?: "-1"
 
             if (resultatBelop.endsWith(".0")) {
                 resultatBelop = resultatBelop.removeSuffix(".0")
@@ -47,14 +42,10 @@ class BeregnEgenskaper : No {
             )
         }
 
-        Og("responsen skal inneholde resultatkoden {string} under stien {string}") { resultatkode: String, sti: String ->
+        Og("responsen skal inneholde resultatkoden {string} under stien {string}")
+        { resultatkode: String, sti: String ->
             val response = hentRestTjeneste().hentResponse()
-            val kode = if (response != null) {
-                val documentContext = JsonPath.parse(response)
-                documentContext.read<Any>(sti).toString()
-            } else {
-                "null"
-            }
+            val kode = parseJson(response, sti) ?: "null"
 
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 FellesEgenskaperService.Assertion(
@@ -65,6 +56,15 @@ class BeregnEgenskaper : No {
                 )
             )
         }
+    }
+
+    private fun parseJson(response: String?, sti: String): String? {
+        if (response == null) {
+            return null
+        }
+
+        val documentContext = JsonPath.parse(response)
+        return documentContext.read<Any>(sti).toString()
     }
 
     private fun harForventetResultat(assertion: FellesEgenskaperService.Assertion) {
