@@ -9,8 +9,8 @@ Nais applikasjon som kjører integrasjonstester for applikasjoner som bruker Azu
 
 ## beskrivelse
 
-Funksjonelle tester av bidrag nais applikasjoner som er designet for å kunne kjøres på en laptop som har innstallert naisdevice og vil gjelde
-applikasjoner med azure i google cloud såfremt on-prem
+Funksjonelle tester av bidrag nais applikasjoner som er designet for å kunne kjøre en "sanity check" på en laptop som har innstallert naisdevice og
+vil gjelde applikasjoner med azure i google cloud såfremt on-prem (når de har blitt eksponert for google cloud platform)
 
 ### Teknisk beskrivelse
 
@@ -60,9 +60,9 @@ Cucumber støtter flere språk og for mer detaljert oversikt over funksjonalitet
 
 Et scenario for en nais applikasjon er implementert på følgende måte:
 
-* en `*.feature` er tagget med applikasjonen som skal testes: `@<applikasjon>`, eks: `@bidrag-sak`. Tag'en vil bestemme hvilken ingress som brukes
-  under testing
+* en `*.feature` som er tagget, eks `@<tag>`, må ha en ingress for en nais applikasjon som brukes i feature
 * scenario-steget `Gitt nais applikasjon 'bidrag-sak'` vil bruke ingressen som er oppgitt for nais applikasjonen som i dette tilfellet er `bidrag-sak`
+* hvis en tag ikke er en nais applikasjon blant ingressen(e) som oppgies så må den nevnes i egen liste over tags som skal brukes
 
 ### Funksjonelle krav
 
@@ -74,7 +74,7 @@ Nedenfor så vises de nødvendige input for kjøring (1 og 2):
   * det finnes en egen liste for å liste opp tags uten ingress for applikasjon, `tags`
   * **PS!** det er standard at appnavn blir brukt som context path etter ingress. Hvis det ikke skal gjøres må `noContextPathForApps` også listes opp
 
-Dette er hva som må til for å kjøre testing av en applikasjon som ikke har sikkerhet. Hvis applikasjonen har sikkerhet implementert, må også en
+Dette er hva som må til for å kjøre testing av en applikasjon som ikke har sikkerhet. Når applikasjonen har sikkerhet implementert, må også en
 testbruker angies.
 
 3. testbruker (for simulering av nav-ident, bruker med sikkerhet implementert i Azure)
@@ -83,12 +83,15 @@ Hvis kjøring av denne applikasjonen gjøres lokalt (fra naisdevice) og mot en a
 ikke gjøres uten at azure token blir send med når testen starter. Azure Ad brukes for å lage sikkerhetstoken for testbruker. Det er derfor nødvendig
 med et ekstra parameter som forteller `bidrag-cucumber-cloud` at testbruker har et manuelt generert sikkerhetstoken eller kjøringen er en "sanity
 check" for å teste at den tekniske implementasjonen til cucumber er ok.
+* Vær obs på at en fullstendig kjøring fra et nais-device ikke kan gjøres (selv med manuelt token) hvis testen er designet slik at den kontakter
+  applikasjonen direkte. GCP er satt opp med zero-trust og derfor vil applikasjonen ikke reagere på request fra en applikasjon (eller naisdevice) som
+  ikke er definert med accessPolicy inbound i `nais.yaml`
 
 4. securityToken
 5. sanityCheck=true
 
-Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck, tags og testUser er
-valgfri):
+Disse verdiene sendes som json til test-endepunkt, se avsnittet om `Kjøring lokalt`. Eksempel på en slik json (sanityCheck, noContextPathForApps, tags 
+og testUser er valgfri):
 
 ```json
 {
@@ -108,7 +111,8 @@ valgfri):
 #### Azure Ad data for fullstendig kjøring
 
 Lokalt på et naisdevice, vil sanity check av en cucumber test være alt som er mulig hvis ikke et sikkerhetstoken blir manuelt generert og sendt med
-som input til testen. Følgende azure data blir brukt til å hente sikkerhetstoken for test bruker når sikkerhetstoken ikke er del av json:
+som input til testen. Applikasjonen som testes testes må også kunne nåes fra offentlig internett eller ha `accessPolicy` med "inbound rules" definert
+i `nais.yaml`. Følgende azure data blir brukt til å hente sikkerhetstoken for test bruker når sikkerhetstoken ikke er del av json:
 
 * `AZURE_APP_CLIENT_ID`: miljøvariabel fra kjørende nais applikasjon med azure
 * `AZURE_APP_CLIENT_SECRET`: miljøvariabel fra kjørende nais applikasjon med azure
@@ -119,7 +123,9 @@ som input til testen. Følgende azure data blir brukt til å hente sikkerhetstok
 
 json | Beskrivelse | Kommentar
 ---|---|---
-`ingressesForApps` | kommaseparert liste over ingress og nais-applikasjon som testes| Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b
+`ingressesForApps` | kommaseparert liste over ingress og nais-applikasjon som testes | Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b
+`noContextPathForApps` | kommaseparert liste over applikasjoner (fra `ingressesForApps`) som ikke bruker appnavn som context-path etter ingress
+`tags` | kommaseparert liste over tags som skal kjøres (som ikke nevnes blant ingressene)
 `testUser` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check, men må brukes med `securityToken` (hvis kjøring lokalt).
 
 #### Miljøvariabler for kjøring lokalt
@@ -145,8 +151,6 @@ miljøvariabelen `SANITY_CHECK=true` settes. Da vil bare resultatene fra operasj
 aktuelle sjekken.
 
 ##### Kjøring med maven
-
-Den simpleste formen er å bruke maven
 
 ```
 mvn exec:java                                        \
@@ -194,7 +198,7 @@ ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (Int
 **NB!**
 Husk å legg inn miljøvariablene `SANITY_CHECK` og `INGRESSES_FOR_APPS` i `Edit Configurations...` under `Run`-drop down menyen...
 
-###### Lagre features som er kjørt
+###### Lagre features som er kjørt i intelliJ sin run-drop down
 
 Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes opp på ny...
 
@@ -224,6 +228,16 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 
 1. Start spring-boot applikasjon
 2. Gå til url: http://localhost:8080/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
+3. Ekspander endpoint `/run`
+4. Trykk på "Try it out"
+5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
+6. Press `Execute`
+
+###### gcp
+
+2. Gå til url for main eller feature branch
+   * main - https://bidrag-cucumber-cloud.ekstern.dev.nav.no/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
+   * feature - https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
 3. Ekspander endpoint `/run`
 4. Trykk på "Try it out"
 5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
