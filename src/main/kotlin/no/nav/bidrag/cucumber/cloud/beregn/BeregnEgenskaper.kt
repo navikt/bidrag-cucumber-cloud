@@ -68,6 +68,6 @@ class BeregnEgenskaper : No {
     }
 
     private fun harForventetResultat(assertion: FellesEgenskaperService.Assertion) {
-        assertThat(assertion.expectation).`as`(assertion.message).isEqualTo(1)
+        assertThat(assertion.expectation).`as`(assertion.message).isEqualTo(assertion.value)
     }
 }
