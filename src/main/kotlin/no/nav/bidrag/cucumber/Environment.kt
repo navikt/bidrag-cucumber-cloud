@@ -96,9 +96,7 @@ internal object Environment {
         PrefiksetJournalpostIdForHendelse.fjernIdForHendelser()
     }
 
-    fun isNoContextPathForApp(applicationName: String) = if (fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS) == null) {
-        CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
-    } else {
-        fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS).contains(applicationName)
-    } ?: false
+    fun isNoContextPathForApp(applicationName: String) = fromPropertyOrEnvironment(applicationName) ?: fromCucumberTestsDto(applicationName) ?: false
+    private fun fromPropertyOrEnvironment(applicationName: String) = fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS)?.contains(applicationName)
+    private fun fromCucumberTestsDto(applicationName: String) = CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
 }
