@@ -6,15 +6,17 @@ metadata:
   name: {{ name }}
   namespace: bidrag
 spec:
-  accessPolicy:
-    outbound:
-      external:
-        - host: {{ access.outbound.oppgave }}
-        - host: {{ access.outbound.bidrag-sak }}
   azure:
     application:
       enabled: true
       tenant: trygdeetaten.no
+  accessPolicy:
+    outbound:
+      external:
+        outbound:
+          external:
+            - host: {{ access.outbound.oppgave }}
+            - host: {{ access.outbound.bidrag-sak }}
   envFrom:
     - secret: test-auth-z992903
   image: {{ image }}
@@ -47,3 +49,5 @@ spec:
   env:
     - name: TOPIC_JOURNALPOST
       value: {{ kafka-topic-journalpost }}
+    - name: OPPGAVE_SCOPE
+      value: {{ scope.oppgave }}
