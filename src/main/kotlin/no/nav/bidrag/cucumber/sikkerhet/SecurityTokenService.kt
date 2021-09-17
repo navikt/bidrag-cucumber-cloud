@@ -27,6 +27,6 @@ class SecurityTokenService(@Lazy val authorizedClientManager: OAuth2AuthorizedCl
                         .build()
                 )!!.accessToken
 
-            return accessToken.tokenValue
+            return "Bearer "+accessToken.tokenValue
     }
 }

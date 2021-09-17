@@ -38,7 +38,7 @@ internal object RestTjenesteForApplikasjon {
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         if (Environment.isTestUserPresent()) {
-            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken("oppgave") ?: "" }
+            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken("oppgave") }
         } else {
             ScenarioManager.log("No user to provide security for when accessing $applicationName")
         }
