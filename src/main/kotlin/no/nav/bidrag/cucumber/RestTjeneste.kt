@@ -84,12 +84,17 @@ open class RestTjeneste(
     private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
         ScenarioManager.log("$httpMethod: $fullUrl")
 
-        if (Environment.isNotSanityCheck() || Environment.isSanityCheck && Environment.isTestUserPresent()) {
+        if (Environment.isTestUserPresent()) {
             try {
                 responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
-            } catch (e: HttpStatusCodeException) {
+            } catch (e: Exception) {
                 ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e")
-                responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+
+                if (e is HttpStatusCodeException) {
+                    responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+                } else {
+                    responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e.javaClass.simpleName}: ${e.message}")
+                }
 
                 if (Environment.isNotSanityCheck()) {
                     throw e
