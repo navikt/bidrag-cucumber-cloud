@@ -38,8 +38,8 @@ internal object BidragCucumberSingletons {
         .add(scenario)
 
     fun scenarioMessage(scenario: Scenario): String {
-        val noScenario = scenario.name != null && scenario.name.isNotBlank()
-        return if (noScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
+        val haveScenario = scenario.name != null && scenario.name.isNotBlank()
+        return if (haveScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
     }
 
     fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats()
@@ -62,7 +62,10 @@ internal object BidragCucumberSingletons {
     }
 
     fun holdExceptionForTest(exception: Exception) {
-        val messages = exceptionLogger?.logException(exception, BidragCucumberSingletons::class.java.simpleName) ?: emptyList()
+        val messages = exceptionLogger?.logException(exception, BidragCucumberSingletons::class.java.simpleName) ?: listOf(
+            "${exception.javaClass.simpleName}: ${exception.message}"
+        )
+
         testMessagesHolder?.hold(messages)
         fetchRunStats().addExceptionLogging(messages)
     }

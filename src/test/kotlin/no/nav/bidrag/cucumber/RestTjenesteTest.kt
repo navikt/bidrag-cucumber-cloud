@@ -19,8 +19,9 @@ import org.springframework.web.client.RestTemplate
 internal class RestTjenesteTest {
 
     @BeforeEach
-    fun `reset Cucumber environment`() {
+    fun `reset Cucumber environment and add test user`() {
         Environment.resetCucumberEnvironment()
+        CucumberTestsDto(testUsername = "James Bond").initCucumberEnvironment()
     }
 
     @Test

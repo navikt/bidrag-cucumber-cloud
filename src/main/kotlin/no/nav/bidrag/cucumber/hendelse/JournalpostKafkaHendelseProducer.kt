@@ -25,6 +25,7 @@ class JournalpostKafkaHendelseProducer(
                 ScenarioManager.log("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
             }
         } catch (e: JsonProcessingException) {
+            ScenarioManager.errorLog("${e.javaClass.simpleName}: ${e.message}", e)
             throw IllegalStateException(e.message, e)
         }
     }

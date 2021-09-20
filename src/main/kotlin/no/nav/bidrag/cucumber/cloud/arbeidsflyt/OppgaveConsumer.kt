@@ -7,7 +7,6 @@ import java.time.LocalDate
 
 object OppgaveConsumer {
     fun opprettOppgave(journalpostId: String, tema: String) {
-        sokOppgave(journalpostId, tema)
         hentRestTjeneste().exchangePost(
             "/api/v1/oppgaver",
             """
@@ -26,7 +25,8 @@ object OppgaveConsumer {
         hentRestTjeneste().exchangeGet("/api/v1/oppgaver?journalpostId=$journalpostId&statuskategori=AAPEN&tema=$tema")
 
         try {
-            return BidragCucumberSingletons.objectMapper?.readValue(hentRestTjeneste().hentResponse(), OppgaveSokResponse::class.java)
+            val response = hentRestTjeneste().hentResponse() ?: return null
+            return BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java)
         } finally {
             val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
                 "Har OppgaveSokResponse (${hentRestTjeneste().hentResponse()})"

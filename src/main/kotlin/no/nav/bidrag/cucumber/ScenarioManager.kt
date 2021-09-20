@@ -89,7 +89,10 @@ object ScenarioManager {
 
     fun createCorrelationIdLinkTitle() = "Link for correlation-id, $correlationIdForScenario"
     fun getCorrelationIdForScenario() = correlationIdForScenario
-    fun errorLog(message: String) = log("An error occured", message, LogLevel.ERROR)
+    fun errorLog(message: String, e: Exception) {
+        log("An error occured", message, LogLevel.ERROR)
+        BidragCucumberSingletons.holdExceptionForTest(e)
+    }
 
     private enum class LogLevel {
         INFO, ERROR;

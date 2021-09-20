@@ -10,6 +10,7 @@ import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -46,6 +47,11 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
     @BeforeEach
     fun `opprett prefikset journalpostId for hendelse`() {
         ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.opprett(hendelse, journalpostId, tema)
+    }
+
+    @BeforeEach
+    fun `sett testbruker`() {
+        CucumberTestsDto(testUsername = "John Blund").initCucumberEnvironment()
     }
 
     @BeforeEach
