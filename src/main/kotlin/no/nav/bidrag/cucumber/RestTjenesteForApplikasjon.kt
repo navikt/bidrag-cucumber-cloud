@@ -34,10 +34,10 @@ internal object RestTjenesteForApplikasjon {
     private fun konfigurerSikkerhet(applicationName: String, applicationUrl: String): RestTjeneste.ResttjenesteMedBaseUrl {
 
         val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
-        val tokenService = BidragCucumberSingletons.hentTokenServiceFraContext()
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         if (Environment.isTestUserPresent()) {
+            val tokenService = BidragCucumberSingletons.hentTokenServiceFraContext()
             httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken(applicationName) }
         } else {
             ScenarioManager.log("No user to provide security for when accessing $applicationName")
