@@ -23,7 +23,7 @@ internal object BidragCucumberSingletons {
     private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
-    fun hentTokenServiceFraContext() = applicationContext?.getBean(SecurityTokenService::class.java);
+    fun hentTokenServiceFraContext() = applicationContext?.getBean(SecurityTokenService::class.java)
 
     private fun doManualInit(): HttpHeaderRestTemplate {
         val httpComponentsClientHttpRequestFactory = SpringConfig().httpComponentsClientHttpRequestFactorySomIgnorererHttps()
@@ -73,47 +73,5 @@ internal object BidragCucumberSingletons {
 
     fun setTestMessagesHolder(testMessagesHolder: TestMessagesHolder) {
         BidragCucumberSingletons.testMessagesHolder = testMessagesHolder
-    }
-
-    private class RunStats {
-        val exceptionMessages: MutableList<String> = ArrayList()
-        val failedScenarios: MutableList<String> = ArrayList()
-        private var passed = 0
-        private var total = 0
-
-        fun add(scenario: Scenario) {
-            total = total.inc()
-
-            if (scenario.isFailed) {
-                val namelessScenario = scenario.name == null || scenario.name.isBlank()
-
-                failedScenarios.add("${scenario.uri} # ${if (namelessScenario) "Nameless" else scenario.name}")
-            } else {
-                passed = passed.inc()
-            }
-        }
-
-        fun get(): String {
-            val noOfFailed = failedScenarios.size
-            val failedScenariosString = if (failedScenarios.isEmpty()) "" else "Failed scenarios:\n${
-                failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
-            }\n${if (exceptionMessages.isEmpty()) "No f" else "F"}ailure details!\n${exceptionMessages.joinToString(separator = "\n")}"
-
-            return """
-    Scenarios: $total
-    Passed   : $passed
-    Failed   : $noOfFailed
- 
-$failedScenariosString
-"""
-        }
-
-        fun addExceptionLogging(messages: List<String>) {
-            exceptionMessages.addAll(messages)
-        }
-
-        override fun toString(): String {
-            return get()
-        }
     }
 }
