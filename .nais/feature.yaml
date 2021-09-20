@@ -6,3 +6,6 @@ access:
     bidrag-sak: bidrag-sak-feature.dev-fss-pub.nais.io
     oppgave: oppgave-q1.dev-fss-pub.nais.io
 kafka-topic-journalpost: bidrag.journalpost-feature
+scope:
+  oppgave: dev-fss.oppgavehandtering.oppgave-q1
+  sak: dev-gcp.bidrag.bidrag-sak-feature

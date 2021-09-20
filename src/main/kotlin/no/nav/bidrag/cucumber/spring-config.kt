@@ -11,7 +11,6 @@ import no.nav.bidrag.cucumber.aop.TestFailedAdvice
 import no.nav.bidrag.cucumber.hendelse.JournalpostKafkaHendelseProducer
 import no.nav.bidrag.cucumber.model.TestMessagesHolder
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
-import no.nav.bidrag.cucumber.sikkerhet.TokenProvider
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.ssl.SSLContexts
@@ -22,14 +21,10 @@ import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.Scope
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.web.client.RestTemplate
 import java.security.cert.X509Certificate
 
 @Configuration
 class SpringConfig {
-
-    @Bean
-    fun tokenProvider(restTemplate: RestTemplate) = TokenProvider(restTemplate)
 
     @Bean
     fun openAPI(): OpenAPI = OpenAPI().info(

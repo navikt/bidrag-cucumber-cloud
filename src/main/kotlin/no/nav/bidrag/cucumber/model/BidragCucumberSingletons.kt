@@ -6,6 +6,7 @@ import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
+import no.nav.bidrag.cucumber.sikkerhet.SecurityTokenService
 import org.springframework.context.ApplicationContext
 
 /**
@@ -22,6 +23,7 @@ internal object BidragCucumberSingletons {
     private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
+    fun hentTokenServiceFraContext() = applicationContext?.getBean(SecurityTokenService::class.java);
 
     private fun doManualInit(): HttpHeaderRestTemplate {
         val httpComponentsClientHttpRequestFactory = SpringConfig().httpComponentsClientHttpRequestFactorySomIgnorererHttps()

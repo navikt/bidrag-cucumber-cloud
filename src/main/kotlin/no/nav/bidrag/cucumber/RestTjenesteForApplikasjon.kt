@@ -1,7 +1,6 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import no.nav.bidrag.cucumber.sikkerhet.Sikkerhet
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.web.util.UriTemplateHandler
@@ -38,7 +37,8 @@ internal object RestTjenesteForApplikasjon {
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         if (Environment.isTestUserPresent()) {
-            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { Sikkerhet.fetchAzureBearerToken() }
+            val tokenService = BidragCucumberSingletons.hentTokenServiceFraContext()
+            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken(applicationName) }
         } else {
             ScenarioManager.log("No user to provide security for when accessing $applicationName")
         }
