@@ -26,7 +26,6 @@ internal class CucumberControllerIntegrationTest {
 
     private val ingressIsUp: MutableMap<String, Boolean> = HashMap()
 
-    @Suppress("SameParameterValue")
     private fun assumeThatActuatorHealthIsRunningCachedException(ingress: String, app: String) {
         if (!ingressIsUp.contains(ingress)) {
             try {
@@ -45,8 +44,6 @@ internal class CucumberControllerIntegrationTest {
     @Test
     fun `skal feile ved testing av applikasjon med azure ad`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -55,7 +52,7 @@ internal class CucumberControllerIntegrationTest {
                 {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"]
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(), initJsonAsMediaType()
             ),
             Void::class.java
         )
@@ -66,8 +63,6 @@ internal class CucumberControllerIntegrationTest {
     @Test
     fun `skal ikke feile ved testing av applikasjon med azure ad når det er snakk om en sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -77,7 +72,7 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(), initJsonAsMediaType()
             ),
             Void::class.java
         )
@@ -88,8 +83,6 @@ internal class CucumberControllerIntegrationTest {
     @Test
     fun `skal hente ut cucumber tekst fra kjøring`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -99,7 +92,7 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(), initJsonAsMediaType()
             ),
             String::class.java
         )
@@ -114,8 +107,6 @@ internal class CucumberControllerIntegrationTest {
     @Test
     fun `skal ikke feile når det er sanity check selv om det sendes med brukernavn til en testbruker`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -123,10 +114,9 @@ internal class CucumberControllerIntegrationTest {
                 """
                 {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                  "sanityCheck":true,
-                  "testUsername":"z992903"
+                  "sanityCheck":true
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(), initJsonAsMediaType()
             ),
             String::class.java
         )
@@ -137,8 +127,6 @@ internal class CucumberControllerIntegrationTest {
     @Test
     fun `skal logge eventuelle exception når det feiler under testing`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -148,7 +136,7 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
                   "testUsername":"jalla"
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(), initJsonAsMediaType()
             ),
             String::class.java
         )
@@ -157,5 +145,12 @@ internal class CucumberControllerIntegrationTest {
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
             { assertThat(testResponse.body).`as`("body").contains("Failure details!") }
         )
+    }
+
+    private fun initJsonAsMediaType(): HttpHeaders {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        return headers
     }
 }
