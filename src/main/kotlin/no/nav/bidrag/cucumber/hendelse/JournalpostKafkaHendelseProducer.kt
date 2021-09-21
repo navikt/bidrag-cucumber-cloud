@@ -20,6 +20,7 @@ class JournalpostKafkaHendelseProducer(
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
             if (Environment.isNotSanityCheck()) {
+                ScenarioManager.log("Publish $journalpostHendelse")
                 kafkaTemplate.send(topic, journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse))
             } else {
                 ScenarioManager.log("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
@@ -38,7 +39,7 @@ interface HendelseProducer {
 data class JournalpostHendelse(
     val journalpostId: String,
     val hendelse: String,
-    val sporing: Sporingsdata = Sporingsdata(CorrelationId.fetchCorrelationIdForThread()),
+    val sporing: Sporingsdata = Sporingsdata(correlationId = CorrelationId.fetchCorrelationIdForThread()),
     val detaljer: Map<String, String?> = emptyMap()
 ) {
     constructor(detaljer: Map<String, String>, hendelse: Hendelse, tema: String) : this(
@@ -52,9 +53,7 @@ data class JournalpostHendelse(
     }
 }
 
-data class Sporingsdata(val correlationId: String) {
-    var brukerident: String? = null
-
-    @Suppress("unused") // brukes av jackson
+data class Sporingsdata(val correlationId: String, var brukerident: String? = null) {
+    @Suppress("unused") // brukes av jackson (and not part of equals/hashcode for data class)
     val opprettet: LocalDateTime = LocalDateTime.now()
 }
