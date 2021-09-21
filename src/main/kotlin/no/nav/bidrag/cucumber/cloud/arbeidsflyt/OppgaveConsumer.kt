@@ -15,7 +15,8 @@ object OppgaveConsumer {
               "tema": "$tema",
               "oppgavetype": "JFR",
               "prioritet": "NORM",
-              "aktivDato": "${LocalDate.now().minusDays(1)}"
+              "aktivDato": "${LocalDate.now().minusDays(1)}",
+              "tildeltEnhetsnr": "1001"
             }
             """.trimIndent()
         )

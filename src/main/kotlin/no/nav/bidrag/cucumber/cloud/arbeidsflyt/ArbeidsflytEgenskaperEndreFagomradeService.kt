@@ -11,7 +11,7 @@ import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
  */
 object ArbeidsflytEgenskaperEndreFagomradeService {
 
-    fun opprettOppgave(prefiksJournalpostId: String, tema: String) {
+    fun opprettOppgaveNarUkjent(prefiksJournalpostId: String, tema: String) {
         val sokResponse = OppgaveConsumer.sokOppgave(prefiksJournalpostId, tema)
 
         if (sokResponse == null || sokResponse.antallTreffTotalt == 0) {

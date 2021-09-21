@@ -80,7 +80,7 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
             .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
 
         val prefiksetJournalpostId = PrefiksetJournalpostIdForHendelse().hent(hendelse, tema)
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(prefiksetJournalpostId, tema)
+        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgaveNarUkjent(prefiksetJournalpostId, tema)
 
         verify(restTemplateMock).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -94,7 +94,7 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
         )
 
         val prefiksetJournalpostId = PrefiksetJournalpostIdForHendelse().hent(hendelse, tema)
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(prefiksetJournalpostId, tema)
+        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgaveNarUkjent(prefiksetJournalpostId, tema)
 
         verify(restTemplateMock, never()).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -106,7 +106,7 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
         )
 
         val prefiksetJournalpostId = PrefiksetJournalpostIdForHendelse().hent(hendelse, tema)
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgave(prefiksetJournalpostId, tema)
+        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgaveNarUkjent(prefiksetJournalpostId, tema)
 
         @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java) as ArgumentCaptor<HttpEntity<String>>
 
