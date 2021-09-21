@@ -84,19 +84,20 @@ open class RestTjeneste(
     private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
         ScenarioManager.log("$httpMethod: $fullUrl")
 
-        if (Environment.isNotSanityCheck() || Environment.isSanityCheck && Environment.isTestUserPresent()) {
-            try {
-                responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
-            } catch (e: HttpStatusCodeException) {
-                ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e")
-                responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+        try {
+            responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
+        } catch (e: Exception) {
+            ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e", e)
 
-                if (Environment.isNotSanityCheck()) {
-                    throw e
-                }
+            if (e is HttpStatusCodeException) {
+                responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+            } else {
+                responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e.javaClass.simpleName}: ${e.message}")
             }
-        } else {
-            ScenarioManager.log("Ikke nødvendig å kontakte endpoint uten testbruker ved sanity check!")
+
+            if (Environment.isNotSanityCheck()) {
+                throw e
+            }
         }
     }
 

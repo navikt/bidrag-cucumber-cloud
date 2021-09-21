@@ -1,16 +1,12 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
+import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import org.slf4j.LoggerFactory
 import java.time.LocalDate
 
 object OppgaveConsumer {
-    @JvmStatic
-    private val LOGGER = LoggerFactory.getLogger(OppgaveConsumer::class.java)
-
     fun opprettOppgave(journalpostId: String, tema: String) {
-        sokOppgave(journalpostId, tema)
         hentRestTjeneste().exchangePost(
             "/api/v1/oppgaver",
             """
@@ -29,11 +25,16 @@ object OppgaveConsumer {
         hentRestTjeneste().exchangeGet("/api/v1/oppgaver?journalpostId=$journalpostId&statuskategori=AAPEN&tema=$tema")
 
         try {
-            return BidragCucumberSingletons.objectMapper?.readValue(hentRestTjeneste().hentResponse(), OppgaveSokResponse::class.java)
+            val response = hentRestTjeneste().hentResponse() ?: return null
+            return BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java)
         } finally {
-            LOGGER.info("${
-                if (hentRestTjeneste().responseEntity != null) "Har " else "Mangler " 
-            }OppgaveSokResponse (${hentRestTjeneste().hentResponse()} med http status: ${hentRestTjeneste().hentHttpStatus()})")
+            val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
+                "Har OppgaveSokResponse (${hentRestTjeneste().hentResponse()})"
+            } else {
+                "Mangler OppgaveSokResponse"
+            }
+
+            ScenarioManager.log("$oppgaveSokResponse med http status: ${hentRestTjeneste().hentHttpStatus()}")
         }
     }
 

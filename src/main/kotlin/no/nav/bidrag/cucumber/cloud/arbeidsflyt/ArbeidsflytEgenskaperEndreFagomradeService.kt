@@ -18,9 +18,9 @@ object ArbeidsflytEgenskaperEndreFagomradeService {
 
         val sokResponse = OppgaveConsumer.sokOppgave(prefiksJournalpostId, tema)
 
-        if (sokResponse?.antallTreffTotalt == 0) {
+        if (sokResponse == null || sokResponse.antallTreffTotalt == 0) {
             OppgaveConsumer.opprettOppgave(prefiksJournalpostId, tema)
-        } else if (sokResponse != null && sokResponse.oppgaver.isNotEmpty()) {
+        } else if (sokResponse.oppgaver.isNotEmpty()) {
             val id = sokResponse.oppgaver.first().id
             val versjon = sokResponse.oppgaver.first().versjon
 
