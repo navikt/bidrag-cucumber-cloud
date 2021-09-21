@@ -8,4 +8,4 @@ access:
 kafka-topic-journalpost: bidrag.journalpost
 scope:
   oppgave: dev-fss.oppgavehandtering.oppgave
-  sak: dev-gcp.bidrag.bidrag-sak
+  sak: dev-fss.bidrag.bidrag-sak
