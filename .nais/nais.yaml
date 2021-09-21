@@ -49,3 +49,5 @@ spec:
       value: {{ kafka-topic-journalpost }}
     - name: OPPGAVE_SCOPE
       value: {{ scope.oppgave }}
+    - name: SAK_SCOPE
+      value: {{ scope.sak }}
