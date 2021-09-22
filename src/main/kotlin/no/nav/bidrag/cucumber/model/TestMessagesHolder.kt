@@ -1,11 +1,13 @@
 package no.nav.bidrag.cucumber.model
 
-import kotlin.math.log
-
 class TestMessagesHolder {
     companion object {
         @JvmStatic
         private val TEST_MESSAGES_FOR_THREAD = ThreadLocal<MutableList<String>?>()
+
+        fun fjernTestMessages() {
+            TEST_MESSAGES_FOR_THREAD.remove()
+        }
     }
 
     fun fetchTestMessages(): String {

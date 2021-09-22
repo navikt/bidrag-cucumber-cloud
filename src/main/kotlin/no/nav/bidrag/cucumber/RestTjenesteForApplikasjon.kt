@@ -1,11 +1,14 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.web.util.UriTemplateHandler
 import java.net.URI
 
 internal object RestTjenesteForApplikasjon {
+    @JvmStatic
+    private val LOGGER = LoggerFactory.getLogger(RestTjenesteForApplikasjon::class.java)
     private val REST_TJENESTE_FOR_APPLIKASJON = RestTjenesteForApplikasjonThreadLocal()
 
     fun hentEllerKonfigurer(applicationName: String): RestTjeneste.ResttjenesteMedBaseUrl {
@@ -37,7 +40,7 @@ internal object RestTjenesteForApplikasjon {
             val tokenService = BidragCucumberSingletons.hentTokenServiceFraContext()
             httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken(applicationName) }
         } else {
-            ScenarioManager.log("No user to provide security for when accessing $applicationName")
+            LOGGER.info("No user to provide security for when accessing $applicationName")
         }
 
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)

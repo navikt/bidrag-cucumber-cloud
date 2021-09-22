@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
@@ -13,9 +14,7 @@ object ArbeidsflytEgenskaperEndreFagomradeService {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaperEndreFagomradeService::class.java)
 
-    fun opprettOppgave(hendelse: Hendelse, journalpostId: Long, tema: String) {
-        val prefiksJournalpostId = ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.opprett(hendelse, journalpostId, tema)
-
+    fun opprettOppgaveNarUkjent(prefiksJournalpostId: String, tema: String) {
         val sokResponse = OppgaveConsumer.sokOppgave(prefiksJournalpostId, tema)
 
         if (sokResponse == null || sokResponse.antallTreffTotalt == 0) {

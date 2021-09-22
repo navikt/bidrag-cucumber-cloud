@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -16,6 +17,11 @@ import org.springframework.web.client.RestTemplate
 open class RestTjeneste(
     internal val rest: ResttjenesteMedBaseUrl
 ) {
+    companion object {
+        @JvmStatic
+        private val LOGGER = LoggerFactory.getLogger(Environment::class.java)
+    }
+
     private lateinit var fullUrl: FullUrl
     internal var responseEntity: ResponseEntity<String?>? = null
 
@@ -42,12 +48,16 @@ open class RestTjeneste(
 
         exchange(HttpEntity(null, header), endpointUrl, HttpMethod.GET)
 
-        ScenarioManager.log(
+        LOGGER.info(
             if (responseEntity?.body != null) "response with body and status ${responseEntity!!.statusCode}"
-            else if (responseEntity == null) "no response entity" else "no response body with status ${responseEntity!!.statusCode}"
+            else if (responseEntity == null) "no response entity (${sanityCheck()})" else "no response body with status ${responseEntity!!.statusCode}"
         )
 
         return responseEntity ?: ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build()
+    }
+
+    private fun sanityCheck(): String {
+        return if (Environment.isSanityCheck) "is sanity check" else "is NOT sanity check"
     }
 
     private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
@@ -82,12 +92,12 @@ open class RestTjeneste(
     }
 
     private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
-        ScenarioManager.log("$httpMethod: $fullUrl")
+        LOGGER.info("$httpMethod: $fullUrl")
 
         try {
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
         } catch (e: Exception) {
-            ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl) - $e", e)
+            ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl)", e)
 
             if (e is HttpStatusCodeException) {
                 responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
