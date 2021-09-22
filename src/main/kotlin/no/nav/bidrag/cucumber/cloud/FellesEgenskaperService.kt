@@ -2,23 +2,25 @@ package no.nav.bidrag.cucumber.cloud
 
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.RestTjeneste
-import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import org.slf4j.LoggerFactory
 
 object FellesEgenskaperService {
+    @JvmStatic
+    private val LOGGER = LoggerFactory.getLogger(FellesEgenskaperService::class.java)
     @JvmStatic
     private val RESTTJENESTER = ThreadLocal<RestTjeneste>()
 
     fun assertWhenNotSanityCheck(assertion: Assertion) {
         if (Environment.isSanityCheck) {
-            ScenarioManager.log("Sanity check - ${assertion.message}: actual - '${assertion.value}', wanted - '${assertion.expectation}'")
+            LOGGER.info("Sanity check - ${assertion.message}: actual - '${assertion.value}', wanted - '${assertion.expectation}'")
         } else {
             assertion.doVerify()
         }
     }
 
     fun settOppNaisApp(naisApplikasjon: String) {
-        ScenarioManager.log("Setter opp $naisApplikasjon")
+        LOGGER.info("Setter opp $naisApplikasjon")
         RESTTJENESTER.set(RestTjeneste(naisApplikasjon))
     }
 

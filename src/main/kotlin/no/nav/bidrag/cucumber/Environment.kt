@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse
+import no.nav.bidrag.cucumber.logback.TestMessageBeforeLayoutHolder
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import org.slf4j.LoggerFactory
@@ -70,7 +71,7 @@ internal object Environment {
         val app = string.split('@')[1]
             .replace("no-tag:", "")
 
-        ScenarioManager.log("Ingress@naisApp: $string")
+        LOGGER.info("Ingress@naisApp: $string")
 
         return Pair(ingress, app)
     }
@@ -79,6 +80,7 @@ internal object Environment {
         LOGGER.info("Initializing environment for $cucumberTestsDto")
         CUCUMBER_TESTS.set(cucumberTestsDto)
         cucumberTestsDto.warningLogDifferences()
+        TestMessageBeforeLayoutHolder.startTestRun()
     }
 
     /**
@@ -94,6 +96,7 @@ internal object Environment {
         RestTjenesteForApplikasjon.removeAll()
         FellesEgenskaperService.fjernResttjenester()
         PrefiksetJournalpostIdForHendelse.fjernIdForHendelser()
+        TestMessageBeforeLayoutHolder.endTestRun()
     }
 
     fun isNoContextPathForApp(applicationName: String) = fromPropertyOrEnvironment(applicationName) ?: fromCucumberTestsDto(applicationName) ?: false

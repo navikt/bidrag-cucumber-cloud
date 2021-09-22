@@ -18,7 +18,7 @@ object ScenarioManager {
     fun use(scenario: Scenario) {
         this.scenario = scenario
         initCorrelationId()
-        BidragCucumberSingletons.holdTestMessage("Starting ${BidragCucumberSingletons.scenarioMessage(scenario)}")
+        LOGGER.info("Starting ${BidragCucumberSingletons.scenarioMessage(scenario)}")
     }
 
     internal fun initCorrelationId() {
@@ -27,7 +27,7 @@ object ScenarioManager {
     }
 
     fun reset(scenario: Scenario) {
-        BidragCucumberSingletons.holdTestMessage("Finished ${BidragCucumberSingletons.scenarioMessage(scenario)}")
+        LOGGER.info("Finished ${BidragCucumberSingletons.scenarioMessage(scenario)}")
         BidragCucumberSingletons.addRunStats(scenario)
         this.scenario = null
         resetCorrelationId()
@@ -42,35 +42,14 @@ object ScenarioManager {
         return CorrelationId.generateTimestamped(label).get()
     }
 
-    fun log(message: String) {
-        log(null, message, LogLevel.INFO)
-    }
-
-    fun log(messageTitle: String?, message: String) {
-        log(messageTitle, message, LogLevel.INFO)
-    }
-
-    private fun log(messageTitle: String?, message: String, logLevel: LogLevel) {
-        val logLevelMessage = logLevel.produceLogMessage(messageTitle, message)
+    fun log(messageTitle: String, message: String) {
+        val testMessage = "$messageTitle: $message"
 
         if (scenario != null) {
-            scenario!!.log(logLevelMessage)
+            scenario!!.log("$testMessage\n")
+            BidragCucumberSingletons.holdTestMessage(testMessage)
         } else {
-            logOutsideScenario(logLevel, message)
-        }
-
-        BidragCucumberSingletons.holdTestMessage(logLevelMessage)
-    }
-
-    private fun logOutsideScenario(logLevel: LogLevel, message: String) {
-        when (logLevel) {
-            LogLevel.INFO -> {
-                LOGGER.info("Outside scenario: $message")
-            }
-
-            LogLevel.ERROR -> {
-                LOGGER.error("Outside scenario: $message")
-            }
+            LOGGER.info("Outside scenario: $testMessage")
         }
     }
 
@@ -90,23 +69,7 @@ object ScenarioManager {
     fun createCorrelationIdLinkTitle() = "Link for correlation-id, $correlationIdForScenario"
     fun getCorrelationIdForScenario() = correlationIdForScenario
     fun errorLog(message: String, e: Exception) {
-        log("An error occured", message, LogLevel.ERROR)
+        LOGGER.error("$message - ${e.javaClass.simpleName}")
         BidragCucumberSingletons.holdExceptionForTest(e)
-    }
-
-    private enum class LogLevel {
-        INFO, ERROR;
-
-        fun produceLogMessage(messageTitle: String?, message: String) = when (this) {
-            INFO -> {
-                constructMessage(messageTitle, message)
-            }
-            ERROR -> {
-                constructMessage(messageTitle, message)
-            }
-        }
-
-        private fun constructMessage(messageTitle: String?, message: String) =
-            if (messageTitle != null) "$messageTitle:\n$message\n" else "$message\n"
     }
 }

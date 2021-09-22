@@ -85,7 +85,9 @@ class CucumberControllerRestTemplateMockBeanTest {
         val testMessages = testResponse.body ?: "Ingen body i response: $testResponse"
 
         val softly = SoftAssertions()
+        softly.assertThat(testMessages).contains("Starting")
         softly.assertThat(testMessages).contains("Link")
+        softly.assertThat(testMessages).contains("Finished")
         softly.assertThat(testMessages).contains("Scenario")
         softly.assertAll()
     }

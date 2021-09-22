@@ -5,11 +5,14 @@ import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import org.slf4j.LoggerFactory
 
 /**
  * Service class in order to loosely couple logic from cucumber infrastructure
  */
 object ArbeidsflytEgenskaperEndreFagomradeService {
+    @JvmStatic
+    private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaperEndreFagomradeService::class.java)
 
     fun opprettOppgaveNarUkjent(prefiksJournalpostId: String, tema: String) {
         val sokResponse = OppgaveConsumer.sokOppgave(prefiksJournalpostId, tema)
@@ -28,7 +31,7 @@ object ArbeidsflytEgenskaperEndreFagomradeService {
         val journalpostHendelse = JournalpostHendelse(detaljer, hendelse, tema)
 
         BidragCucumberSingletons.hendelseProducer?.publish(journalpostHendelse)
-            ?: ScenarioManager.log(
+            ?: LOGGER.info(
                 "Cannot publish $hendelse ${
                     if (Environment.isSanityCheck) {
                         "while running sanity check!"

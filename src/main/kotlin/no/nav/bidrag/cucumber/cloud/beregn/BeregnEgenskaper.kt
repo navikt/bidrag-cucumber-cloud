@@ -7,17 +7,20 @@ import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import org.assertj.core.api.Assertions.assertThat
+import org.slf4j.LoggerFactory
 import java.io.File
 
 class BeregnEgenskaper : No {
     companion object {
+        @JvmStatic
+        private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
         @JvmStatic
         private val BEREGN_RESOURCES = "$ABSOLUTE_CLOUD_PATH/beregn"
     }
 
     init {
         Når("jeg bruker endpoint {string} med json fra {string}") { endpoint: String, jsonFilePath: String ->
-            ScenarioManager.log("Leser $BEREGN_RESOURCES/$jsonFilePath")
+            LOGGER.info("Leser $BEREGN_RESOURCES/$jsonFilePath")
             val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
             val json = jsonFile.readText(Charsets.UTF_8)
 

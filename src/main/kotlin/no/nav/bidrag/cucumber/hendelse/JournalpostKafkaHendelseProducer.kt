@@ -7,9 +7,9 @@ import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaper
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
+import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
-
 
 class JournalpostKafkaHendelseProducer(
     private val kafkaTemplate: KafkaTemplate<String, String>,
@@ -17,16 +17,21 @@ class JournalpostKafkaHendelseProducer(
     private val objectMapper: ObjectMapper
 ) : HendelseProducer {
 
+    companion object {
+        @JvmStatic
+        private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
+    }
+
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
             if (Environment.isNotSanityCheck()) {
-                ScenarioManager.log("Publish $journalpostHendelse")
+                LOGGER.info("Publish $journalpostHendelse")
                 kafkaTemplate.send(topic, journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse))
             } else {
-                ScenarioManager.log("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
+                LOGGER.info("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
             }
         } catch (e: JsonProcessingException) {
-            ScenarioManager.errorLog("${e.javaClass.simpleName}: ${e.message}", e)
+            ScenarioManager.errorLog("Publisering av $journalpostHendelse feilet!", e)
             throw IllegalStateException(e.message, e)
         }
     }
