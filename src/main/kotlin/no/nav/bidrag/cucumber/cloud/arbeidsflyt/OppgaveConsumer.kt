@@ -10,10 +10,8 @@ object OppgaveConsumer {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(OppgaveConsumer::class.java)
 
-    fun opprettOppgave(journalpostId: String, tema: String) {
-        hentRestTjeneste().exchangePost(
-            "/api/v1/oppgaver",
-            """
+    fun opprettOppgave(journalpostId: Long, tema: String) {
+        val oppgaveJson = """
             {
               "journalpostId": "$journalpostId",
               "tema": "$tema",
@@ -23,15 +21,25 @@ object OppgaveConsumer {
               "tildeltEnhetsnr": "1001"
             }
             """.trimIndent()
-        )
+
+        LOGGER.info("oppretter oppgave: $oppgaveJson")
+
+        hentRestTjeneste().exchangePost("/api/v1/oppgaver", oppgaveJson)
     }
 
-    fun sokOppgave(journalpostId: String, tema: String): OppgaveSokResponse? {
+    fun sokOppgave(journalpostId: Long, tema: String): OppgaveSokResponse {
         hentRestTjeneste().exchangeGet("/api/v1/oppgaver?journalpostId=$journalpostId&statuskategori=AAPEN&tema=$tema")
 
         try {
-            val response = hentRestTjeneste().hentResponse() ?: return null
-            return BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java)
+            val response = hentRestTjeneste().hentResponse() ?: return OppgaveSokResponse()
+
+            if (Environment.isSanityCheck) {
+                return OppgaveSokResponse()
+            } else {
+                return BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java) ?: throw IllegalStateException(
+                    "Kunne ikke mappe response: ${response}"
+                )
+            }
         } finally {
             val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
                 "Har OppgaveSokResponse (${hentRestTjeneste().hentResponse()})"
@@ -43,10 +51,10 @@ object OppgaveConsumer {
         }
     }
 
-    fun settOppgaveTilUnderBehandling(id: Int, tema: String, versjon: String) {
+    fun settOppgaveTilUnderBehandling(id: Long, tema: String, versjon: String) {
         hentRestTjeneste().exchangePatch("/api/v1/oppgaver/$id", """"{"versjon":"$versjon","tema":"$tema","status":"UNDER_BEHANDLING"}""")
     }
 
     data class OppgaveSokResponse(var antallTreffTotalt: Int = 0, var oppgaver: List<Oppgave> = emptyList())
-    data class Oppgave(var id: Int = -1, var versjon: String = "na")
+    data class Oppgave(var id: Long = -1, var versjon: String = "na")
 }

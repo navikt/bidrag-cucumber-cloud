@@ -1,8 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import no.nav.bidrag.cucumber.Environment
-import no.nav.bidrag.cucumber.ScenarioManager
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave.Hendelse
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import org.slf4j.LoggerFactory
@@ -14,11 +13,12 @@ object ArbeidsflytEgenskaperEndreFagomradeService {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaperEndreFagomradeService::class.java)
 
-    fun opprettOppgaveNarUkjent(prefiksJournalpostId: String, tema: String) {
-        val sokResponse = OppgaveConsumer.sokOppgave(prefiksJournalpostId, tema)
+    fun opprettOppgaveNarUkjent(hendelse: String, journalpostId: Long, tema: String) {
+        JournalpostIdForOppgave.leggTil(Hendelse.valueOf(hendelse), journalpostId, tema)
+        val sokResponse = OppgaveConsumer.sokOppgave(journalpostId, tema)
 
-        if (sokResponse == null || sokResponse.antallTreffTotalt == 0) {
-            OppgaveConsumer.opprettOppgave(prefiksJournalpostId, tema)
+        if (sokResponse.antallTreffTotalt == 0) {
+            OppgaveConsumer.opprettOppgave(journalpostId, tema)
         } else if (sokResponse.oppgaver.isNotEmpty()) {
             val id = sokResponse.oppgaver.first().id
             val versjon = sokResponse.oppgaver.first().versjon
@@ -45,7 +45,7 @@ object ArbeidsflytEgenskaperEndreFagomradeService {
     }
 
     fun sokOppgaveForHendelse(hendelse: Hendelse, tema: String) {
-        val journalpostId = ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.hent(hendelse, tema)
+        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
         OppgaveConsumer.sokOppgave(journalpostId, tema)
     }
 }
