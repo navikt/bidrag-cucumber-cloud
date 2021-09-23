@@ -12,7 +12,7 @@ object ScenarioManager {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(ScenarioManager::class.java)
 
-    private lateinit var correlationIdForScenario: String
+    private var correlationIdForScenario: String? = null
     private var scenario: Scenario? = null
 
     fun use(scenario: Scenario) {
@@ -22,8 +22,10 @@ object ScenarioManager {
     }
 
     internal fun initCorrelationId() {
-        correlationIdForScenario = createCorrelationIdValue()
-        MDC.put(CORRELATION_ID, correlationIdForScenario)
+        if (scenario != null) {
+            correlationIdForScenario = createCorrelationIdValue()
+            MDC.put(CORRELATION_ID, correlationIdForScenario)
+        }
     }
 
     fun reset(scenario: Scenario) {
@@ -42,14 +44,11 @@ object ScenarioManager {
         return CorrelationId.generateTimestamped(label).get()
     }
 
-    fun log(messageTitle: String, message: String) {
-        val testMessage = "$messageTitle: $message"
-
+    fun logWithScenario(messageTitle: String, message: String) {
         if (scenario != null) {
+            val testMessage = "$messageTitle: $message"
             scenario!!.log("$testMessage\n")
             BidragCucumberSingletons.holdTestMessage(testMessage)
-        } else {
-            LOGGER.info("Outside scenario: $testMessage")
         }
     }
 
@@ -66,8 +65,8 @@ object ScenarioManager {
         return "https://logs.adeo.no/app/kibana#/discover?_g=($time)&_a=($columns,$index,interval:auto,$query,$sort)"
     }
 
-    fun createCorrelationIdLinkTitle() = "Link for correlation-id, $correlationIdForScenario"
-    fun getCorrelationIdForScenario() = correlationIdForScenario
+    fun createCorrelationIdLinkTitle() = "Link for correlation-id ($correlationIdForScenario)"
+    fun getCorrelationIdForScenario() = correlationIdForScenario ?: "na"
     fun errorLog(message: String, e: Exception) {
         LOGGER.error("$message - ${e.javaClass.simpleName}")
         BidragCucumberSingletons.holdExceptionForTest(e)

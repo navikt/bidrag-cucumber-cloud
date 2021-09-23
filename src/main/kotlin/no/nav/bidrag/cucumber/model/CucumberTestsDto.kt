@@ -14,7 +14,7 @@ data class CucumberTestsDto(
     @Schema(description = "Om testkjøringen er en sanity check av *.feature-filer. Feiler ikke ved assertions, bare feil ved I/O") var sanityCheck: Boolean? = false,
     @Schema(description = "Security (azure) token som skal brukes ved lokal kjøring") var securityToken: String? = null,
     @Schema(description = "liste med tags som skal testes uten å oppgi ingress") var tags: List<String> = emptyList(),
-    @Schema(description = "Brukernavn (navident/saksbehandler) for testkjøring, eks: z123456") var testUsername: String? = null
+    @Schema(description = "Brukernavn (test ident) for testkjøring, eks: z123456") var testUsername: String? = null
 ) {
     companion object {
         private const val NOT_IGNORED = "not @ignored"
@@ -69,7 +69,7 @@ data class CucumberTestsDto(
             )
         }
 
-        LOGGER.info("Created '$stringedTags' from $values")
+        LOGGER.info("Using tags - '$stringedTags' - from $values")
 
         return stringedTags
     }

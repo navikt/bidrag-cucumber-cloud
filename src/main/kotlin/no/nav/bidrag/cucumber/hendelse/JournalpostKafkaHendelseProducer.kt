@@ -6,7 +6,8 @@ import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.ArbeidsflytEgenskaper
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave.Hendelse
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
@@ -49,7 +50,7 @@ data class JournalpostHendelse(
 ) {
     constructor(detaljer: Map<String, String>, hendelse: Hendelse, tema: String) : this(
         detaljer = detaljer,
-        journalpostId = ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.hent(hendelse, tema),
+        journalpostId = JournalpostIdForOppgave.hentPrefiksetJournalpostId(hendelse, tema),
         hendelse = hendelse.name
     )
 

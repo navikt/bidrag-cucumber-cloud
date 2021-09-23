@@ -1,14 +1,16 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
+import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.RestTjeneste
 import no.nav.bidrag.cucumber.RestTjenesteForApplikasjon
 import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.PrefiksetJournalpostIdForHendelse.Hendelse
+import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -27,9 +29,9 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
 
-@DisplayName("ArbeidsflytEgenskaperEndreFagomradeService")
+@DisplayName("OppgaveOgHendelseService")
 @SpringBootTest(classes = [BidragCucumberCloud::class])
-internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
+internal class OppgaveOgHendelseServiceTest {
 
     private val baseUrl = "https://base"
     private val hendelse = Hendelse.AVVIK_ENDRE_FAGOMRADE
@@ -44,8 +46,8 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
     private lateinit var restTemplateMock: RestTemplate
 
     @BeforeEach
-    fun `opprett prefikset journalpostId for hendelse`() {
-        ArbeidsflytEgenskaper.prefiksetJournalpostIdForHendelse.opprett(hendelse, journalpostId, tema)
+    fun `legg til prefikset journalpostId for hendelse og tema`() {
+        JournalpostIdForOppgave.leggTil(hendelse, journalpostId, tema)
     }
 
     @BeforeEach
@@ -65,7 +67,8 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
 
     @Test
     fun `skal opprette journalpostHendelse`() {
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), tema)
+        CorrelationId.generateTimestamped("junit-test")
+        OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), tema)
 
         verify(hendelseProducerMock).publish(
             JournalpostHendelse(journalpostId = "$tema-$journalpostId", hendelse = hendelse.name, detaljer = mapOf("fagomrade" to "FAR"))
@@ -79,8 +82,8 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
 
-        val prefiksetJournalpostId = PrefiksetJournalpostIdForHendelse().hent(hendelse, tema)
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgaveNarUkjent(prefiksetJournalpostId, tema)
+        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
+        OppgaveOgHendelseService.tilbyOppgave(hendelse.name, journalpostId, tema)
 
         verify(restTemplateMock).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -90,11 +93,11 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().build())
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
-            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1"}]}""")
+            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1","versjon":"1"}]}""")
         )
 
-        val prefiksetJournalpostId = PrefiksetJournalpostIdForHendelse().hent(hendelse, tema)
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgaveNarUkjent(prefiksetJournalpostId, tema)
+        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
+        OppgaveOgHendelseService.tilbyOppgave(hendelse.name, journalpostId, tema)
 
         verify(restTemplateMock, never()).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -105,13 +108,14 @@ internal class ArbeidsflytEgenskaperEndreFagomradeServiceTest {
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}""")
         )
 
-        val prefiksetJournalpostId = PrefiksetJournalpostIdForHendelse().hent(hendelse, tema)
-        ArbeidsflytEgenskaperEndreFagomradeService.opprettOppgaveNarUkjent(prefiksetJournalpostId, tema)
+        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
+        OppgaveOgHendelseService.tilbyOppgave(hendelse.name, journalpostId, tema)
 
-        @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java) as ArgumentCaptor<HttpEntity<String>>
+        @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
+                as ArgumentCaptor<HttpEntity<PatchStatusOppgaveRequest>>
 
         verify(restTemplateMock).exchange(eq("/api/v1/oppgaver/1001"), eq(HttpMethod.PATCH), httpEntityCaptor.capture(), eq(String::class.java))
 
-        assertThat(httpEntityCaptor.value.body).isEqualTo(""""{"versjon":"1","tema":"BID","status":"UNDER_BEHANDLING"}""")
+        assertThat(httpEntityCaptor.value.body).isEqualTo(PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1))
     }
 }

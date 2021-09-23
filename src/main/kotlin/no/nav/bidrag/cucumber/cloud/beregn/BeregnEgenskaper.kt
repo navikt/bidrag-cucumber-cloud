@@ -3,7 +3,6 @@ package no.nav.bidrag.cucumber.cloud.beregn
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
-import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import org.assertj.core.api.Assertions.assertThat

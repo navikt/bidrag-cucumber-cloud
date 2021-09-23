@@ -24,16 +24,16 @@ object FellesEgenskaperService {
         RESTTJENESTER.set(RestTjeneste(naisApplikasjon))
     }
 
-    fun hentRestTjeneste() = RESTTJENESTER.get() ?: throw IllegalStateException("Ingen resttjeneste for tråd. Har du satt opp ingressesForApps?")
+    fun hentRestTjeneste() = RESTTJENESTER.get() ?: throw IllegalStateException("Ingen resttjenester for tråd. Har du satt opp ingressesForApps?")
     fun fjernResttjenester() = RESTTJENESTER.remove()
 
     data class Assertion(val message: String, val value: Any?, val expectation: Any?, val verify: (input: Assertion) -> Unit) {
         fun doVerify() {
             try {
                 verify(this)
-            } catch (exception: Exception) {
-                BidragCucumberSingletons.holdExceptionForTest(exception)
-                throw exception
+            } catch (throwable: Throwable) {
+                BidragCucumberSingletons.holdExceptionForTest(throwable)
+                throw throwable
             }
         }
     }

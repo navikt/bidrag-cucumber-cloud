@@ -61,9 +61,9 @@ internal object BidragCucumberSingletons {
         RUN_STATS.remove()
     }
 
-    fun holdExceptionForTest(exception: Exception) {
-        val messages = exceptionLogger?.logException(exception, BidragCucumberSingletons::class.java.simpleName) ?: listOf(
-            "${exception.javaClass.simpleName}: ${exception.message}"
+    fun holdExceptionForTest(throwable: Throwable) {
+        val messages = exceptionLogger?.logException(throwable, BidragCucumberSingletons::class.java.simpleName) ?: listOf(
+            "${throwable.javaClass.simpleName}: ${throwable.message}"
         )
 
         testMessagesHolder?.hold(messages)
