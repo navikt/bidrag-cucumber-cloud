@@ -3,28 +3,18 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.MedOppgaveId
+import no.nav.bidrag.cucumber.model.OppgaveSokResponse
 import org.slf4j.LoggerFactory
-import java.time.LocalDate
 
 object OppgaveConsumer {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(OppgaveConsumer::class.java)
 
-    fun opprettOppgave(journalpostId: Long, tema: String) {
-        val oppgaveJson = """
-            {
-              "journalpostId": "$journalpostId",
-              "tema": "$tema",
-              "oppgavetype": "JFR",
-              "prioritet": "NORM",
-              "aktivDato": "${LocalDate.now().minusDays(1)}",
-              "tildeltEnhetsnr": "1001"
-            }
-            """.trimIndent()
+    fun opprettOppgave(oppgave: Any) {
+        LOGGER.info("oppretter oppgave: $oppgave")
 
-        LOGGER.info("oppretter oppgave: $oppgaveJson")
-
-        hentRestTjeneste().exchangePost("/api/v1/oppgaver", oppgaveJson)
+        hentRestTjeneste().exchangePost("/api/v1/oppgaver", oppgave)
     }
 
     fun sokOppgave(journalpostId: Long, tema: String): OppgaveSokResponse {
@@ -33,11 +23,11 @@ object OppgaveConsumer {
         try {
             val response = hentRestTjeneste().hentResponse() ?: return OppgaveSokResponse()
 
-            if (Environment.isSanityCheck) {
-                return OppgaveSokResponse()
+            return if (Environment.isSanityCheck) {
+                OppgaveSokResponse()
             } else {
-                return BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java) ?: throw IllegalStateException(
-                    "Kunne ikke mappe response: ${response}"
+                BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java) ?: throw IllegalStateException(
+                    "Kunne ikke mappe response: $response"
                 )
             }
         } finally {
@@ -51,10 +41,7 @@ object OppgaveConsumer {
         }
     }
 
-    fun settOppgaveTilUnderBehandling(id: Long, tema: String, versjon: String) {
-        hentRestTjeneste().exchangePatch("/api/v1/oppgaver/$id", """"{"versjon":"$versjon","tema":"$tema","status":"UNDER_BEHANDLING"}""")
+    fun patchOppgave(medOppgaveId: MedOppgaveId) {
+        hentRestTjeneste().exchangePatch("/api/v1/oppgaver/${medOppgaveId.id}", medOppgaveId)
     }
-
-    data class OppgaveSokResponse(var antallTreffTotalt: Int = 0, var oppgaver: List<Oppgave> = emptyList())
-    data class Oppgave(var id: Long = -1, var versjon: String = "na")
 }

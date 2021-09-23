@@ -4,26 +4,35 @@ import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave.Hendelse
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
+import no.nav.bidrag.cucumber.model.PostOppgaveRequest
 import org.slf4j.LoggerFactory
 
 /**
  * Service class in order to loosely couple logic from cucumber infrastructure
  */
-object ArbeidsflytEgenskaperEndreFagomradeService {
+object OppgaveOgHendelseService {
     @JvmStatic
-    private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaperEndreFagomradeService::class.java)
+    private val LOGGER = LoggerFactory.getLogger(OppgaveOgHendelseService::class.java)
 
-    fun opprettOppgaveNarUkjent(hendelse: String, journalpostId: Long, tema: String) {
+    fun tilbyOppgave(hendelse: String, journalpostId: Long, tema: String) {
         JournalpostIdForOppgave.leggTil(Hendelse.valueOf(hendelse), journalpostId, tema)
         val sokResponse = OppgaveConsumer.sokOppgave(journalpostId, tema)
 
         if (sokResponse.antallTreffTotalt == 0) {
-            OppgaveConsumer.opprettOppgave(journalpostId, tema)
+            OppgaveConsumer.opprettOppgave(PostOppgaveRequest(journalpostId = journalpostId.toString(), tema = tema))
         } else if (sokResponse.oppgaver.isNotEmpty()) {
             val id = sokResponse.oppgaver.first().id
             val versjon = sokResponse.oppgaver.first().versjon
 
-            OppgaveConsumer.settOppgaveTilUnderBehandling(id, tema, versjon)
+            OppgaveConsumer.patchOppgave(
+                PatchStatusOppgaveRequest(
+                    id = id,
+                    status = "UNDER_BEHANDLING",
+                    tema = tema,
+                    versjon = versjon.toInt()
+                )
+            )
         }
     }
 

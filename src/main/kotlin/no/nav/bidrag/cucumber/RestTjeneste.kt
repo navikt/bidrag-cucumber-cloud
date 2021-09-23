@@ -65,7 +65,7 @@ open class RestTjeneste(
         headers.add(CorrelationId.CORRELATION_ID_HEADER, ScenarioManager.getCorrelationIdForScenario())
         headers.add(X_ENHET_HEADER, "4802")
 
-        ScenarioManager.log(
+        ScenarioManager.logWithScenario(
             ScenarioManager.createCorrelationIdLinkTitle(),
             ScenarioManager.createQueryLinkForCorrelationId()
         )
@@ -78,20 +78,25 @@ open class RestTjeneste(
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
 
-    fun exchangePatch(endpointUrl: String, json: String) {
-        val jsonEntity = httpEntity(endpointUrl, json)
+    fun exchangePost(endpointUrl: String, json: Any) {
+        val httpEntity = httpEntity(endpointUrl, json)
+        exchange(httpEntity, endpointUrl, HttpMethod.POST)
+    }
+
+    fun exchangePatch(endpointUrl: String, body: Any) {
+        val jsonEntity = httpEntity(endpointUrl, body)
         exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
     }
 
-    private fun httpEntity(endpointUrl: String, json: String): HttpEntity<String> {
+    private fun httpEntity(endpointUrl: String, body: Any): HttpEntity<*> {
         this.fullUrl = FullUrl(rest.baseUrl, endpointUrl)
         val headers = initHttpHeadersWithCorrelationIdAndEnhet()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        return HttpEntity(json, headers)
+        return HttpEntity(body, headers)
     }
 
-    private fun exchange(jsonEntity: HttpEntity<String>, endpointUrl: String, httpMethod: HttpMethod) {
+    private fun exchange(jsonEntity: HttpEntity<*>, endpointUrl: String, httpMethod: HttpMethod) {
         LOGGER.info("$httpMethod: $fullUrl")
 
         try {
