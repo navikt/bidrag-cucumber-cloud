@@ -52,45 +52,50 @@ data class CucumberTestsDto(
     }
 
     fun fetchTags(): String {
-        val tagsFromApps = ingressesForApps
+        val collectTags = ingressesForApps
             .filterNot { it.contains("@no-tag:") }
             .map { it.split("@")[1] }
-            .map { "@$it" }
+            .map { "@$it" } as MutableList<String>
 
-        val tagsFromIngresses = transformToString(tagsFromApps)
-        val stringedTags = "$tagsFromIngresses${joinWithTagList(tagsFromIngresses)}"
+        collectTags.addAll(tags)
+        val tagsAsStrings = transformAssertedTagsToString(collectTags)
 
-        val values = ArrayList(ingressesForApps)
-        values.addAll(tags)
-
-        if (stringedTags.isEmpty()) {
+        if (tagsAsStrings.isEmpty()) {
             throw IllegalStateException(
                 "Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser som ikke har prefiksen 'no-tag:' etter @"
             )
         }
 
-        LOGGER.info("Using tags - '$stringedTags' - from $values")
+        val tagsAsStringWithNotIgnored = "$tagsAsStrings and $NOT_IGNORED"
+        val logValues = ArrayList(ingressesForApps)
+        logValues.addAll(tags)
 
-        return stringedTags
+        LOGGER.info("Using tags - '$tagsAsStringWithNotIgnored' - from $logValues")
+
+        return tagsAsStringWithNotIgnored
     }
 
-    private fun transformToString(tags: List<String>): String {
+    private fun transformAssertedTagsToString(tags: List<String>): String {
         if (tags.isEmpty()) {
             return ""
         }
 
-        tags.forEach { isFeatureTag(it) }
+        val uniqueTags = HashSet(tags).toList()
 
-        return tags.joinToString(prefix = "(", postfix = " and $NOT_IGNORED)", separator = " and $NOT_IGNORED) or (")
+        uniqueTags.forEach { assertKnownTag(it) }
+
+        val allTags = uniqueTags.joinToString(separator = " or ")
+
+        return if (uniqueTags.size == 1) allTags else "($allTags)"
     }
 
-    private fun isFeatureTag(tag: String) {
-        if (isTagPresentInFeatureFile(tag)) {
+    private fun assertKnownTag(tag: String) {
+        if (isNotTagPresentInFeatureFile(tag)) {
             throw IllegalStateException("$tag er ukjent blant $NAMES_OF_FEATURE_FILES")
         }
     }
 
-    private fun isTagPresentInFeatureFile(tag: String) = FEATURE_FILES.stream()
+    private fun isNotTagPresentInFeatureFile(tag: String) = FEATURE_FILES.stream()
         .filter { file: File -> isTagPresent(file, tag) }
         .findFirst().isEmpty
 
@@ -106,7 +111,7 @@ data class CucumberTestsDto(
             return ""
         }
 
-        return if (tagsFromIngresses.isBlank()) transformToString(uniqueTags) else " or ${transformToString(uniqueTags)}"
+        return if (tagsFromIngresses.isBlank()) transformAssertedTagsToString(uniqueTags) else " or ${transformAssertedTagsToString(uniqueTags)}"
     }
 
     internal fun initCucumberEnvironment() {
