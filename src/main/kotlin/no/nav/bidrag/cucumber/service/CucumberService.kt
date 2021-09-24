@@ -50,9 +50,7 @@ class CucumberService(
         Environment.resetCucumberEnvironment()
 
         if (result != 0.toByte()) {
-            val message = "Cucumber tests failed! (tags: $tags)!"
-            LOGGER.error(message)
-            throw TestFailedException(message, suppressedStackText)
+            throw TestFailedException("Cucumber tests failed! (tags: $tags)!", suppressedStackText)
         }
 
         return suppressedStackText

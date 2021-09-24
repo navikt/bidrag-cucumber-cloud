@@ -28,6 +28,7 @@ class JournalpostKafkaHendelseProducer(
             if (Environment.isNotSanityCheck()) {
                 LOGGER.info("Publish $journalpostHendelse")
                 kafkaTemplate.send(topic, journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse))
+                LOGGER.info("Published $journalpostHendelse")
             } else {
                 LOGGER.info("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
             }

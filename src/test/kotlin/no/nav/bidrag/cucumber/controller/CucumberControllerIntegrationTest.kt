@@ -82,14 +82,14 @@ internal class CucumberControllerIntegrationTest {
 
     @Test
     fun `skal hente ut cucumber tekst fra kjøring`() {
-        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
+        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no", "bidrag-cucumber-cloud")
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                  "ingressesForApps":["https://bidrag-cucumber-cloud.ekstern.dev.nav.no@bidrag-cucumber-cloud"],
                   "sanityCheck":true
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
@@ -126,15 +126,13 @@ internal class CucumberControllerIntegrationTest {
 
     @Test
     fun `skal logge eventuelle exception når det feiler under testing`() {
-        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
-
         val testResponse = testRestTemplate.postForEntity(
             "/run",
             HttpEntity(
                 """
                 {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                  "testUsername":"jalla"
+                  "testUsername":"ukjent"
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
             ),

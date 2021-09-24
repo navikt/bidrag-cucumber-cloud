@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import no.nav.bidrag.cucumber.service.CucumberService
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/run")
 class CucumberController(private val cucumberService: CucumberService) {
+    companion object {
+        @JvmStatic
+        private val LOGGER = LoggerFactory.getLogger(CucumberController::class.java)
+    }
 
     @PostMapping
     @Operation(summary = "Run cucumber tests determined by input")
@@ -25,6 +30,7 @@ class CucumberController(private val cucumberService: CucumberService) {
         ]
     )
     fun run(@RequestBody cucumberTestsDto: CucumberTestsDto): ResponseEntity<String> {
+        LOGGER.info("Running cucumber tests with $cucumberTestsDto!")
         return ResponseEntity(cucumberService.run(cucumberTestsDto), HttpStatus.OK)
     }
 }

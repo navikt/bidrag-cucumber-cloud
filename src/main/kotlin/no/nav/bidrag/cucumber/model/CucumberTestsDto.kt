@@ -99,21 +99,6 @@ data class CucumberTestsDto(
         .filter { file: File -> isTagPresent(file, tag) }
         .findFirst().isEmpty
 
-    private fun joinWithTagList(tagsFromIngresses: String): String {
-        if (tags.isEmpty()) {
-            return ""
-        }
-
-        val uniqueTags = tags
-            .filterNot { tagsFromIngresses.contains(it) }
-
-        if (uniqueTags.isEmpty()) {
-            return ""
-        }
-
-        return if (tagsFromIngresses.isBlank()) transformAssertedTagsToString(uniqueTags) else " or ${transformAssertedTagsToString(uniqueTags)}"
-    }
-
     internal fun initCucumberEnvironment() {
         Environment.initCucumberEnvironment(this)
     }
