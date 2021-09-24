@@ -19,7 +19,7 @@ internal class CucumberTestsDtoTest {
     fun `skal hente tags basert på ingressesForApps`() {
         val cucumberTestsDto = CucumberTestsDto(ingressesForApps = listOf("https://somewhere.out.there@bidrag-sak"))
 
-        assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("(@bidrag-sak and not @ignored)")
+        assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-sak and not @ignored")
     }
 
     @Test
@@ -29,7 +29,7 @@ internal class CucumberTestsDtoTest {
         )
 
         assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags")
-            .isEqualTo("(@bidrag-sak and not @ignored) or (@bidrag-arbeidsflyt and not @ignored)")
+            .isEqualTo("(@bidrag-sak or @bidrag-arbeidsflyt) and not @ignored")
     }
 
     @Test
@@ -37,7 +37,7 @@ internal class CucumberTestsDtoTest {
         val cucumberTestsDto = CucumberTestsDto(ingressesForApps = listOf("somewhere@bidrag-arbeidsflyt", "here@no-tag:this-app"))
 
         assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags")
-            .isEqualTo("(@bidrag-arbeidsflyt and not @ignored)")
+            .isEqualTo("@bidrag-arbeidsflyt and not @ignored")
     }
 
     @Test
@@ -61,6 +61,6 @@ internal class CucumberTestsDtoTest {
     fun `skal ikke hente ut tags dobbelt opp`() {
         val cucumberTestsDto = CucumberTestsDto(ingressesForApps = listOf("https://somewhere.out.there@bidrag-sak"), tags = listOf("@bidrag-sak"))
 
-        assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("(@bidrag-sak and not @ignored)")
+        assertThat(cucumberTestsDto.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-sak and not @ignored")
     }
 }
