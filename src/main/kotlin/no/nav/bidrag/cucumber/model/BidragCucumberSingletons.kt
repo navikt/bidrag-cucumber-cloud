@@ -74,6 +74,10 @@ internal object BidragCucumberSingletons {
         BidragCucumberSingletons.applicationContext = applicationContext
     }
 
+    fun setExceptionLogger(exceptionLogger: ExceptionLogger) {
+        BidragCucumberSingletons.exceptionLogger = exceptionLogger
+    }
+
     fun setTestMessagesHolder(testMessagesHolder: TestMessagesHolder) {
         BidragCucumberSingletons.testMessagesHolder = testMessagesHolder
     }

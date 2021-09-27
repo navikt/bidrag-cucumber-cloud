@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.cucumber.core.cli.Main
+import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
@@ -18,9 +19,10 @@ import org.springframework.stereotype.Service
 class CucumberService(
     private val suppressStackTraceText: SuppressStackTraceText,
     applicationContext: ApplicationContext,
-    testMessagesHolder: TestMessagesHolder,
+    exceptionLogger: ExceptionLogger,
     hendelseProducer: HendelseProducer,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
+    testMessagesHolder: TestMessagesHolder
 ) {
     companion object {
         @JvmStatic
@@ -31,6 +33,7 @@ class CucumberService(
         BidragCucumberSingletons.hendelseProducer = hendelseProducer
         BidragCucumberSingletons.objectMapper = objectMapper
         BidragCucumberSingletons.setApplicationContext(applicationContext)
+        BidragCucumberSingletons.setExceptionLogger(exceptionLogger)
         BidragCucumberSingletons.setTestMessagesHolder(testMessagesHolder)
     }
 
