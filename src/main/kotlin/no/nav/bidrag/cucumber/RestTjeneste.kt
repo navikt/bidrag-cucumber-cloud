@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
+import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -30,10 +31,17 @@ open class RestTjeneste(
     fun hentFullUrlMedEventuellWarning() = "$fullUrl${appendWarningWhenExists()}"
     fun hentHttpStatus(): HttpStatus = responseEntity?.statusCode ?: HttpStatus.I_AM_A_TEAPOT
     fun hentResponse(): String? = responseEntity?.body
-    fun hentResponseSomMap() = if (responseEntity?.statusCode == HttpStatus.OK && responseEntity?.body != null)
-        ObjectMapper().readValue(responseEntity!!.body, Map::class.java) as Map<String, Any>
+    fun hentResponseSomMap(): Map<String, Any> = if (responseEntity?.statusCode == HttpStatus.OK && responseEntity?.body != null)
+        mapResponseBody(responseEntity?.body!!)
     else
         HashMap()
+
+    private fun mapResponseBody(body: String): Map<String, Any> = try {
+        ObjectMapper().readValue(body, Map::class.java) as Map<String, Any>
+    } catch (e: Exception) {
+        BidragCucumberSingletons.holdExceptionForTest(e)
+        throw e
+    }
 
     private fun appendWarningWhenExists(): String {
         val warnings = responseEntity?.headers?.get(HttpHeaders.WARNING) ?: emptyList()
@@ -104,10 +112,10 @@ open class RestTjeneste(
         } catch (e: Exception) {
             ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl)", e)
 
-            if (e is HttpStatusCodeException) {
-                responseEntity = ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+            responseEntity = if (e is HttpStatusCodeException) {
+                ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
             } else {
-                responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e.javaClass.simpleName}: ${e.message}")
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e.javaClass.simpleName}: ${e.message}")
             }
 
             if (Environment.isNotSanityCheck()) {
