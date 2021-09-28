@@ -20,16 +20,12 @@ internal object Environment {
     private val alleIngresserForApper: String
         get() = fetchPropertyOrEnvironment(INGRESSES_FOR_APPS) ?: CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: ""
 
-    val clientId: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_ID) ?: "unknown-AZURE_APP_CLIENT_ID"
-    val clientSecret: String get() = fetchPropertyOrEnvironment(AZURE_APP_CLIENT_SECRET) ?: "unknown-AZURE_APP_CLIENT_SECRET"
     val isSanityCheck: Boolean get() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: CUCUMBER_TESTS.get()?.sanityCheck ?: false
     val testUsername: String? get() = fetchPropertyOrEnvironment(TEST_USER) ?: CUCUMBER_TESTS.get()?.testUsername
     val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthForTestUser()) ?: unknownProperty(testAuthForTestUser())
-    val tenant: String get() = fetchPropertyOrEnvironment(AZURE_APP_TENANT_ID) ?: "unknown-AZURE_APP_TENANT_ID"
     val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
 
     fun isNotSanityCheck() = !isSanityCheck
-    fun isNotSecurityTokenProvided() = fetchPropertyOrEnvironment(SECURITY_TOKEN) == null || CUCUMBER_TESTS.get()?.securityToken == null
     fun isTestUserPresent() = testUsername != null
     fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
 

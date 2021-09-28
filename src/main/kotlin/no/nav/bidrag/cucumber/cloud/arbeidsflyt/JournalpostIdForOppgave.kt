@@ -1,5 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
+import no.nav.bidrag.cucumber.hendelse.Hendelse
+
 object JournalpostIdForOppgave {
 
     @JvmStatic
@@ -24,10 +26,6 @@ object JournalpostIdForOppgave {
     fun hentJournalpostId(hendelse: Hendelse, tema: String): Long = hentDto(hendelse, tema).journalpostId
     fun hentPrefiksetJournalpostId(hendelse: Hendelse, tema: String): String = hentDto(hendelse, tema).hentPrefiksetId()
     private fun hentDto(hendelse: Hendelse, tema: String): JournalpostIdForOppgave = hent().finnFor(hendelse, tema)
-
-    enum class Hendelse {
-        AVVIK_ENDRE_FAGOMRADE
-    }
 
     private data class AlleJournalpostIdForOppgave(private val alle: MutableSet<JournalpostIdForOppgave> = HashSet()) {
         fun leggTil(journalpostIdForOppgave: JournalpostIdForOppgave) = alle.add(journalpostIdForOppgave)
