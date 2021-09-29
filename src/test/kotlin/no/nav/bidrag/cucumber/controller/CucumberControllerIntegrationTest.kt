@@ -141,7 +141,7 @@ internal class CucumberControllerIntegrationTest {
 
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
-            { assertThat(testResponse.body).`as`("body").contains("Failure details!") }
+            { assertThat(testResponse.body).`as`("body").contains("Failure details:") }
         )
     }
 
