@@ -36,7 +36,7 @@ class RunStats {
     }"
 
     private fun createFaiureDetailesString() = if (exceptionMessages.isEmpty()) "" else
-        "\n\nFailure details!\n${exceptionMessages.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")}"
+        "\n\nFailure details:\n${exceptionMessages.joinToString(separator = "\n- ")}"
 
     fun addExceptionLogging(messages: List<String>) {
         exceptionMessages.addAll(messages)

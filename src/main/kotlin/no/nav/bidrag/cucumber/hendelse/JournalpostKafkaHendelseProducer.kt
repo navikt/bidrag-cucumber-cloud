@@ -14,7 +14,7 @@ class JournalpostKafkaHendelseProducer(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val topic: String,
     private val objectMapper: ObjectMapper,
-    private val timeoutAfterMs: Long = 15000
+    private val timeoutAfterSeconds: Long = 15
 ) : HendelseProducer {
 
     companion object {
@@ -45,14 +45,14 @@ class JournalpostKafkaHendelseProducer(
 
     private fun publishWithTimeout(publish: Publish, doSend: (input: Publish) -> Unit) {
         val start = LocalDateTime.now()
-        val timeout = LocalDateTime.now().plusNanos(timeoutAfterMs * 1000)
+        val timeout = LocalDateTime.now().plusSeconds(timeoutAfterSeconds)
         val future = CompletableFuture.runAsync {
             doSend(publish)
         }
 
         while (!future.isDone) {
             if (LocalDateTime.now().isBefore(timeout)) {
-                Thread.sleep(10)
+                Thread.sleep(500)
             } else {
                 val hendelseTimeoutException = HendelseTimeoutException(start, LocalDateTime.now())
                 ScenarioManager.errorLog(hendelseTimeoutException.message!!, hendelseTimeoutException)
