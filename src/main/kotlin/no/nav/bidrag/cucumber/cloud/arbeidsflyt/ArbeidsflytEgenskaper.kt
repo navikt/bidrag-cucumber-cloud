@@ -3,7 +3,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave.Hendelse
+import no.nav.bidrag.cucumber.hendelse.Hendelse
 import org.assertj.core.api.Assertions.assertThat
 
 class ArbeidsflytEgenskaper : No {

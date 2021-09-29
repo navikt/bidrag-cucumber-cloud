@@ -22,8 +22,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DisplayName("CucumberController (mock bean test)")
-internal class CucumberControllerMockBeanTest {
+@DisplayName("CucumberController (mocked bean: CucumberService)")
+internal class CucumberControllerCucumberServiceMockBeanTest {
 
     @Autowired
     @Suppress("SpringJavaInjectionPointsAutowiringInspection")

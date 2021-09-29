@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DisplayName("CucumberController (RestTemplate mock test)")
+@DisplayName("CucumberController (mocked bean: RestTemplate)")
 class CucumberControllerRestTemplateMockBeanTest {
 
     @Autowired

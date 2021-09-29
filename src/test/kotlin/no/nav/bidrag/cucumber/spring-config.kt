@@ -13,7 +13,7 @@ import org.springframework.kafka.core.ProducerFactory
 class NotLiveSpringConfig {
 
     @Bean
-    fun hendelseProducer() = mock(HendelseProducer::class.java)
+    fun hendelseProducer() = mock(HendelseProducer::class.java)!!
 
     @Bean
     @Suppress("UNCHECKED_CAST")
