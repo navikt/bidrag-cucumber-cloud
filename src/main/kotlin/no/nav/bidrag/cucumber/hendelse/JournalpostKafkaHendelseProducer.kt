@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber.hendelse
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.Environment
@@ -34,9 +33,9 @@ class JournalpostKafkaHendelseProducer(
             } else {
                 LOGGER.info("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
             }
-        } catch (e: JsonProcessingException) {
+        } catch (e: Exception) {
             ScenarioManager.errorLog("Publisering av $journalpostHendelse feilet!", e)
-            throw IllegalStateException(e.message, e)
+            throw e
         }
     }
 
@@ -55,13 +54,15 @@ class JournalpostKafkaHendelseProducer(
             if (LocalDateTime.now().isBefore(timeout)) {
                 Thread.sleep(10)
             } else {
-                throw HendelseTimeoutException(start, timeout)
+                val hendelseTimeoutException = HendelseTimeoutException(start, LocalDateTime.now())
+                ScenarioManager.errorLog(hendelseTimeoutException.message!!, hendelseTimeoutException)
+
+                throw hendelseTimeoutException
             }
         }
     }
 
     private data class Publish(val journalpostId: String, val json: String)
-
 }
 
 interface HendelseProducer {
@@ -75,7 +76,7 @@ class HendelseTimeoutException(start: LocalDateTime, timeout: LocalDateTime) : R
 data class JournalpostHendelse(
     val journalpostId: String,
     val hendelse: String,
-    val sporing: Sporingsdata = Sporingsdata(correlationId = CorrelationId.fetchCorrelationIdForThread()),
+    val sporing: Sporingsdata = Sporingsdata(correlationId = CorrelationId.fetchCorrelationIdForThread(), brukerident = Environment.testUsername),
     val detaljer: Map<String, String?> = emptyMap()
 ) {
     constructor(detaljer: Map<String, String>, hendelse: Hendelse, tema: String) : this(
@@ -83,13 +84,9 @@ data class JournalpostHendelse(
         journalpostId = JournalpostIdForOppgave.hentPrefiksetJournalpostId(hendelse, tema),
         hendelse = hendelse.name
     )
-
-    init {
-        sporing.brukerident = Environment.testUsername
-    }
 }
 
-data class Sporingsdata(val correlationId: String, var brukerident: String? = null) {
+data class Sporingsdata(val correlationId: String, val brukerident: String? = null) {
     @Suppress("unused") // brukes av jackson (and not part of equals/hashcode for data class)
     val opprettet: LocalDateTime = LocalDateTime.now()
 }
