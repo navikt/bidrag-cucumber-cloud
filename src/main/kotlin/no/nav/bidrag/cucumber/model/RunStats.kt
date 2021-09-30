@@ -14,7 +14,7 @@ class RunStats {
         if (scenario.isFailed) {
             val namelessScenario = scenario.name == null || scenario.name.isBlank()
 
-            failedScenarios.add("${scenario.uri} # ${if (namelessScenario) "Nameless" else scenario.name}")
+            failedScenarios.add("${scenario.uri} # ${if (namelessScenario) "Nameless in ${scenario.uri}" else scenario.name}")
         } else {
             passed = passed.inc()
         }
@@ -22,25 +22,27 @@ class RunStats {
 
     fun get(): String {
         val noOfFailed = failedScenarios.size
-        val failedScenariosString = createFailedScenariosString()
-        val failureDetailesString = createFaiureDetailesString()
+        val failedScenariosAsString = createStringOfFailedScenarios()
+        val failureDetailsAsString = createStringOfFailureDetails()
 
         return """
             Scenarios: $total
             Passed   : $passed
-            Failed   : $noOfFailed $failedScenariosString $failureDetailesString"""
+            Failed   : $noOfFailed $failedScenariosAsString $failureDetailsAsString"""
     }
 
-    private fun createFailedScenariosString() = if (failedScenarios.isEmpty()) "" else "\n\nFailed scenarios:\n${
-        failedScenarios.joinToString(prefix = "- ", separator = "\n- ", postfix = "\n")
+    private fun createStringOfFailedScenarios() = if (failedScenarios.isEmpty()) "" else "\n\nFailed scenarios:\n${
+        failedScenarios.joinToString(prefix = "- ", separator = "\n- ")
     }"
 
-    private fun createFaiureDetailesString() = if (exceptionMessages.isEmpty()) "" else
-        "\n\nFailure details:\n${exceptionMessages.joinToString(separator = "\n- ")}"
+    internal fun createStringOfFailureDetails() = if (exceptionMessages.isEmpty()) "" else
+        "\n\nFailure details:\n${exceptionMessages.joinToString(separator = "\n")}"
 
     fun addExceptionLogging(messages: List<String>) {
-        exceptionMessages.addAll(messages)
+        exceptionMessages.addAll(messages.mapIndexed { idx, message -> if (idx == 0) "- ${indentLines(message)}" else "  ${indentLines(message)}" })
     }
+
+    private fun indentLines(message: String) = message.replace("\n", "\n  ")
 
     override fun toString(): String {
         return get()

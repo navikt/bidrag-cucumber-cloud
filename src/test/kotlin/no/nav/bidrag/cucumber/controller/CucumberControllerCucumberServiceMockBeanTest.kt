@@ -148,7 +148,6 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
     @Test
     fun `skal angi testbruker for testing`() {
-        TestUtil.assumeThatActuatorHealthIsRunning("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
