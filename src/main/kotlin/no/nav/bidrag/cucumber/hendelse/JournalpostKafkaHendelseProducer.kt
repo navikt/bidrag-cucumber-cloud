@@ -8,6 +8,7 @@ import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 
 class JournalpostKafkaHendelseProducer(
@@ -25,7 +26,7 @@ class JournalpostKafkaHendelseProducer(
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
             if (Environment.isNotSanityCheck()) {
-                LOGGER.info("Publish $journalpostHendelse")
+                LOGGER.info("Publish $journalpostHendelse til topic $topic")
                 publishWithTimeout(
                     publish = Publish(journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse)),
                     doSend = this::sendKafkaMelding
@@ -55,7 +56,7 @@ class JournalpostKafkaHendelseProducer(
                 Thread.sleep(500)
             } else {
                 val hendelseTimeoutException = HendelseTimeoutException(start, LocalDateTime.now())
-                ScenarioManager.errorLog(hendelseTimeoutException.message!!, hendelseTimeoutException)
+                LOGGER.error(hendelseTimeoutException.message)
 
                 throw hendelseTimeoutException
             }
@@ -70,8 +71,10 @@ interface HendelseProducer {
 }
 
 class HendelseTimeoutException(start: LocalDateTime, timeout: LocalDateTime) : RuntimeException(
-    "Hendelse med timeout! Start: $start, timeout: $timeout"
+    "Hendelse med timeout! Started: ${onlyTime(start)}, timed out: ${onlyTime(timeout)}"
 )
+
+fun onlyTime(dateTime: LocalDateTime): String = dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss,SSS"))
 
 data class JournalpostHendelse(
     val journalpostId: String,

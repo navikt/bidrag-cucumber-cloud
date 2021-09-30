@@ -12,7 +12,7 @@ env:
 
 jobs:
 
-  run-cucumber-tests-for-cucumber-cloud:
+  run-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-cucumber-cloud"
 
@@ -32,7 +32,7 @@ jobs:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-cucumber-cloud feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
-  run-cucumber-tests-for-bidrag-sak:
+  run-tests-for-bidrag-sak:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-sak"
 
@@ -55,7 +55,7 @@ jobs:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-sak feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
-  run-cucumber-tests-for-bidrag-stonad:
+  run-tests-for-bidrag-stonad:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-stonad"
 
@@ -78,7 +78,7 @@ jobs:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tab @bidrag-stonad feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
-  run-cucumber-tests-for-bidrag-vedtak:
+  run-tests-for-bidrag-vedtak:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-vedtak"
 
@@ -101,7 +101,7 @@ jobs:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-vedtak feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
-  run-cucumber-tests-for-bidrag-arbeidsflyt:
+  run-tests-for-bidrag-arbeidsflyt:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-arbeidsflyt"
 
@@ -124,7 +124,7 @@ jobs:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-arbeidsflyt feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
 
-  run-cucumber-tests-for-bidrag-beregn:
+  run-tests-for-bidrag-beregn:
     runs-on: ubuntu-latest
     name: "Run tests: bidrag-beregn-*"
 
