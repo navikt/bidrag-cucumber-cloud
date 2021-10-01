@@ -30,10 +30,10 @@ class CucumberService(
     }
 
     init {
-        BidragCucumberSingletons.hendelseProducer = hendelseProducer
-        BidragCucumberSingletons.objectMapper = objectMapper
         BidragCucumberSingletons.setApplicationContext(applicationContext)
         BidragCucumberSingletons.setExceptionLogger(exceptionLogger)
+        BidragCucumberSingletons.setHendelseProducer(hendelseProducer)
+        BidragCucumberSingletons.setObjectMapper(objectMapper)
         BidragCucumberSingletons.setTestMessagesHolder(testMessagesHolder)
     }
 

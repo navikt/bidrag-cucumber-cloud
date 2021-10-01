@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.PostOppgaveRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -40,5 +41,16 @@ class JsonMappingTest {
                     .isEqualTo(listOf("https://oppgave-q1.dev-fss-pub.nais.io@no-tag:oppgave"))
             }
         )
+    }
+
+    @Test
+    fun `skal mappe 'data class' for opprettelse av oppgave`() {
+        val postOppgaveRequest = PostOppgaveRequest(journalpostId = "BID-101", tema = "FAR")
+        val json: String = objectMapper.writeValueAsString(postOppgaveRequest)
+
+        assertThat(json).isNotNull
+            .contains("journalpostId")
+            .contains("BID-101")
+            .contains("FAR")
     }
 }

@@ -9,6 +9,7 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.hendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
+import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsDto
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
 import org.assertj.core.api.Assertions.assertThat
@@ -116,6 +117,10 @@ internal class OppgaveOgHendelseServiceTest {
 
         verify(restTemplateMock).exchange(eq("/api/v1/oppgaver/1001"), eq(HttpMethod.PATCH), httpEntityCaptor.capture(), eq(String::class.java))
 
-        assertThat(httpEntityCaptor.value.body).isEqualTo(PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1))
+        assertThat(httpEntityCaptor.value.body).isEqualTo(
+            BidragCucumberSingletons.toJson(
+                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1)
+            )
+        )
     }
 }

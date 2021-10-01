@@ -26,9 +26,7 @@ object OppgaveConsumer {
             return if (Environment.isSanityCheck) {
                 OppgaveSokResponse()
             } else {
-                BidragCucumberSingletons.objectMapper?.readValue(response, OppgaveSokResponse::class.java) ?: throw IllegalStateException(
-                    "Kunne ikke mappe response: $response"
-                )
+                BidragCucumberSingletons.readValue(response, OppgaveSokResponse::class.java)
             }
         } finally {
             val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
