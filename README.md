@@ -17,7 +17,7 @@ vil gjelde applikasjoner med azure i google cloud såfremt on-prem (når de har 
 Modulen er skrevet i Kotlin som gjør det enkelt å skape lett-leselige tester satt opp med `Gherkin`-filer (*.feature) som har norsk tekst og ligger i
 `src/main/resources/<no.nav.bidrag.cucumber.cloud.pakkenavn>`
 
-BDD (Behaviour driven development) beskrives i `Gherkin`-filene (`*.featue`) som kjører automatiserte tester på bakgrunnen av funksjonaliteten som
+BDD (Behaviour driven development) beskrives i `Gherkin`-filene (`*.feature`) som kjører automatiserte tester på bakgrunnen av funksjonaliteten som
 skal støttes. Eks: på en `gherkin` fil på norsk
 
 ```
