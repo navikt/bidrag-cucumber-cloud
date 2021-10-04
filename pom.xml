@@ -11,7 +11,7 @@
 
   <groupId>no.nav.bidrag.cucumber</groupId>
   <artifactId>bidrag-cucumber-cloud</artifactId>
-  <version>0.3.63-SNAPSHOT</version>
+  <version>0.3.64-SNAPSHOT</version>
 
   <name>bidrag-cucumber-cloud</name>
   <description>Nais jobb for applikasjoner som bruker Azure Ad og har ingress med tilgang via naisdevice</description>
