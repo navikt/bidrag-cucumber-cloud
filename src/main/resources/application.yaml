@@ -35,6 +35,22 @@ spring:
           aad:
             token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
             jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS}
+    properties:
+      security.protocol: SSL
+      ssl:
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        truststore:
+          location: ${KAFKA_TRUSTSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        endpoint.identification.algorithm:
+      consumer:
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 # Dummy value in order to start local app
 TOPIC_JOURNALPOST: bidrag.journalpost
