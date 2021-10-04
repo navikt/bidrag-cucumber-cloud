@@ -68,12 +68,10 @@ internal object BidragCucumberSingletons {
     }
 
     fun holdExceptionForTest(throwable: Throwable) {
-        val messages = exceptionLogger?.logException(throwable, BidragCucumberSingletons::class.java.simpleName) ?: listOf(
-            "${throwable.javaClass.simpleName}: ${throwable.message}"
-        )
+        val assertionMmessage = "${throwable.javaClass.simpleName}: ${throwable.message}"
 
-        testMessagesHolder?.hold(messages)
-        fetchRunStats().addExceptionLogging(messages)
+        testMessagesHolder?.hold(assertionMmessage)
+        fetchRunStats().addExceptionLogging(listOf(assertionMmessage))
     }
 
     fun publiserHendelse(journalpostHendelse: JournalpostHendelse) {

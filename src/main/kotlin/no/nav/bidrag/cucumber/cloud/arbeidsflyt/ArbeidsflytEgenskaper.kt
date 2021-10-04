@@ -46,6 +46,6 @@ class ArbeidsflytEgenskaper : No {
     }
 
     private fun harForventetAntallTreff(assertion: Assertion) {
-        assertThat(assertion.expectation).`as`(assertion.message).isEqualTo(1)
+        assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
     }
 }
