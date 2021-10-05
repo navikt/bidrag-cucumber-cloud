@@ -3,6 +3,8 @@ package no.nav.bidrag.cucumber.hendelse
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
+import no.nav.bidrag.cucumber.model.HendelseTimeoutException
+import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach

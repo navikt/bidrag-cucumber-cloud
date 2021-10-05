@@ -6,6 +6,7 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
 import no.nav.bidrag.cucumber.hendelse.Hendelse
 import org.assertj.core.api.Assertions.assertThat
 
+@Suppress("unused") // cucumber
 class ArbeidsflytEgenskaper : No {
 
     init {
@@ -27,7 +28,7 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet å finne oppgaven",
                     value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = "1",
+                    expectation = 1,
                     verify = this::harForventetAntallTreff
                 ),
             )
@@ -38,7 +39,7 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
                     value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = "0",
+                    expectation = 0,
                     verify = this::harForventetAntallTreff
                 ),
             )

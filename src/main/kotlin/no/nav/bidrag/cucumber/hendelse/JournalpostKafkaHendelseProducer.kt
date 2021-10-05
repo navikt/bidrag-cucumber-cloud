@@ -1,14 +1,13 @@
 package no.nav.bidrag.cucumber.hendelse
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.ScenarioManager
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave
+import no.nav.bidrag.cucumber.model.HendelseTimeoutException
+import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 
 class JournalpostKafkaHendelseProducer(
@@ -68,28 +67,4 @@ class JournalpostKafkaHendelseProducer(
 
 interface HendelseProducer {
     fun publish(journalpostHendelse: JournalpostHendelse)
-}
-
-class HendelseTimeoutException(start: LocalDateTime, timeout: LocalDateTime) : RuntimeException(
-    "Hendelse med timeout! Started: ${onlyTime(start)}, timed out: ${onlyTime(timeout)}"
-)
-
-fun onlyTime(dateTime: LocalDateTime): String = dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss,SSS"))
-
-data class JournalpostHendelse(
-    val journalpostId: String,
-    val hendelse: String,
-    val sporing: Sporingsdata = Sporingsdata(correlationId = CorrelationId.fetchCorrelationIdForThread(), brukerident = Environment.testUsername),
-    val detaljer: Map<String, String?> = emptyMap()
-) {
-    constructor(detaljer: Map<String, String>, hendelse: Hendelse, tema: String) : this(
-        detaljer = detaljer,
-        journalpostId = JournalpostIdForOppgave.hentPrefiksetJournalpostId(hendelse, tema),
-        hendelse = hendelse.name
-    )
-}
-
-data class Sporingsdata(val correlationId: String, val brukerident: String? = null) {
-    @Suppress("unused") // brukes av jackson (and not part of equals/hashcode for data class)
-    val opprettet: LocalDateTime = LocalDateTime.now()
 }
