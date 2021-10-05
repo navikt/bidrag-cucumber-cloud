@@ -3,7 +3,7 @@ package no.nav.bidrag.cucumber.aop
 import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.controller.CucumberController
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.service.CucumberService
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -37,7 +37,7 @@ internal class ExceptionLoggerAspectTest {
         headers.contentType = MediaType.APPLICATION_JSON
 
         val illegalStateException = IllegalStateException("something fishy happened")
-        whenever(cucumberServiceMock.run(CucumberTestsDto())).thenThrow(illegalStateException)
+        whenever(cucumberServiceMock.run(CucumberTestsModel())).thenThrow(illegalStateException)
 
         testRestTemplate.postForEntity("/run", HttpEntity("{}", headers), Void::class.java)
 

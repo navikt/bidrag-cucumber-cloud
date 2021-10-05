@@ -1,8 +1,7 @@
 package no.nav.bidrag.cucumber.controller
 
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
-import no.nav.bidrag.cucumber.TestUtil
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.TestFailedException
 import no.nav.bidrag.cucumber.service.CucumberService
 import org.assertj.core.api.Assertions.assertThat
@@ -59,7 +58,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(cucumberServiceMock).run(CucumberTestsDto(listOf("ingress@tag")))
+        verify(cucumberServiceMock).run(CucumberTestsModel(listOf("ingress@tag")))
     }
 
     @Test
@@ -81,7 +80,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(cucumberServiceMock).run(CucumberTestsDto(sanityCheck = true))
+        verify(cucumberServiceMock).run(CucumberTestsModel(sanityCheck = true))
     }
 
     @Test
@@ -103,7 +102,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(cucumberServiceMock).run(CucumberTestsDto(securityToken = "xyz..."))
+        verify(cucumberServiceMock).run(CucumberTestsModel(securityToken = "xyz..."))
     }
 
     @Test
@@ -111,7 +110,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        whenever(cucumberServiceMock.run(CucumberTestsDto())).thenThrow(TestFailedException("not ok", "test failed"))
+        whenever(cucumberServiceMock.run(CucumberTestsModel())).thenThrow(TestFailedException("not ok", "test failed"))
 
         val testResponse = testRestTemplate.postForEntity(
             "/run", HttpEntity("{}", headers), Void::class.java
@@ -131,7 +130,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        whenever(cucumberServiceMock.run(CucumberTestsDto())).thenThrow(IllegalStateException("something fishy happened"))
+        whenever(cucumberServiceMock.run(CucumberTestsModel())).thenThrow(IllegalStateException("something fishy happened"))
 
         val testResponse = testRestTemplate.postForEntity(
             "/run", HttpEntity("{}", headers), Void::class.java
@@ -169,7 +168,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
             { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
             {
                 verify(cucumberServiceMock).run(
-                    CucumberTestsDto(
+                    CucumberTestsModel(
                         sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
                     )
                 )
@@ -198,7 +197,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
             { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
             {
                 verify(cucumberServiceMock).run(
-                    CucumberTestsDto(
+                    CucumberTestsModel(
                         ingressesForApps = listOf("https://some-ingress@some-app"), tags = listOf("@some-tag")
                     )
                 )

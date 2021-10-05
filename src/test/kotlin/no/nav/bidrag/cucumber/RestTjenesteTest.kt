@@ -1,6 +1,6 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,16 +21,16 @@ internal class RestTjenesteTest {
     @BeforeEach
     fun `reset Cucumber environment and add test user`() {
         Environment.resetCucumberEnvironment()
-        CucumberTestsDto(testUsername = "James Bond").initCucumberEnvironment()
+        CucumberTestsModel(testUsername = "James Bond").initCucumberEnvironment()
     }
 
     @Test
     fun `gitt INGRESSES_FOR_APPS med verdi for applikasjon, skal RestTjeneste konfigureres med denne verdien`() {
-        val cucumberTestsDto = CucumberTestsDto(
+        val cucumberTestsModel = CucumberTestsModel(
             ingressesForApps = listOf("https://somewhere.com/@nais-app", "https://somewhere.else.com@annen-nais-app")
         )
 
-        cucumberTestsDto.initCucumberEnvironment()
+        cucumberTestsModel.initCucumberEnvironment()
 
         val restTjeneste = RestTjeneste("nais-app")
         val annenRestTjeneste = RestTjeneste("annen-nais-app")
@@ -43,11 +43,11 @@ internal class RestTjenesteTest {
 
     @Test
     fun `gitt INGRESSES_FOR_APPS med verdi for applikasjon (konfigurert som er en tag), skal RestTjeneste konfigureres med tag-navnet`() {
-        val cucumberTestsDto = CucumberTestsDto(
+        val cucumberTestsModel = CucumberTestsModel(
             ingressesForApps = listOf("https://somewhere.com/@nais-tag", "https://somewhere.else.com@annen-nais-tag")
         )
 
-        cucumberTestsDto.initCucumberEnvironment()
+        cucumberTestsModel.initCucumberEnvironment()
 
         val restTjeneste = RestTjeneste("nais-tag")
         val annenRestTjeneste = RestTjeneste("annen-nais-tag")

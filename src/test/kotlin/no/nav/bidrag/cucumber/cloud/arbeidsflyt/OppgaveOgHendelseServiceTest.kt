@@ -10,7 +10,7 @@ import no.nav.bidrag.cucumber.hendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -53,7 +53,7 @@ internal class OppgaveOgHendelseServiceTest {
 
     @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
-        CucumberTestsDto(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
+        CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
 
         val restTjenesteMedBaseUrl = RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, baseUrl)
 
