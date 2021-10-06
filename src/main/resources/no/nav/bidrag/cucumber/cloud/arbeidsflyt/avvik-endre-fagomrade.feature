@@ -1,5 +1,5 @@
 # language: no
-@bidrag-arbeidsflyt
+@arbeidsflyt-endre-fagomrade
 Egenskap: bidrag-arbeidsflyt: AVVIK_ENDRE_FAGOMRADE
 
   Tester nais applikasjon bidrag-arbeidsflyt
@@ -7,15 +7,16 @@ Egenskap: bidrag-arbeidsflyt: AVVIK_ENDRE_FAGOMRADE
 
   Bakgrunn: En oppgave lagret via oppgave api
     Gitt nais applikasjon 'oppgave'
-    Og at en oppgave opprettes for 'AVVIK_ENDRE_FAGOMRADE' med journalpostId 1010101010 og tema 'BID'
+    Og hendelse 'AVVIK_ENDRE_FAGOMRADE' for journalpostId 1010101010 og tema 'BID'
+    Og at det finnes en oppgave under behandling
 
   Scenario: Ikke ferdigstill oppgaver når journalpost bytter til internt fagområde (BID -> FAR og vice versa)
-    Når det opprettes en journalposthendelse - 'AVVIK_ENDRE_FAGOMRADE' - for endring av fagområde fra 'BID' til 'FAR'
-    Og jeg søker etter oppgave opprettet for 'AVVIK_ENDRE_FAGOMRADE' på tema 'BID'
+    Når hendelsen opprettes for endring av fagområde til 'FAR'
+    Og jeg søker etter oppgaven
     Så skal jeg finne oppgaven i søkeresultatet
 
   Scenario: Ferdigstill oppgaver når journalpost bytter til eksternt fagområde
-    Når det opprettes en journalposthendelse - 'AVVIK_ENDRE_FAGOMRADE' - for endring av fagområde fra 'BID' til 'AAREG'
-    Og jeg søker etter oppgave opprettet for 'AVVIK_ENDRE_FAGOMRADE' på tema 'BID'
+    Når hendelsen opprettes for endring av fagområde til 'AAREG'
+    Og jeg søker etter oppgaven
     Så skal jeg ikke finne oppgaven i søkeresultatet
 

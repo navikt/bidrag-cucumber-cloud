@@ -8,9 +8,9 @@ import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.hendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
-import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
+import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -47,13 +47,8 @@ internal class OppgaveOgHendelseServiceTest {
     private lateinit var restTemplateMock: RestTemplate
 
     @BeforeEach
-    fun `legg til prefikset journalpostId for hendelse og tema`() {
-        JournalpostIdForOppgave.leggTil(hendelse, journalpostId, tema)
-    }
-
-    @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
-        CucumberTestsDto(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
+        CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
 
         val restTjenesteMedBaseUrl = RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, baseUrl)
 
@@ -69,10 +64,10 @@ internal class OppgaveOgHendelseServiceTest {
     @Test
     fun `skal opprette journalpostHendelse`() {
         CorrelationId.generateTimestamped("junit-test")
-        OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), tema)
+        OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), journalpostId)
 
         verify(hendelseProducerMock).publish(
-            JournalpostHendelse(journalpostId = "$tema-$journalpostId", hendelse = hendelse.name, detaljer = mapOf("fagomrade" to "FAR"))
+            JournalpostHendelse(journalpostId = journalpostId.toString(), hendelse = hendelse.name, detaljer = mapOf("fagomrade" to "FAR"))
         )
     }
 
@@ -83,8 +78,7 @@ internal class OppgaveOgHendelseServiceTest {
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
 
-        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
-        OppgaveOgHendelseService.tilbyOppgave(hendelse.name, journalpostId, tema)
+        OppgaveOgHendelseService.tilbyOppgave(journalpostId = journalpostId, tema = tema)
 
         verify(restTemplateMock).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -97,8 +91,7 @@ internal class OppgaveOgHendelseServiceTest {
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1","versjon":"1"}]}""")
         )
 
-        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
-        OppgaveOgHendelseService.tilbyOppgave(hendelse.name, journalpostId, tema)
+        OppgaveOgHendelseService.tilbyOppgave(journalpostId, tema)
 
         verify(restTemplateMock, never()).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -109,8 +102,7 @@ internal class OppgaveOgHendelseServiceTest {
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}""")
         )
 
-        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
-        OppgaveOgHendelseService.tilbyOppgave(hendelse.name, journalpostId, tema)
+        OppgaveOgHendelseService.tilbyOppgave(journalpostId, tema)
 
         @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
                 as ArgumentCaptor<HttpEntity<PatchStatusOppgaveRequest>>

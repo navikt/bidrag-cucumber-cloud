@@ -7,7 +7,6 @@ import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
-import no.nav.bidrag.cucumber.hendelse.JournalpostHendelse
 import no.nav.bidrag.cucumber.sikkerhet.SecurityTokenService
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
@@ -68,12 +67,10 @@ internal object BidragCucumberSingletons {
     }
 
     fun holdExceptionForTest(throwable: Throwable) {
-        val messages = exceptionLogger?.logException(throwable, BidragCucumberSingletons::class.java.simpleName) ?: listOf(
-            "${throwable.javaClass.simpleName}: ${throwable.message}"
-        )
+        val assertionMessage = "${throwable.javaClass.simpleName}: ${throwable.message}"
 
-        testMessagesHolder?.hold(messages)
-        fetchRunStats().addExceptionLogging(messages)
+        testMessagesHolder?.hold(assertionMessage)
+        fetchRunStats().addExceptionLogging(listOf(assertionMessage))
     }
 
     fun publiserHendelse(journalpostHendelse: JournalpostHendelse) {
@@ -86,9 +83,7 @@ internal object BidragCucumberSingletons {
         "Kunne ikke mappe: $value"
     )
 
-    fun toJson(body: Any): String = objectMapper?.writeValueAsString(body) ?: throw IllegalStateException(
-        "har ikke fått jackson objectMapper fra spring!"
-    )
+    fun toJson(body: Any): String = objectMapper?.writeValueAsString(body) ?: """{ "noMappingAvailable":"$body" }"""
 
     fun setApplicationContext(applicationContext: ApplicationContext) {
         BidragCucumberSingletons.applicationContext = applicationContext

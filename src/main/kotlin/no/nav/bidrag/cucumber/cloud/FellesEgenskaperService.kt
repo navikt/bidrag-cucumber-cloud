@@ -8,13 +8,18 @@ import org.slf4j.LoggerFactory
 object FellesEgenskaperService {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(FellesEgenskaperService::class.java)
+
     @JvmStatic
     private val RESTTJENESTER = ThreadLocal<RestTjeneste>()
 
     fun assertWhenNotSanityCheck(assertion: Assertion) {
-        if (Environment.isSanityCheck) {
-            LOGGER.info("Sanity check - ${assertion.message}: actual - '${assertion.value}', wanted - '${assertion.expectation}'")
-        } else {
+        LOGGER.info(
+            "Assertion, actual: '${assertion.value}' - (class: ${assertion.value?.javaClass}), " +
+                    "wanted: '${assertion.expectation}' (class: ${assertion.expectation?.javaClass}), " +
+                    "sanity check: ${Environment.isSanityCheck}"
+        )
+
+        if (Environment.isNotSanityCheck()) {
             assertion.doVerify()
         }
     }

@@ -1,10 +1,9 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave
 import no.nav.bidrag.cucumber.logback.TestMessageBeforeLayoutHolder
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import org.slf4j.LoggerFactory
 
 internal object Environment {
@@ -12,7 +11,7 @@ internal object Environment {
     private val LOGGER = LoggerFactory.getLogger(Environment::class.java)
 
     @JvmStatic
-    private val CUCUMBER_TESTS = ThreadLocal<CucumberTestsDto>()
+    private val CUCUMBER_TESTS = ThreadLocal<CucumberTestsModel>()
 
     @JvmStatic
     private val INGRESS_FOR_APP = ThreadLocal<MutableMap<String, String>>()
@@ -72,10 +71,10 @@ internal object Environment {
         return Pair(ingress, app)
     }
 
-    fun initCucumberEnvironment(cucumberTestsDto: CucumberTestsDto) {
-        LOGGER.info("Initializing environment for $cucumberTestsDto")
-        CUCUMBER_TESTS.set(cucumberTestsDto)
-        cucumberTestsDto.warningLogDifferences()
+    fun initCucumberEnvironment(cucumberTestsModel: CucumberTestsModel) {
+        LOGGER.info("Initializing environment for $cucumberTestsModel")
+        CUCUMBER_TESTS.set(cucumberTestsModel)
+        cucumberTestsModel.warningLogDifferences()
         TestMessageBeforeLayoutHolder.startTestRun()
     }
 
@@ -91,7 +90,6 @@ internal object Environment {
         BidragCucumberSingletons.removeRunStats()
         RestTjenesteForApplikasjon.removeAll()
         FellesEgenskaperService.fjernResttjenester()
-        JournalpostIdForOppgave.fjernIdForHendelser()
         TestMessageBeforeLayoutHolder.endTestRun()
     }
 

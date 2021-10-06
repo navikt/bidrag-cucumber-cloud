@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber.hendelse
 
 enum class Hendelse {
-    AVVIK_ENDRE_FAGOMRADE
+    AVVIK_ENDRE_FAGOMRADE,
+    OPPRETT_OPPGAVE
 }

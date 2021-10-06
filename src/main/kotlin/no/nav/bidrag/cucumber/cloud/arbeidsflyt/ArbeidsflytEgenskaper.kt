@@ -6,20 +6,34 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
 import no.nav.bidrag.cucumber.hendelse.Hendelse
 import org.assertj.core.api.Assertions.assertThat
 
+@Suppress("unused") // brukes av cucumber
 class ArbeidsflytEgenskaper : No {
 
+    private lateinit var hendelse: Hendelse
+    private lateinit var tema: String
+    private var journalpostId: Long = -1
+
     init {
-        Og("at en oppgave opprettes for {string} med journalpostId {long} og tema {string}") { hendelse: String, journalpostId: Long, tema: String ->
-            OppgaveOgHendelseService.tilbyOppgave(hendelse, journalpostId, tema)
+        Og("hendelse {string} for journalpostId {long} og tema {string}") { hendelse: String, journalpostId: Long, tema: String ->
+            this.hendelse = Hendelse.valueOf(hendelse)
+            this.journalpostId = journalpostId
+            this.tema = tema
         }
 
-        Når("det opprettes en journalposthendelse - {string} - for endring av fagområde fra {string} til {string}") { hendelseStreng: String, fraFagomrade: String, tilFagomrade: String ->
-            val hendelse = Hendelse.valueOf(hendelseStreng)
-            OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to tilFagomrade), fraFagomrade)
+        Og("at det finnes en oppgave under behandling") {
+            OppgaveOgHendelseService.tilbyOppgave(journalpostId = journalpostId, tema = tema)
         }
 
-        Når("jeg søker etter oppgave opprettet for {string} på tema {string}") { hendelse: String, tema: String ->
-            OppgaveOgHendelseService.sokOppgaveForHendelse(Hendelse.valueOf(hendelse), tema)
+        Når("hendelsen opprettes for endring av fagområde til {string}") { tilFagomrade: String ->
+            OppgaveOgHendelseService.opprettJournalpostHendelse(
+                hendelse = hendelse,
+                detaljer = mapOf("fagomrade" to tilFagomrade),
+                journalpostId = journalpostId
+            )
+        }
+
+        Og("jeg søker etter oppgaven") {
+            OppgaveOgHendelseService.sokOppgaveForHendelse(journalpostId = journalpostId, tema = tema)
         }
 
         Så("skal jeg finne oppgaven i søkeresultatet") {
@@ -27,7 +41,7 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet å finne oppgaven",
                     value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = "1",
+                    expectation = 1,
                     verify = this::harForventetAntallTreff
                 ),
             )
@@ -38,14 +52,22 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
                     value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = "0",
+                    expectation = 0,
                     verify = this::harForventetAntallTreff
                 ),
             )
         }
+
+        Og("at det ikke finnes en åpen oppgave") {
+            OppgaveOgHendelseService.ferdigstillEventuellOppgave(journalpostId = journalpostId, tema = tema)
+        }
+
+        Når("hendelsen opprettes") {
+            OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse = hendelse, journalpostId = journalpostId)
+        }
     }
 
     private fun harForventetAntallTreff(assertion: Assertion) {
-        assertThat(assertion.expectation).`as`(assertion.message).isEqualTo(1)
+        assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
     }
 }

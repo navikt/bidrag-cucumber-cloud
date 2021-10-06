@@ -7,7 +7,7 @@ import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
 import no.nav.bidrag.cucumber.model.TestMessagesHolder
@@ -31,10 +31,10 @@ class CucumberService(
         BidragCucumberSingletons.setTestMessagesHolder(testMessagesHolder)
     }
 
-    internal fun run(cucumberTestsDto: CucumberTestsDto): String {
-        Environment.initCucumberEnvironment(cucumberTestsDto)
+    internal fun run(cucumberTestsModel: CucumberTestsModel): String {
+        Environment.initCucumberEnvironment(cucumberTestsModel)
 
-        val tags = cucumberTestsDto.fetchTags()
+        val tags = cucumberTestsModel.fetchTags()
         val result = runCucumberTests(tags)
 
         val suppressedStackText = suppressStackTraceText.suppress(

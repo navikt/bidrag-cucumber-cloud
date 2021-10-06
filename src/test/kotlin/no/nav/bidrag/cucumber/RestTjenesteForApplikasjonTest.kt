@@ -1,6 +1,6 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -9,7 +9,7 @@ internal class RestTjenesteForApplikasjonTest {
 
     @Test
     fun `skal ikke bruke app navn som del av ingress, når applikasjon konfigureres og det spesifikt oppgies at denne ikke skal bli med`() {
-        CucumberTestsDto(
+        CucumberTestsModel(
             ingressesForApps = listOf("https://outside@this", "https://blow@that", "https://love@you"),
             noContextPathForApps = listOf("this", "that")
         ).initCucumberEnvironment()

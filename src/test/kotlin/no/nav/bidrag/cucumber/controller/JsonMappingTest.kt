@@ -2,7 +2,7 @@ package no.nav.bidrag.cucumber.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
-import no.nav.bidrag.cucumber.model.CucumberTestsDto
+import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.PostOppgaveRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
@@ -22,22 +22,22 @@ class JsonMappingTest {
     fun `skal mappe en kjøring av bidrag-arberdsflyt`() {
         val json = """
           {
-            "tags":["@bidrag-arbeidsflyt"],
+            "tags":["@arbeidsflyt-endre-fagomrade"],
             "testUsername":"z992903",
             "noContextPathForApps":["oppgave"],
             "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@no-tag:oppgave"]
           }
           """.trimIndent()
 
-        val cucumberTestsDto = objectMapper.readValue(json, CucumberTestsDto::class.java)
+        val cucumberTestsModel = objectMapper.readValue(json, CucumberTestsModel::class.java)
 
         assertAll(
-            { assertThat(cucumberTestsDto).`as`("cucumberTestsDto").isNotNull() },
-            { assertThat(cucumberTestsDto.tags).`as`("tags").isEqualTo(listOf("@bidrag-arbeidsflyt")) },
-            { assertThat(cucumberTestsDto.testUsername).`as`("testUsername").isEqualTo("z992903") },
-            { assertThat(cucumberTestsDto.noContextPathForApps).`as`("noContextPathForApps").isEqualTo(listOf("oppgave")) },
+            { assertThat(cucumberTestsModel).`as`("cucumberTestsDto").isNotNull() },
+            { assertThat(cucumberTestsModel.tags).`as`("tags").isEqualTo(listOf("@arbeidsflyt-endre-fagomrade")) },
+            { assertThat(cucumberTestsModel.testUsername).`as`("testUsername").isEqualTo("z992903") },
+            { assertThat(cucumberTestsModel.noContextPathForApps).`as`("noContextPathForApps").isEqualTo(listOf("oppgave")) },
             {
-                assertThat(cucumberTestsDto.ingressesForApps).`as`("ingressesForApps")
+                assertThat(cucumberTestsModel.ingressesForApps).`as`("ingressesForApps")
                     .isEqualTo(listOf("https://oppgave-q1.dev-fss-pub.nais.io@no-tag:oppgave"))
             }
         )
