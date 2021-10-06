@@ -1,7 +1,6 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
-import no.nav.bidrag.cucumber.cloud.arbeidsflyt.JournalpostIdForOppgave
 import no.nav.bidrag.cucumber.logback.TestMessageBeforeLayoutHolder
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
@@ -91,7 +90,6 @@ internal object Environment {
         BidragCucumberSingletons.removeRunStats()
         RestTjenesteForApplikasjon.removeAll()
         FellesEgenskaperService.fjernResttjenester()
-        JournalpostIdForOppgave.fjernIdForHendelser()
         TestMessageBeforeLayoutHolder.endTestRun()
     }
 

@@ -11,8 +11,7 @@ import no.nav.bidrag.cucumber.model.PostOppgaveRequest
  */
 object OppgaveOgHendelseService {
 
-    fun tilbyOppgave(hendelse: String, journalpostId: Long, tema: String) {
-        JournalpostIdForOppgave.leggTil(Hendelse.valueOf(hendelse), journalpostId, tema)
+    fun tilbyOppgave(journalpostId: Long, tema: String) {
         val sokResponse = OppgaveConsumer.sokOppgave(journalpostId, tema)
 
         if (sokResponse.antallTreffTotalt == 0) {
@@ -32,13 +31,32 @@ object OppgaveOgHendelseService {
         }
     }
 
-    fun opprettJournalpostHendelse(hendelse: Hendelse, detaljer: Map<String, String>, tema: String) {
-        BidragCucumberSingletons.publiserHendelse(JournalpostHendelse(detaljer, hendelse, tema))
+    fun opprettJournalpostHendelse(hendelse: Hendelse, detaljer: Map<String, String> = emptyMap(), journalpostId: Long) {
+        BidragCucumberSingletons.publiserHendelse(
+            JournalpostHendelse(journalpostId = journalpostId.toString(), detaljer = detaljer, hendelse = hendelse.name)
+        )
+
         Thread.sleep(500) // for å gi bidrag-arbeidsflyt tid til å behandle hendelse
     }
 
-    fun sokOppgaveForHendelse(hendelse: Hendelse, tema: String) {
-        val journalpostId = JournalpostIdForOppgave.hentJournalpostId(hendelse, tema)
+    fun sokOppgaveForHendelse(journalpostId: Long, tema: String) {
         OppgaveConsumer.sokOppgave(journalpostId, tema)
+    }
+
+    fun ferdigstillEventuellOppgave(journalpostId: Long, tema: String) {
+        val sokResponse = OppgaveConsumer.sokOppgave(journalpostId, tema)
+
+        if (sokResponse.antallTreffTotalt > 0) {
+            sokResponse.oppgaver.forEach {
+                OppgaveConsumer.patchOppgave(
+                    PatchStatusOppgaveRequest(
+                        id = it.id,
+                        status = "FERDIGSTILT",
+                        tema = tema,
+                        versjon = it.versjon.toInt()
+                    )
+                )
+            }
+        }
     }
 }

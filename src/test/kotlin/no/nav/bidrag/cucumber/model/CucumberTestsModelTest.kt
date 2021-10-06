@@ -25,19 +25,19 @@ internal class CucumberTestsModelTest {
     @Test
     fun `skal også bruke tags som ikke er listet i ingressesForApps`() {
         val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.out.there@bidrag-sak"), tags = listOf("@bidrag-arbeidsflyt")
+            ingressesForApps = listOf("https://somewhere.out.there@bidrag-sak"), tags = listOf("@arbeidsflyt-endre-fagomrade")
         )
 
         assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags")
-            .isEqualTo("(@bidrag-sak or @bidrag-arbeidsflyt) and not @ignored")
+            .isEqualTo("(@bidrag-sak or @arbeidsflyt-endre-fagomrade) and not @ignored")
     }
 
     @Test
     fun `skal bare plukke tags fra ingressesForApps`() {
-        val cucumberTestsModel = CucumberTestsModel(ingressesForApps = listOf("somewhere@bidrag-arbeidsflyt", "here@no-tag:this-app"))
+        val cucumberTestsModel = CucumberTestsModel(ingressesForApps = listOf("somewhere@arbeidsflyt-endre-fagomrade", "here@no-tag:this-app"))
 
         assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags")
-            .isEqualTo("@bidrag-arbeidsflyt and not @ignored")
+            .isEqualTo("@arbeidsflyt-endre-fagomrade and not @ignored")
     }
 
     @Test

@@ -22,7 +22,7 @@ class JsonMappingTest {
     fun `skal mappe en kjøring av bidrag-arberdsflyt`() {
         val json = """
           {
-            "tags":["@bidrag-arbeidsflyt"],
+            "tags":["@arbeidsflyt-endre-fagomrade"],
             "testUsername":"z992903",
             "noContextPathForApps":["oppgave"],
             "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@no-tag:oppgave"]
@@ -33,7 +33,7 @@ class JsonMappingTest {
 
         assertAll(
             { assertThat(cucumberTestsModel).`as`("cucumberTestsDto").isNotNull() },
-            { assertThat(cucumberTestsModel.tags).`as`("tags").isEqualTo(listOf("@bidrag-arbeidsflyt")) },
+            { assertThat(cucumberTestsModel.tags).`as`("tags").isEqualTo(listOf("@arbeidsflyt-endre-fagomrade")) },
             { assertThat(cucumberTestsModel.testUsername).`as`("testUsername").isEqualTo("z992903") },
             { assertThat(cucumberTestsModel.noContextPathForApps).`as`("noContextPathForApps").isEqualTo(listOf("oppgave")) },
             {
