@@ -33,7 +33,7 @@ class ArbeidsflytEgenskaper : No {
         Når("hendelsen opprettes for endring av fagområde til {string}") { tilFagomrade: String ->
             OppgaveOgHendelseService.opprettJournalpostHendelse(
                 hendelse = hendelse,
-                detaljer = mapOf("fagomrade" to tilFagomrade, "enhetsnummer" to enhetsnr),
+                detaljer = mapOf("gammeltFagomrade" to tema, "nyttFagomrade" to tilFagomrade, "enhetsnummer" to enhetsnr),
                 journalpostId = journalpostId
             )
         }

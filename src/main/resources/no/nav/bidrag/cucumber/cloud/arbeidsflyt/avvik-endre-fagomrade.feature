@@ -8,7 +8,7 @@ Egenskap: bidrag-arbeidsflyt: AVVIK_ENDRE_FAGOMRADE
   Bakgrunn: En oppgave lagret via oppgave api
     Gitt nais applikasjon 'oppgave'
     Og hendelse 'AVVIK_ENDRE_FAGOMRADE' for journalpostId 1010101010 og tema 'BID'
-    Og hendelsen gjelder enhet '1046'
+    Og hendelsen gjelder enhet '4806'
     Og at det finnes en oppgave under behandling
 
   Scenario: Ikke ferdigstill oppgaver når journalpost bytter til internt fagområde (BID -> FAR og vice versa)
