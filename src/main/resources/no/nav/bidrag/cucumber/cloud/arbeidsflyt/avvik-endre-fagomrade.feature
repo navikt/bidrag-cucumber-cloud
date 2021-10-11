@@ -12,11 +12,13 @@ Egenskap: bidrag-arbeidsflyt: AVVIK_ENDRE_FAGOMRADE
 
   Scenario: Ikke ferdigstill oppgaver når journalpost bytter til internt fagområde (BID -> FAR og vice versa)
     Når hendelsen opprettes for endring av fagområde til 'FAR'
+    Og jeg venter i et sekund slik at hendelse blir behandlet
     Og jeg søker etter oppgaven
     Så skal jeg finne oppgaven i søkeresultatet
 
   Scenario: Ferdigstill oppgaver når journalpost bytter til eksternt fagområde
     Når hendelsen opprettes for endring av fagområde til 'AAREG'
+    Og jeg venter i et sekund slik at hendelse blir behandlet
     Og jeg søker etter oppgaven
     Så skal jeg ikke finne oppgaven i søkeresultatet
 
