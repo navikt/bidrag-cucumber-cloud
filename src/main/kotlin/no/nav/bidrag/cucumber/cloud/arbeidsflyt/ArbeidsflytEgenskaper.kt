@@ -65,6 +65,10 @@ class ArbeidsflytEgenskaper : No {
         Når("hendelsen opprettes") {
             OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse = hendelse, journalpostId = journalpostId)
         }
+
+        Og("jeg venter i et sekund slik at hendelse blir behandlet") {
+            Thread.sleep(1000)
+        }
     }
 
     private fun harForventetAntallTreff(assertion: Assertion) {

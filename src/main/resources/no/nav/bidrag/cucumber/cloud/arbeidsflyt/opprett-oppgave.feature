@@ -12,5 +12,6 @@ Egenskap: bidrag-arbeidsflyt: OPPRETT_OPPGAVE
 
   Scenario: Arbeidsflyt skal opprette oppgave med journalpostId ved hendelse
     Når hendelsen opprettes
+    Og jeg venter i et sekund slik at hendelse blir behandlet
     Og jeg søker etter oppgaven
     Så skal jeg finne oppgaven i søkeresultatet
