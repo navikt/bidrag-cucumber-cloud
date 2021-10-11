@@ -73,11 +73,6 @@ open class RestTjeneste(
         headers.add(CorrelationId.CORRELATION_ID_HEADER, ScenarioManager.getCorrelationIdForScenario())
         headers.add(X_ENHET_HEADER, "4802")
 
-        ScenarioManager.logWithScenario(
-            ScenarioManager.createCorrelationIdLinkTitle(),
-            ScenarioManager.createQueryLinkForCorrelationId()
-        )
-
         return headers
     }
 

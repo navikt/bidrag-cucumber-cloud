@@ -56,11 +56,6 @@ internal class OppgaveOgHendelseServiceTest {
         FellesEgenskaperService.settOppNaisApp(naisApplikasjon)
     }
 
-    @BeforeEach
-    fun `init CorrelationId`() {
-        ScenarioManager.initCorrelationId()
-    }
-
     @Test
     fun `skal opprette journalpostHendelse`() {
         CorrelationId.generateTimestamped("junit-test")

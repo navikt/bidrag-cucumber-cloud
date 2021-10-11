@@ -16,43 +16,23 @@ object ScenarioManager {
     private var scenario: Scenario? = null
 
     fun use(scenario: Scenario) {
-        this.scenario = scenario
-        initCorrelationId()
         LOGGER.info("Starting ${BidragCucumberSingletons.scenarioMessage(scenario)}")
-    }
-
-    internal fun initCorrelationId() {
-        if (scenario != null) {
-            correlationIdForScenario = createCorrelationIdValue()
-            MDC.put(CORRELATION_ID, correlationIdForScenario)
-        }
+        this.scenario = scenario
+        createCorrelationId()
+        MDC.put(CORRELATION_ID, correlationIdForScenario)
     }
 
     fun reset(scenario: Scenario) {
         LOGGER.info("Finished ${BidragCucumberSingletons.scenarioMessage(scenario)}")
         BidragCucumberSingletons.addRunStats(scenario)
         this.scenario = null
-        resetCorrelationId()
-    }
-
-    private fun resetCorrelationId() {
-        correlationIdForScenario = createCorrelationIdValue("outside-scenario")
+        this.correlationIdForScenario = null
         MDC.clear()
     }
 
-    private fun createCorrelationIdValue(label: String = "bcc"): String {
-        return CorrelationId.generateTimestamped(label).get()
-    }
+    private fun createCorrelationId() {
+        correlationIdForScenario = createCorrelationIdValue()
 
-    fun logWithScenario(messageTitle: String, message: String) {
-        if (scenario != null) {
-            val testMessage = "$messageTitle: $message"
-            scenario!!.log("$testMessage\n")
-            BidragCucumberSingletons.holdTestMessage(testMessage)
-        }
-    }
-
-    fun createQueryLinkForCorrelationId(): String {
         val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val date = LocalDate.now().format(pattern)
 
@@ -62,11 +42,15 @@ object ScenarioManager {
         val query = "query:(language:lucene,query:'%22$correlationIdForScenario%22')"
         val sort = "sort:!(!(%27@timestamp%27,desc))"
 
-        return "https://logs.adeo.no/app/kibana#/discover?_g=($time)&_a=($columns,$index,interval:auto,$query,$sort)"
+        LOGGER.info("${linkMessage()}: https://logs.adeo.no/app/kibana#/discover?_g=($time)&_a=($columns,$index,interval:auto,$query,$sort)")
     }
 
-    fun createCorrelationIdLinkTitle() = "Link for correlation-id ($correlationIdForScenario)"
-    fun getCorrelationIdForScenario() = correlationIdForScenario ?: "na"
+    private fun createCorrelationIdValue(value: String = "bcc"): String {
+        return CorrelationId.generateTimestamped(value).get()
+    }
+
+    private fun linkMessage() = "Link for correlation-id ($correlationIdForScenario)"
+    fun getCorrelationIdForScenario() = correlationIdForScenario ?: createCorrelationIdValue("unknown")
     fun errorLog(message: String, e: Exception) {
         LOGGER.error("$message - ${e.javaClass.simpleName}")
         BidragCucumberSingletons.holdExceptionForTest(e)

@@ -60,7 +60,6 @@ internal class RestTjenesteTest {
 
     @Test
     fun `skal hente full url uten advarsel`() {
-        ScenarioManager.initCorrelationId()
         val restTemplateMock = mock(RestTemplate::class.java)
         val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
 
@@ -76,7 +75,6 @@ internal class RestTjenesteTest {
 
     @Test
     fun `skal ha WARNING fra HttpHeaders når rest tjeneste sender med dette som header`() {
-        ScenarioManager.initCorrelationId()
         val restTemplateMock = mock(RestTemplate::class.java)
         val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
         val headers = HttpHeaders(LinkedMultiValueMap(mapOf(HttpHeaders.WARNING to listOf("the truth will emerge!"))))
