@@ -18,7 +18,8 @@ object OppgaveConsumer {
     }
 
     fun sokOppgave(journalpostId: Long, tema: String): OppgaveSokResponse {
-        hentRestTjeneste().exchangeGet("/api/v1/oppgaver?journalpostId=$journalpostId&statuskategori=AAPEN&tema=$tema")
+        hentRestTjeneste()
+            .exchangeGet("/api/v1/oppgaver?journalpostId=$journalpostId&journalpostId=$tema-$journalpostId&statuskategori=AAPEN&tema=$tema")
 
         try {
             val response = hentRestTjeneste().hentResponse() ?: return OppgaveSokResponse()

@@ -3,7 +3,7 @@
 Egenskap: bidrag-arbeidsflyt: AVVIK_ENDRE_FAGOMRADE
 
   Tester nais applikasjon bidrag-arbeidsflyt
-  Applikasjonen reagerer på kafka hendelser og manipulerer oppgaver etter hendelse
+  Applikasjonen reagerer på kafka hendelse AVVIK_ENDRE_FAGOMRADE og ferdigstiller oppgaver
 
   Bakgrunn: En oppgave lagret via oppgave api
     Gitt nais applikasjon 'oppgave'
