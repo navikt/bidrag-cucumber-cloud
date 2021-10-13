@@ -128,7 +128,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue != envValue
 
     private fun warningForDifference(name: String, property: Any?, envValue: Any?) {
-        if (property == null && envValue != "null" || property != "null" && envValue == null) {
+        if (!(property == null && envValue == "null") && !(property == "null" && envValue == null)) {
             LOGGER.warn("$property vs $envValue: (${this.javaClass.simpleName}.$name vs ${Environment::class.java.simpleName} - $name)")
         }
     }

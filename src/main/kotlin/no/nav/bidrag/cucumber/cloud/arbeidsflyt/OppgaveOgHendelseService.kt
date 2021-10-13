@@ -1,14 +1,19 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.assertWhenNotSanityCheck
 import no.nav.bidrag.cucumber.hendelse.Hendelse
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
 import no.nav.bidrag.cucumber.model.PostOppgaveRequest
+import org.assertj.core.api.Assertions.assertThat
 
 /**
  * Service class in order to loosely couple logic from cucumber infrastructure
  */
+@Suppress("UNCHECKED_CAST")
 object OppgaveOgHendelseService {
 
     fun tilbyOppgave(journalpostId: Long, tema: String) {
@@ -58,5 +63,29 @@ object OppgaveOgHendelseService {
                 )
             }
         }
+    }
+
+    fun assertThatOppgaveTilhorerEnhet(enhetsnummer: String) {
+        val responseSomMap = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()
+
+        assertWhenNotSanityCheck(
+            Assertion(
+                message = "Forventet å finne oppgaven",
+                value = responseSomMap["antallTreffTotalt"],
+                expectation = 1,
+                verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
+            ),
+        )
+
+        val tildeltEnhetsnr = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("tildeltEnhetsnr")
+
+        assertWhenNotSanityCheck(
+            Assertion(
+                message = "Oppgaven er tildelt enhet",
+                value = tildeltEnhetsnr,
+                expectation = enhetsnummer,
+                verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
+            )
+        )
     }
 }

@@ -81,7 +81,7 @@ jobs:
 
   run-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-cucumber-cloud"
+    name: "bidrag-cucumber-cloud"
     needs: deploy
 
     steps:
@@ -98,7 +98,7 @@ jobs:
 
   run-tests-for-bidrag-sak:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-sak"
+    name: "bidrag-sak"
     needs: deploy
 
     env:
@@ -121,7 +121,7 @@ jobs:
 
   run-tests-for-bidrag-stonad:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-stonad"
+    name: "bidrag-stonad"
     needs: deploy
 
     env:
@@ -144,7 +144,7 @@ jobs:
 
   run-tests-for-bidrag-vedtak:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-vedtak"
+    name: "bidrag-vedtak"
     needs: deploy
 
     env:
@@ -167,7 +167,7 @@ jobs:
 
   run-tests-for-arbeidsflyt-endre-fagomrade:
     runs-on: ubuntu-latest
-    name: "Run tests: arbeidsflyt-endre-fagomrade"
+    name: "arbeidsflyt-endre-fagomrade"
     needs: deploy
 
     env:
@@ -190,7 +190,7 @@ jobs:
 
   run-tests-for-arbeidsflyt-opprett-oppgave:
     runs-on: ubuntu-latest
-    name: "Run tests: arbeidsflyt-opprett-oppgave"
+    name: "arbeidsflyt-opprett-oppgave"
     needs: deploy
 
     env:
@@ -211,9 +211,32 @@ jobs:
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
 
+  run-tests-for-arbeidsflyt-overfor-enhet:
+    runs-on: ubuntu-latest
+    name: "arbeidsflyt-overfor-til-annen-enhet"
+    needs: deploy
+
+    env:
+      INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
+
+    steps:
+      - name: feature ingresses
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "INGRESS_OPPGAVE=https://oppgave-q1.dev-fss-pub.nais.io" >> $GITHUB_ENV
+          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"tags":["@arbeidsflyt-overfor-til-annen-enhet"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+                   "${{ env.INGRESS_OPPGAVE }}@no-tag:oppgave"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+
   run-tests-for-bidrag-beregn:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-beregn-*"
+    name: "bidrag-beregn-*"
     needs: deploy
 
     env:
@@ -248,6 +271,7 @@ jobs:
       - run-tests-for-cucumber-cloud
       - run-tests-for-arbeidsflyt-endre-fagomrade
       - run-tests-for-arbeidsflyt-opprett-oppgave
+      - run-tests-for-arbeidsflyt-overfor-enhet
       - run-tests-for-bidrag-beregn
       - run-tests-for-bidrag-sak
       - run-tests-for-bidrag-stonad
