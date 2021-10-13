@@ -26,8 +26,8 @@ internal object Environment {
 
     fun isNotSanityCheck() = !isSanityCheck
     fun isTestUserPresent() = testUsername != null
-    fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
 
+    private fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
     private fun fetchPropertyOrEnvironment(key: String) = fetch(key) ?: System.getenv(key)
     private fun testAuthForTestUser() = TEST_AUTH + '_' + testUsernameUppercase()
     private fun testUsernameUppercase() = testUsername?.uppercase()

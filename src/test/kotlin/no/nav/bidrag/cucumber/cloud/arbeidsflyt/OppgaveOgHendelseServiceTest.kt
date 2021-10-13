@@ -105,7 +105,7 @@ internal class OppgaveOgHendelseServiceTest {
 
         assertThat(httpEntityCaptor.value.body).isEqualTo(
             BidragCucumberSingletons.toJson(
-                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1)
+                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1, tildeltEnhetsnr = "1001")
             )
         )
     }
