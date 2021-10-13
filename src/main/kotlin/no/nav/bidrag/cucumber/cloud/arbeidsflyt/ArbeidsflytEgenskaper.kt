@@ -28,7 +28,7 @@ class ArbeidsflytEgenskaper : No {
         }
 
         Og("at det finnes en oppgave under behandling") {
-            OppgaveOgHendelseService.tilbyOppgave(journalpostId = journalpostId, tema = tema)
+            OppgaveOgHendelseService.tilbyOppgave(journalpostId = journalpostId, tema = tema, enhetsnummer = enhetsnummer)
         }
 
         Når("hendelsen opprettes for endring av fagområde til {string}") { tilFagomrade: String ->

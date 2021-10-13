@@ -16,11 +16,11 @@ import org.assertj.core.api.Assertions.assertThat
 @Suppress("UNCHECKED_CAST")
 object OppgaveOgHendelseService {
 
-    fun tilbyOppgave(journalpostId: Long, tema: String) {
+    fun tilbyOppgave(journalpostId: Long, tema: String, enhetsnummer: String = "1001") {
         val sokResponse = OppgaveConsumer.sokOppgave(journalpostId, tema)
 
         if (sokResponse.antallTreffTotalt == 0) {
-            OppgaveConsumer.opprettOppgave(PostOppgaveRequest(journalpostId = journalpostId.toString(), tema = tema))
+            OppgaveConsumer.opprettOppgave(PostOppgaveRequest(journalpostId = journalpostId.toString(), tema = tema, tildeltEnhetsnr = enhetsnummer))
         } else if (sokResponse.oppgaver.isNotEmpty()) {
             val id = sokResponse.oppgaver.first().id
             val versjon = sokResponse.oppgaver.first().versjon
@@ -30,7 +30,8 @@ object OppgaveOgHendelseService {
                     id = id,
                     status = "UNDER_BEHANDLING",
                     tema = tema,
-                    versjon = versjon.toInt()
+                    versjon = versjon.toInt(),
+                    tildeltEnhetsnr = enhetsnummer
                 )
             )
         } else throw IllegalStateException("Antall treff: ${sokResponse.antallTreffTotalt}, men liste i response er tom!!!")
@@ -58,7 +59,8 @@ object OppgaveOgHendelseService {
                         id = it.id,
                         status = "FERDIGSTILT",
                         tema = tema,
-                        versjon = it.versjon.toInt()
+                        versjon = it.versjon.toInt(),
+                        tildeltEnhetsnr = it.tildeltEnhetsnr
                     )
                 )
             }
