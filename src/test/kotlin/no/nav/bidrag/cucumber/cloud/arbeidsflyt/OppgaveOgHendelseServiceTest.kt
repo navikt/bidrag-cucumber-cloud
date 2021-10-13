@@ -4,7 +4,6 @@ import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.RestTjeneste
 import no.nav.bidrag.cucumber.RestTjenesteForApplikasjon
-import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.hendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
@@ -59,10 +58,10 @@ internal class OppgaveOgHendelseServiceTest {
     @Test
     fun `skal opprette journalpostHendelse`() {
         CorrelationId.generateTimestamped("junit-test")
-        OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), journalpostId)
+        OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), "$tema-$journalpostId")
 
         verify(hendelseProducerMock).publish(
-            JournalpostHendelse(journalpostId = journalpostId.toString(), hendelse = hendelse.name, detaljer = mapOf("fagomrade" to "FAR"))
+            JournalpostHendelse(journalpostId = "$tema-$journalpostId", hendelse = hendelse.name, detaljer = mapOf("fagomrade" to "FAR"))
         )
     }
 

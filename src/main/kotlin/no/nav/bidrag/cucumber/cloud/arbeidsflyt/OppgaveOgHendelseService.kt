@@ -28,12 +28,12 @@ object OppgaveOgHendelseService {
                     versjon = versjon.toInt()
                 )
             )
-        }
+        } else throw IllegalStateException("Antall treff: ${sokResponse.antallTreffTotalt}, men liste i response er tom!!!")
     }
 
-    fun opprettJournalpostHendelse(hendelse: Hendelse, detaljer: Map<String, String> = emptyMap(), journalpostId: Long) {
+    fun opprettJournalpostHendelse(hendelse: Hendelse, detaljer: Map<String, String> = emptyMap(), journalpostId: String) {
         BidragCucumberSingletons.publiserHendelse(
-            JournalpostHendelse(journalpostId = journalpostId.toString(), detaljer = detaljer, hendelse = hendelse.name)
+            JournalpostHendelse(journalpostId = journalpostId, hendelse = hendelse.name, detaljer = detaljer)
         )
 
         Thread.sleep(500) // for å gi bidrag-arbeidsflyt tid til å behandle hendelse
