@@ -1,10 +1,9 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import io.cucumber.java8.No
-import io.cucumber.java8.PendingException
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
-import no.nav.bidrag.cucumber.hendelse.Hendelse
+import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 
@@ -15,50 +14,49 @@ class ArbeidsflytEgenskaper : No {
         private val LOGGER = LoggerFactory.getLogger(ArbeidsflytEgenskaper::class.java)
     }
 
-    private lateinit var enhetsnummer: String
-    private lateinit var hendelse: Hendelse
-    private lateinit var tema: String
-    private var journalpostId: Long = -1
+    private lateinit var journalpostHendelse: JournalpostHendelse
 
     init {
-        Og("hendelse {string} for journalpostId {long} og tema {string}") { hendelse: String, journalpostId: Long, tema: String ->
-            this.hendelse = Hendelse.valueOf(hendelse)
-            this.journalpostId = journalpostId
-            this.tema = tema
+        Og("en journalpostHendelse med journalpostId {long} og fagområde {string}") { journalpostId: Long, fagomrade: String ->
+            journalpostHendelse = JournalpostHendelse(
+                journalpostId = "$fagomrade-$journalpostId",
+                enhet = "4806",
+                fagomrade = fagomrade
+            )
         }
 
         Og("at det finnes en oppgave under behandling") {
-            OppgaveOgHendelseService.tilbyOppgave(journalpostId = journalpostId, tema = tema, enhetsnummer = enhetsnummer)
+            OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse = journalpostHendelse)
         }
 
-        Når("hendelsen opprettes for endring av fagområde til {string}") { tilFagomrade: String ->
-            OppgaveOgHendelseService.opprettJournalpostHendelse(
-                hendelse = hendelse,
-                detaljer = mapOf("gammeltFagomrade" to tema, "nyttFagomrade" to tilFagomrade, "enhetsnummer" to enhetsnummer),
-                journalpostId = "$tema-$journalpostId"
-            )
+        Og("at det finnes en oppgave under behandling for enhet {string}") { enhetsnummer: String ->
+            journalpostHendelse.enhet = enhetsnummer
+            OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse = journalpostHendelse)
         }
 
-        Gitt("en oppgave for journalpostId {long} under tema {string} som tilhører enhet {string}") { journalpostId: Long, tema: String, enhetsnummer: String ->
-            this.enhetsnummer = enhetsnummer
-            this.journalpostId = journalpostId
-            this.tema = tema
+        Når("hendelsen opprettes med fagområde {string}") { fagomrade: String ->
+            journalpostHendelse.fagomrade = fagomrade
+            OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
+        }
+
+        Gitt("en oppgave for denne hendelsen som tilhører enhet {string}") { enhetsnummer: String ->
+            journalpostHendelse.enhet = enhetsnummer
         }
 
         Gitt("at jeg søker etter oppgaven") {
-            OppgaveOgHendelseService.sokOppgaveForHendelse(journalpostId = journalpostId, tema = tema)
-        }
-
-        Gitt("hendelsen opprettes for overføring til enhet {string}") { tilEnhet: String ->
-            OppgaveOgHendelseService.opprettJournalpostHendelse(
-                hendelse = hendelse,
-                detaljer = mapOf("fagomrade" to tema, "gammeltEnhetsnummer" to enhetsnummer, "nyttEnhetsnummer" to tilEnhet),
-                journalpostId = "$tema-$journalpostId"
+            OppgaveOgHendelseService.sokOppgaveForHendelse(
+                journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
+                tema = journalpostHendelse.fagomrade!!
             )
         }
 
-        Og("jeg søker etter oppgaven") {
-            OppgaveOgHendelseService.sokOppgaveForHendelse(journalpostId = journalpostId, tema = tema)
+        Gitt("hendelsen opprettes med enhet {string}") { enhetsnummer: String ->
+            journalpostHendelse.enhet = enhetsnummer
+            OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
+        }
+
+        Og("jeg søker etter oppgaven på fagområde {string}") { fagomrade: String ->
+            OppgaveOgHendelseService.sokOppgaveForHendelse(journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(), tema = fagomrade)
         }
 
         Så("skal jeg finne oppgaven i søkeresultatet") {
@@ -88,11 +86,14 @@ class ArbeidsflytEgenskaper : No {
         }
 
         Og("at det ikke finnes en åpen oppgave") {
-            OppgaveOgHendelseService.ferdigstillEventuellOppgave(journalpostId = journalpostId, tema = tema)
+            OppgaveOgHendelseService.ferdigstillEventuellOppgave(
+                journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
+                tema = journalpostHendelse.fagomrade!!
+            )
         }
 
         Når("hendelsen opprettes") {
-            OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse = hendelse, journalpostId = "$tema-$journalpostId")
+            OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
         Og("jeg venter i et sekund slik at hendelse blir behandlet") {
@@ -101,7 +102,7 @@ class ArbeidsflytEgenskaper : No {
         }
 
         Og("hendelsen gjelder enhet {string}") { enhetsnummer: String ->
-            this.enhetsnummer = enhetsnummer
+            journalpostHendelse.enhet = enhetsnummer
         }
     }
 }

@@ -45,11 +45,7 @@ internal class HendelseControllerTest {
                 """
                 {
                   "journalpostId":"1001",
-                  "hendelse":"TEST_HENDELSE",
-                  "brukerident":"jumbo",
-                  "detaljer":{
-                    "svada":"lada"
-                  }
+                  "brukerident":"jumbo"
                 }
                 """.trimMargin().trim(), headers
             ),
@@ -58,12 +54,6 @@ internal class HendelseControllerTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(hendelseProducerMock).publish(
-            JournalpostHendelse(
-                journalpostId = "1001",
-                hendelse = "TEST_HENDELSE",
-                detaljer = mapOf("svada" to "lada")
-            )
-        )
+        verify(hendelseProducerMock).publish(JournalpostHendelse(journalpostId = "1001"))
     }
 }

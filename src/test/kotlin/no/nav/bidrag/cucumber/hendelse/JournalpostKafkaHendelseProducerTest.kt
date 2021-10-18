@@ -47,7 +47,7 @@ internal class JournalpostKafkaHendelseProducerTest {
 
     @Test
     fun `skal få timeout når kafka henger ved publisering`() {
-        val journalpostHendelse = JournalpostHendelse(journalpostId = "BID-101", hendelse = "TEST")
+        val journalpostHendelse = JournalpostHendelse(journalpostId = "BID-101")
 
         whenever(objectMapperMock.writeValueAsString(journalpostHendelse)).thenReturn("{}")
         lenient().`when`(kafkaTemplateMock.send(eq("test.topic"), anyString(), anyString())).then { Thread.sleep(5000) }
@@ -66,7 +66,7 @@ internal class JournalpostKafkaHendelseProducerTest {
 
     @Test
     fun `skal ikke få timeout når kafka publiserer hendelse`() {
-        val journalpostHendelse = JournalpostHendelse(journalpostId = "BID-101", hendelse = "TEST")
+        val journalpostHendelse = JournalpostHendelse(journalpostId = "BID-101")
         val start = LocalDateTime.now()
 
         whenever(objectMapperMock.writeValueAsString(journalpostHendelse)).thenReturn("{}")

@@ -5,12 +5,12 @@ import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.RestTjeneste
 import no.nav.bidrag.cucumber.RestTjenesteForApplikasjon
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
-import no.nav.bidrag.cucumber.hendelse.Hendelse
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
+import no.nav.bidrag.cucumber.model.Sporingsdata
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -34,10 +34,9 @@ import org.springframework.web.client.RestTemplate
 internal class OppgaveOgHendelseServiceTest {
 
     private val baseUrl = "https://base"
-    private val hendelse = Hendelse.AVVIK_ENDRE_FAGOMRADE
-    private val journalpostId: Long = 1010101010
-    private val naisApplikasjon: String = "oppgave"
-    private val tema = "BID"
+    private val journalpostHendelse = JournalpostHendelse(
+        journalpostId = "BID-1010101010", fagomrade = "BID"
+    )
 
     @MockBean
     private lateinit var hendelseProducerMock: HendelseProducer
@@ -47,6 +46,7 @@ internal class OppgaveOgHendelseServiceTest {
 
     @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
+        val naisApplikasjon = "oppgave"
         CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon")).initCucumberEnvironment()
 
         val restTjenesteMedBaseUrl = RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, baseUrl)
@@ -58,10 +58,10 @@ internal class OppgaveOgHendelseServiceTest {
     @Test
     fun `skal opprette journalpostHendelse`() {
         CorrelationId.generateTimestamped("junit-test")
-        OppgaveOgHendelseService.opprettJournalpostHendelse(hendelse, mapOf("fagomrade" to "FAR"), "$tema-$journalpostId")
+        OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
 
         verify(hendelseProducerMock).publish(
-            JournalpostHendelse(journalpostId = "$tema-$journalpostId", hendelse = hendelse.name, detaljer = mapOf("fagomrade" to "FAR"))
+            JournalpostHendelse(journalpostId = "BID-${journalpostHendelse.hentJournalpostIdUtenPrefix()}", fagomrade = "BID")
         )
     }
 
@@ -72,7 +72,7 @@ internal class OppgaveOgHendelseServiceTest {
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
 
-        OppgaveOgHendelseService.tilbyOppgave(journalpostId = journalpostId, tema = tema)
+        OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
         verify(restTemplateMock).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -85,7 +85,7 @@ internal class OppgaveOgHendelseServiceTest {
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1","versjon":"1"}]}""")
         )
 
-        OppgaveOgHendelseService.tilbyOppgave(journalpostId, tema)
+        OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
         verify(restTemplateMock, never()).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
     }
@@ -96,7 +96,7 @@ internal class OppgaveOgHendelseServiceTest {
             ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}""")
         )
 
-        OppgaveOgHendelseService.tilbyOppgave(journalpostId, tema)
+        OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
         @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
                 as ArgumentCaptor<HttpEntity<PatchStatusOppgaveRequest>>
@@ -105,7 +105,7 @@ internal class OppgaveOgHendelseServiceTest {
 
         assertThat(httpEntityCaptor.value.body).isEqualTo(
             BidragCucumberSingletons.toJson(
-                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1, tildeltEnhetsnr = "1001")
+                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1, tildeltEnhetsnr = "4806")
             )
         )
     }
