@@ -12,12 +12,12 @@ Egenskap: en journalpost mottaksregistreres
 
   Scenario: Arbeidsflyt skal opprette oppgave med journalpostId ved hendelse
     Når hendelsen opprettes med aktør id '2889800801806' og journalstatus 'M'
-    Og jeg venter i et sekund slik at hendelse blir behandlet
+    Og jeg venter i et og et halvt sekund slik at hendelse blir behandlet
     Og jeg søker etter oppgaver på fagområde 'BID'
     Så skal jeg finne oppgave i søkeresultatet med oppgavetypen 'JFR'
 
   Scenario: Arbeidsflyt skal ikke opprette oppgave med journalpostId ved hendelse
     Når hendelsen opprettes uten aktør id, men med journalstatus 'M'
-    Og jeg venter i et sekund slik at hendelse blir behandlet
+    Og jeg venter i et og et halvt sekund slik at hendelse blir behandlet
     Og jeg søker etter oppgaver på fagområde 'BID'
     Så skal jeg ikke finne oppgave i søkeresultatet

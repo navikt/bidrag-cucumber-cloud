@@ -111,8 +111,8 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
-        Og("jeg venter i et sekund slik at hendelse blir behandlet") {
-            LOGGER.info("Venter i et sekund slik at hendelse blir behandlet")
+        Og("jeg venter i et og et halvt sekund slik at hendelse blir behandlet") {
+            LOGGER.info("Venter i et og et halvt sekund slik at hendelse blir behandlet")
             Thread.sleep(1000)
         }
 
