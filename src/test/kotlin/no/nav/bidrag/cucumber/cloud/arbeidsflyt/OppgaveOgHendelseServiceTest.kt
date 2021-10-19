@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.BidragCucumberCloud
+import no.nav.bidrag.cucumber.FAGOMRADE_BIDRAG
 import no.nav.bidrag.cucumber.RestTjeneste
 import no.nav.bidrag.cucumber.RestTjenesteForApplikasjon
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
@@ -10,7 +11,6 @@ import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
-import no.nav.bidrag.cucumber.model.Sporingsdata
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -35,7 +35,7 @@ internal class OppgaveOgHendelseServiceTest {
 
     private val baseUrl = "https://base"
     private val journalpostHendelse = JournalpostHendelse(
-        journalpostId = "BID-1010101010", fagomrade = "BID"
+        journalpostId = "BID-1010101010", fagomrade = FAGOMRADE_BIDRAG
     )
 
     @MockBean
@@ -105,7 +105,7 @@ internal class OppgaveOgHendelseServiceTest {
 
         assertThat(httpEntityCaptor.value.body).isEqualTo(
             BidragCucumberSingletons.toJson(
-                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = "BID", versjon = 1, tildeltEnhetsnr = "4806")
+                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = FAGOMRADE_BIDRAG, versjon = 1, tildeltEnhetsnr = "4806")
             )
         )
     }

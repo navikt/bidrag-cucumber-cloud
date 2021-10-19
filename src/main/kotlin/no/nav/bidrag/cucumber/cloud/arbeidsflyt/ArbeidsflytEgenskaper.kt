@@ -34,13 +34,13 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse = journalpostHendelse)
         }
 
+        Og("at det finnes en oppgave under behandling med oppgavetype {string}") { oppgavetype: String ->
+            OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse = journalpostHendelse, oppgavetype = oppgavetype)
+        }
+
         Når("hendelsen opprettes med fagområde {string}") { fagomrade: String ->
             journalpostHendelse.fagomrade = fagomrade
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
-        }
-
-        Gitt("en oppgave for denne hendelsen som tilhører enhet {string}") { enhetsnummer: String ->
-            journalpostHendelse.enhet = enhetsnummer
         }
 
         Gitt("at jeg søker etter oppgaven") {
@@ -55,11 +55,11 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
-        Og("jeg søker etter oppgaven på fagområde {string}") { fagomrade: String ->
+        Og("jeg søker etter oppgaver på fagområde {string}") { fagomrade: String ->
             OppgaveOgHendelseService.sokOppgaveForHendelse(journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(), tema = fagomrade)
         }
 
-        Så("skal jeg finne oppgaven i søkeresultatet") {
+        Så("skal jeg finne oppgave i søkeresultatet") {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     message = "Forventet å finne oppgaven",
@@ -70,11 +70,15 @@ class ArbeidsflytEgenskaper : No {
             )
         }
 
-        Så("skal jeg finne oppgaven i søkeresultatet med enhet {string}") { enhetsnummer: String ->
-            OppgaveOgHendelseService.assertThatOppgaveTilhorerEnhet(enhetsnummer)
+        Så("skal jeg finne oppgave i søkeresultatet med enhet {string}") { enhetsnummer: String ->
+            OppgaveOgHendelseService.assertThatOppgaveTilhorer(enhet = enhetsnummer)
         }
 
-        Så("skal jeg ikke finne oppgaven i søkeresultatet") {
+        Så("skal jeg finne oppgave i søkeresultatet med oppgavetypen {string}") { oppgavetype: String ->
+            OppgaveOgHendelseService.assertThatOppgaveTilhorer(oppgavetype = oppgavetype)
+        }
+
+        Så("skal jeg ikke finne oppgave i søkeresultatet") {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
@@ -93,6 +97,17 @@ class ArbeidsflytEgenskaper : No {
         }
 
         Når("hendelsen opprettes") {
+            OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
+        }
+
+        Når("hendelsen opprettes med aktør id {string} og journalstatus {string}") { aktorId: String, journalstatus: String ->
+            journalpostHendelse.aktorId = aktorId
+            journalpostHendelse.journalstatus = journalstatus
+            OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
+        }
+
+        Når("hendelsen opprettes uten aktør id, men med journalstatus {string}") { journalstatus: String ->
+            journalpostHendelse.journalstatus = journalstatus
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 

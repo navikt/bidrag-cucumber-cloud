@@ -12,7 +12,7 @@ data class JournalpostHendelse(
     var enhet: String? = null,
     var journalstatus: String? = null,
 ) {
-    var sporing: Sporingsdata = Sporingsdata()
+    var sporing: Sporingsdata = Sporingsdata(brukerident = "jactor-rises")
 
     constructor(hendelseApi: HendelseApi) : this(
         journalpostId = hendelseApi.journalpostId,

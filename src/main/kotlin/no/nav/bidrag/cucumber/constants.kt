@@ -15,3 +15,5 @@ internal const val PROFILE_LIVE = "LIVE"
 
 internal val ABSOLUTE_CLOUD_PATH = FilePath("cloud-features.path").findFolderPath()
 internal const val CORRELATION_ID = "correlationId"
+
+internal const val FAGOMRADE_BIDRAG = "BID"

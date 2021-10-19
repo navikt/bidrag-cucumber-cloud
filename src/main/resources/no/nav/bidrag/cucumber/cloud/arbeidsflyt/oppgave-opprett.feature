@@ -11,7 +11,13 @@ Egenskap: en journalpost mottaksregistreres
     Og at det ikke finnes en åpen oppgave
 
   Scenario: Arbeidsflyt skal opprette oppgave med journalpostId ved hendelse
-    Når hendelsen opprettes
+    Når hendelsen opprettes med aktør id '123456789' og journalstatus 'M'
     Og jeg venter i et sekund slik at hendelse blir behandlet
-    Og jeg søker etter oppgaven på fagområde 'BID'
-    Så skal jeg finne oppgaven i søkeresultatet
+    Og jeg søker etter oppgaver på fagområde 'BID'
+    Så skal jeg finne oppgave i søkeresultatet med oppgavetypen 'JFR'
+
+  Scenario: Arbeidsflyt skal ikke opprette oppgave med journalpostId ved hendelse
+    Når hendelsen opprettes uten aktør id, men med journalstatus 'M'
+    Og jeg venter i et sekund slik at hendelse blir behandlet
+    Og jeg søker etter oppgaver på fagområde 'BID'
+    Så skal jeg ikke finne oppgave i søkeresultatet

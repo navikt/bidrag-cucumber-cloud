@@ -1,5 +1,6 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
+import no.nav.bidrag.cucumber.FAGOMRADE_BIDRAG
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.assertWhenNotSanityCheck
@@ -15,9 +16,9 @@ import org.assertj.core.api.Assertions.assertThat
 @Suppress("UNCHECKED_CAST")
 object OppgaveOgHendelseService {
 
-    fun tilbyOppgave(journalpostHendelse: JournalpostHendelse) {
+    fun tilbyOppgave(journalpostHendelse: JournalpostHendelse, oppgavetype: String? = null) {
         val sokResponse = OppgaveConsumer.sokOppgave(journalpostHendelse.hentJournalpostIdUtenPrefix(), journalpostHendelse.fagomrade!!)
-        val fagomrade: String = journalpostHendelse.fagomrade!!
+        val fagomrade: String = journalpostHendelse.fagomrade ?: FAGOMRADE_BIDRAG
         val enhetsnummer: String = journalpostHendelse.enhet ?: "4806"
 
         if (sokResponse.antallTreffTotalt == 0) {
@@ -25,7 +26,8 @@ object OppgaveOgHendelseService {
                 PostOppgaveRequest(
                     journalpostId = journalpostHendelse.hentJournalpostIdStrengUtenPrefix(),
                     tema = fagomrade,
-                    tildeltEnhetsnr = enhetsnummer
+                    tildeltEnhetsnr = enhetsnummer,
+                    oppgavetype = oppgavetype ?: "BEH_SAK"
                 )
             )
         } else if (sokResponse.oppgaver.isNotEmpty()) {
@@ -38,7 +40,8 @@ object OppgaveOgHendelseService {
                     status = "UNDER_BEHANDLING",
                     tema = fagomrade,
                     versjon = versjon.toInt(),
-                    tildeltEnhetsnr = enhetsnummer
+                    tildeltEnhetsnr = enhetsnummer,
+                    oppgavetype = oppgavetype
                 )
             )
         } else throw IllegalStateException("Antall treff: ${sokResponse.antallTreffTotalt}, men liste i response er tom!!!")
@@ -70,7 +73,7 @@ object OppgaveOgHendelseService {
         }
     }
 
-    fun assertThatOppgaveTilhorerEnhet(enhetsnummer: String) {
+    fun assertThatOppgaveTilhorer(enhet: String? = null, oppgavetype: String? = null) {
         val responseSomMap = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()
 
         assertWhenNotSanityCheck(
@@ -82,13 +85,36 @@ object OppgaveOgHendelseService {
             ),
         )
 
+        if (enhet != null) {
+            assertTildeltEnhetsnummer(responseSomMap, enhet)
+        }
+
+        if (oppgavetype != null) {
+            assertOppgavetype(responseSomMap, oppgavetype)
+        }
+    }
+
+    private fun assertTildeltEnhetsnummer(responseSomMap: Map<String, Any>, enhet: String) {
         val tildeltEnhetsnr = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("tildeltEnhetsnr")
 
         assertWhenNotSanityCheck(
             Assertion(
                 message = "Oppgaven er tildelt enhet",
                 value = tildeltEnhetsnr,
-                expectation = enhetsnummer,
+                expectation = enhet,
+                verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
+            )
+        )
+    }
+
+    private fun assertOppgavetype(responseSomMap: Map<String, Any>, oppgavetype: String) {
+        val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("oppgavetype")
+
+        assertWhenNotSanityCheck(
+            Assertion(
+                message = "Oppgaven har riktig oppgavetype",
+                value = oppgavetypeFraMap,
+                expectation = oppgavetype,
                 verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
             )
         )

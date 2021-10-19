@@ -14,8 +14,8 @@ object FellesEgenskaperService {
 
     fun assertWhenNotSanityCheck(assertion: Assertion) {
         LOGGER.info(
-            "Assertion, actual: '${assertion.value}' - (class: ${assertion.value?.javaClass}), " +
-                    "wanted: '${assertion.expectation}' (class: ${assertion.expectation?.javaClass}), " +
+            "Assertion, actual: '${assertion.value}' - (${assertion.value?.javaClass}), " +
+                    "wanted: '${assertion.expectation}' (${assertion.expectation?.javaClass}), " +
                     "sanity check: ${Environment.isSanityCheck}"
         )
 
