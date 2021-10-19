@@ -1,29 +1,43 @@
 package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.commons.CorrelationId
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.dto.HendelseApi
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 data class JournalpostHendelse(
-    val journalpostId: String,
-    val hendelse: String,
-    val detaljer: Map<String, String?> = emptyMap()
+    var journalpostId: String = "na",
+    var aktorId: String? = null,
+    var fagomrade: String? = null,
+    var enhet: String? = null,
+    var journalstatus: String? = null,
 ) {
-    @Suppress("unused") // mappes av jackson...
-    val sporing: Sporingsdata = Sporingsdata(correlationId = CorrelationId.fetchCorrelationIdForThread(), brukerident = Environment.testUsername)
+    var sporing: Sporingsdata = Sporingsdata(brukerident = "jactor-rises")
 
     constructor(hendelseApi: HendelseApi) : this(
         journalpostId = hendelseApi.journalpostId,
-        hendelse = hendelseApi.hendelse,
-        detaljer = hendelseApi.detaljer
+        aktorId = hendelseApi.aktorId,
+        fagomrade = hendelseApi.fagomrade,
+        enhet = hendelseApi.enhet,
+        journalstatus = hendelseApi.journalstatus,
     )
+
+    internal fun hentJournalpostIdUtenPrefix() = hentJournalpostIdStrengUtenPrefix().toLong()
+    fun hentJournalpostIdStrengUtenPrefix() = journalpostId.split('-')[1]
 }
 
-data class Sporingsdata(val correlationId: String, val brukerident: String? = null) {
-    @Suppress("unused") // brukes av jackson (and not part of equals/hashcode for data class)
-    val opprettet: LocalDateTime = LocalDateTime.now()
+data class Sporingsdata(
+    var brukerident: String? = null
+) {
+    var correlationId: String = System.currentTimeMillis().toString()
+
+    init {
+        val fromThread = CorrelationId.fetchCorrelationIdForThread()
+
+        if (fromThread != null) {
+            correlationId = fromThread
+        }
+    }
 }
 
 class HendelseTimeoutException(start: LocalDateTime, timeout: LocalDateTime) : RuntimeException(

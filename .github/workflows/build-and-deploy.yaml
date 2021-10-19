@@ -188,6 +188,29 @@ jobs:
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
 
+  run-tests-for-arbeidsflyt-journalforing:
+    runs-on: ubuntu-latest
+    name: "arbeidsflyt-journalforing"
+    needs: deploy
+
+    env:
+      INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
+
+    steps:
+      - name: feature ingresses
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "INGRESS_OPPGAVE=https://oppgave-q1.dev-fss-pub.nais.io" >> $GITHUB_ENV
+          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"tags":["@arbeidsflyt-journalforing"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+                   "${{ env.INGRESS_OPPGAVE }}@no-tag:oppgave"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+
   run-tests-for-arbeidsflyt-opprett-oppgave:
     runs-on: ubuntu-latest
     name: "arbeidsflyt-opprett-oppgave"
@@ -270,6 +293,7 @@ jobs:
     needs:
       - run-tests-for-cucumber-cloud
       - run-tests-for-arbeidsflyt-endre-fagomrade
+      - run-tests-for-arbeidsflyt-journalforing
       - run-tests-for-arbeidsflyt-opprett-oppgave
       - run-tests-for-arbeidsflyt-overfor-enhet
       - run-tests-for-bidrag-beregn

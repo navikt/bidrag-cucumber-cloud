@@ -10,13 +10,14 @@ data class PatchStatusOppgaveRequest(
     var status: String,
     var tema: String,
     var versjon: Int,
-    var tildeltEnhetsnr: String
+    var tildeltEnhetsnr: String,
+    var oppgavetype: String? = null
 ): MedOppgaveId
 
 data class PostOppgaveRequest(
     var journalpostId: String,
     var tema: String,
-    var oppgavetype: String = "JFR",
+    var oppgavetype: String = "BEH_SAK",
     var prioritet: String = "HOY",
     var aktivDato: LocalDate = LocalDate.now().minusDays(1),
     var tildeltEnhetsnr: String = "1001"
