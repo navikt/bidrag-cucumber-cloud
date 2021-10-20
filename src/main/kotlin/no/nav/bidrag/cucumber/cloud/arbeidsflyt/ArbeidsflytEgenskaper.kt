@@ -113,7 +113,7 @@ class ArbeidsflytEgenskaper : No {
 
         Og("jeg venter i et og et halvt sekund slik at hendelse blir behandlet") {
             LOGGER.info("Venter i et og et halvt sekund slik at hendelse blir behandlet")
-            Thread.sleep(1000)
+            Thread.sleep(1500)
         }
 
         Og("hendelsen gjelder enhet {string}") { enhetsnummer: String ->
