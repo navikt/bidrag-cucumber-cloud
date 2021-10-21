@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.commons.CorrelationId
+import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.dto.HendelseApi
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -12,7 +13,8 @@ data class JournalpostHendelse(
     var enhet: String? = null,
     var journalstatus: String? = null,
 ) {
-    var sporing: Sporingsdata = Sporingsdata(brukerident = "jactor-rises")
+    @Suppress("unused") // brukes for sporing av data som publiseres
+    var sporing: Sporingsdata = Sporingsdata(brukerident = Environment.testUsername)
 
     constructor(hendelseApi: HendelseApi) : this(
         journalpostId = hendelseApi.journalpostId,
