@@ -14,7 +14,7 @@ jobs:
 
   run-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-cucumber-cloud"
+    name: "bidrag-cucumber-cloud"
 
     steps:
       - run: |
@@ -34,7 +34,7 @@ jobs:
 
   run-tests-for-bidrag-sak:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-sak"
+    name: "bidrag-sak"
 
     env:
       INGRESS_SAK: https://bidrag-sak.dev-fss-pub.nais.io
@@ -57,7 +57,7 @@ jobs:
 
   run-tests-for-bidrag-stonad:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-stonad"
+    name: "bidrag-stonad"
 
     env:
       INGRESS_STONAD: https://bidrag-stonad.dev.intern.nav.no
@@ -80,7 +80,7 @@ jobs:
 
   run-tests-for-bidrag-vedtak:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-vedtak"
+    name: "bidrag-vedtak"
 
     env:
       INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
@@ -103,7 +103,7 @@ jobs:
 
   run-tests-for-arbeidsflyt-endre-fagomrade:
     runs-on: ubuntu-latest
-    name: "Run tests: arbeidsflyt-endre-fagomrade"
+    name: "arbeidsflyt-endre-fagomrade"
 
     env:
       INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
@@ -149,7 +149,7 @@ jobs:
 
   run-tests-for-arbeidsflyt-opprett-oppgave:
     runs-on: ubuntu-latest
-    name: "Run tests: arbeidsflyt-opprett-oppgave"
+    name: "arbeidsflyt-opprett-oppgave"
 
     env:
       INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
@@ -172,7 +172,7 @@ jobs:
 
   run-tests-for-bidrag-beregn:
     runs-on: ubuntu-latest
-    name: "Run tests: bidrag-beregn-*"
+    name: "bidrag-beregn-*"
 
     env:
       INGRESS_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.adeo.no
