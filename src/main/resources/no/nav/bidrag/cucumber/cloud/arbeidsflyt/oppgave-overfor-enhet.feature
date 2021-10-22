@@ -16,6 +16,6 @@ Egenskap: en journalpost blir overført til en annen enhet
 
   Scenario: Overfør oppgave til annen enhet når hendelse behandles
     Gitt hendelsen opprettes med enhet '4812'
-    Og jeg venter i et og et halvt sekund slik at hendelse blir behandlet
+    Og jeg venter i to sekunder slik at hendelse blir behandlet
     Og jeg søker etter oppgaver på fagområde 'BID'
     Så skal jeg finne oppgave i søkeresultatet med enhet '4812'
