@@ -109,4 +109,18 @@ internal class OppgaveOgHendelseServiceTest {
             )
         )
     }
+
+    @Test
+    fun `skal gjenta rest-kall når det er gitt et maks antall ganger og ikke ønsket resultat fungerer`() {
+        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
+            ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}""")
+        ).thenReturn(
+            ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}""")
+        ).thenReturn(
+            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1","tildeltEnhetsnr":"123"}]}""")
+        )
+
+        OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(123, "BID", antallGjentakelser = 3)
+        OppgaveOgHendelseService.assertThatOppgaveHar("123")
+    }
 }

@@ -12,12 +12,10 @@ Egenskap: en journalpost endrer fagområde
 
   Scenario: Ikke ferdigstill oppgaver når journalpost endres til internt fagområde (BID -> FAR og vice versa)
     Når hendelsen opprettes med fagområde 'FAR'
-    Og jeg venter i to sekunder slik at hendelse blir behandlet
-    Og jeg søker etter oppgaver på fagområde 'BID'
+    Og jeg søker etter opprettet oppgave på fagområde 'BID', maks 3 ganger
     Så skal jeg finne oppgave i søkeresultatet
 
   Scenario: Ferdigstill oppgaver når journalpost endres til eksternt fagområde
     Når hendelsen opprettes med fagområde 'AAREG'
-    Og jeg venter i to sekunder slik at hendelse blir behandlet
-    Og jeg søker etter oppgaver på fagområde 'BID'
+    Og jeg søker etter oppgaver på fagområde 'BID' etter behandling av hendelse
     Så skal jeg ikke finne oppgave i søkeresultatet

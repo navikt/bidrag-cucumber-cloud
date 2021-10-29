@@ -24,7 +24,7 @@ class JournalpostKafkaHendelseProducer(
 
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
-            if (Environment.isNotSanityCheck()) {
+            if (Environment.isNotSanityCheck) {
                 LOGGER.info("Publish $journalpostHendelse til topic $topic")
                 publishWithTimeout(
                     publish = Publish(journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse)),

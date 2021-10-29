@@ -36,7 +36,7 @@ internal object RestTjenesteForApplikasjon {
         val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-        if (Environment.isTestUserPresent()) {
+        if (Environment.isTestUserPresent) {
             val tokenService = BidragCucumberSingletons.hentTokenServiceFraContext()
             httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken(applicationName) }
         } else {

@@ -43,10 +43,11 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
-        Gitt("at jeg søker etter oppgaven") {
-            OppgaveOgHendelseService.sokOppgaveForHendelse(
-                journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
-                tema = journalpostHendelse.fagomrade!!
+        Gitt("at jeg søker etter oppgaven etter behandling av hendelse") {
+            OppgaveOgHendelseService.sokOppgaverEtterBehandlingAvHendelse(
+                hendelse = journalpostHendelse,
+                tema = journalpostHendelse.fagomrade ?: throw IllegalStateException("Cucumber test må sørge for at fagområde er satt!"),
+                sleepInMilliseconds = 1500
             )
         }
 
@@ -55,27 +56,32 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
-        Og("jeg søker etter oppgaver på fagområde {string}") { fagomrade: String ->
-            OppgaveOgHendelseService.sokOppgaveForHendelse(journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(), tema = fagomrade)
-        }
-
-        Så("skal jeg finne oppgave i søkeresultatet") {
-            FellesEgenskaperService.assertWhenNotSanityCheck(
-                Assertion(
-                    message = "Forventet å finne oppgaven",
-                    value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = 1,
-                    verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
-                ),
+        Og("jeg søker etter oppgaver på fagområde {string} etter behandling av hendelse") { fagomrade: String ->
+            OppgaveOgHendelseService.sokOppgaverEtterBehandlingAvHendelse(
+                hendelse = journalpostHendelse,
+                tema = fagomrade,
+                sleepInMilliseconds = 1500
             )
         }
 
+        Og("jeg søker etter opprettet oppgave på fagområde {string}, maks {int} ganger") { fagomrade: String, antallGanger: Int ->
+            OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
+                journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
+                tema = fagomrade,
+                antallGjentakelser = antallGanger
+            )
+        }
+
+        Så("skal jeg finne oppgave i søkeresultatet") {
+            OppgaveOgHendelseService.assertThatOPpgaveFinnes()
+        }
+
         Så("skal jeg finne oppgave i søkeresultatet med enhet {string}") { enhetsnummer: String ->
-            OppgaveOgHendelseService.assertThatOppgaveTilhorer(enhet = enhetsnummer)
+            OppgaveOgHendelseService.assertThatOppgaveHar(enhet = enhetsnummer)
         }
 
         Så("skal jeg finne oppgave i søkeresultatet med oppgavetypen {string}") { oppgavetype: String ->
-            OppgaveOgHendelseService.assertThatOppgaveTilhorer(oppgavetype = oppgavetype)
+            OppgaveOgHendelseService.assertThatOppgaveHar(oppgavetype = oppgavetype)
         }
 
         Så("skal jeg ikke finne oppgave i søkeresultatet") {
@@ -109,11 +115,6 @@ class ArbeidsflytEgenskaper : No {
         Når("hendelsen opprettes uten aktør id, men med journalstatus {string}") { journalstatus: String ->
             journalpostHendelse.journalstatus = journalstatus
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
-        }
-
-        Og("jeg venter i to sekunder slik at hendelse blir behandlet") {
-            LOGGER.info("Venter i to sekunder slik at hendelse blir behandlet")
-            Thread.sleep(2000)
         }
 
         Og("hendelsen gjelder enhet {string}") { enhetsnummer: String ->
