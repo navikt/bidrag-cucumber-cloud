@@ -17,9 +17,10 @@ object OppgaveConsumer {
         hentRestTjeneste().exchangePost("/api/v1/oppgaver", oppgave)
     }
 
-    fun sokOppgave(journalpostId: Long, tema: String): OppgaveSokResponse {
-        hentRestTjeneste()
-            .exchangeGet("/api/v1/oppgaver?journalpostId=$journalpostId&journalpostId=$tema-$journalpostId&statuskategori=AAPEN&tema=$tema")
+    fun sokOppgaver(journalpostId: Long, tema: String): OppgaveSokResponse {
+        hentRestTjeneste().exchangeGet(
+            "/api/v1/oppgaver?journalpostId=$journalpostId&journalpostId=$tema-$journalpostId&statuskategori=AAPEN&tema=$tema"
+        )
 
         try {
             val response = hentRestTjeneste().hentResponse() ?: return OppgaveSokResponse()
@@ -33,7 +34,7 @@ object OppgaveConsumer {
             val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
                 "Har OppgaveSokResponse (${hentRestTjeneste().hentResponse()})"
             } else {
-                "Mangler OppgaveSokResponse ${if (Environment.isSanityCheck) "siden det er kjøring av sanity check" else "og det er ikke sanity check"}!"
+                "Mangler OppgaveSokResponse ${if (Environment.isSanityCheck) "og det er" else "og det er ikke"} sanity check!"
             }
 
             LOGGER.info("$oppgaveSokResponse med http status: ${hentRestTjeneste().hentHttpStatus()}")

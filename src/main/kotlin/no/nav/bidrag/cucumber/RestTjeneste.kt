@@ -112,7 +112,7 @@ open class RestTjeneste(
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e.javaClass.simpleName}: ${e.message}")
             }
 
-            if (Environment.isNotSanityCheck()) {
+            if (Environment.isNotSanityCheck) {
                 throw e
             }
         }

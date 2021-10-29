@@ -19,7 +19,7 @@ object FellesEgenskaperService {
                     "sanity check: ${Environment.isSanityCheck}"
         )
 
-        if (Environment.isNotSanityCheck()) {
+        if (Environment.isNotSanityCheck) {
             assertion.doVerify()
         }
     }

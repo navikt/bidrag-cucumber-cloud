@@ -19,13 +19,13 @@ internal object Environment {
     private val alleIngresserForApper: String
         get() = fetchPropertyOrEnvironment(INGRESSES_FOR_APPS) ?: CUCUMBER_TESTS.get()?.fetchIngressesForAppsAsString() ?: ""
 
+    internal var isLive = true
     val isSanityCheck: Boolean get() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: CUCUMBER_TESTS.get()?.sanityCheck ?: false
     val testUsername: String? get() = fetchPropertyOrEnvironment(TEST_USER) ?: CUCUMBER_TESTS.get()?.testUsername
     val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthForTestUser()) ?: unknownProperty(testAuthForTestUser())
     val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
-
-    fun isNotSanityCheck() = !isSanityCheck
-    fun isTestUserPresent() = testUsername != null
+    val isNotSanityCheck: Boolean get() = !isSanityCheck
+    val isTestUserPresent: Boolean get() = testUsername != null
 
     private fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
     private fun fetchPropertyOrEnvironment(key: String) = fetch(key) ?: System.getenv(key)
@@ -94,6 +94,7 @@ internal object Environment {
     }
 
     fun isNoContextPathForApp(applicationName: String) = fromPropertyOrEnvironment(applicationName) ?: fromCucumberTestsDto(applicationName) ?: false
+    fun sleepInMillisecondsWhenWhenLive(milliseconds: Long) = if (isLive && isNotSanityCheck) Thread.sleep(milliseconds) else Unit
     private fun fromPropertyOrEnvironment(applicationName: String) = fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS)?.contains(applicationName)
     private fun fromCucumberTestsDto(applicationName: String) = CUCUMBER_TESTS.get()?.noContextPathForApps?.contains(applicationName)
 }

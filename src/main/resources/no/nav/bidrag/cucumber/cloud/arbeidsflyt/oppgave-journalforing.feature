@@ -12,6 +12,5 @@ Egenskap: en journalpost og journalføringsoppgave
 
   Scenario: Arbeidsflyt skal ferdigstille oppgave med journalpostId ved hendelse
     Når hendelsen opprettes med aktør id '123456789' og journalstatus 'J'
-    Og jeg venter i to sekunder slik at hendelse blir behandlet
-    Og jeg søker etter oppgaver på fagområde 'BID'
+    Og jeg søker etter oppgaver på fagområde 'BID' etter behandling av hendelse
     Så skal jeg ikke finne oppgave i søkeresultatet
