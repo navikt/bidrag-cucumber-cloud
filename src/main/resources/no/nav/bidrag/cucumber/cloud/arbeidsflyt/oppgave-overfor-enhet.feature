@@ -17,5 +17,6 @@ Egenskap: en journalpost blir overført til en annen enhet
 
   Scenario: Overfør oppgave til annen enhet når hendelse behandles
     Gitt hendelsen opprettes med enhet '4812'
-    Og jeg søker etter opprettet oppgave på fagområde 'BID', maks 3 ganger
+    Og jeg venter to sekunder slik at hendelsen kan bli behandlet
+    Og jeg søker etter opprettet oppgave på fagområde 'BID'
     Så skal jeg finne oppgave i søkeresultatet med enhet '4812'

@@ -64,6 +64,14 @@ class ArbeidsflytEgenskaper : No {
             )
         }
 
+        Og("jeg søker etter opprettet oppgave på fagområde {string}") { fagomrade: String ->
+            OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
+                journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
+                tema = fagomrade,
+                antallGjentakelser = 1
+            )
+        }
+
         Og("jeg søker etter opprettet oppgave på fagområde {string}, maks {int} ganger") { fagomrade: String, antallGanger: Int ->
             OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
                 journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
@@ -123,6 +131,11 @@ class ArbeidsflytEgenskaper : No {
 
         Og("hendelsen gjelder enhet {string}") { enhetsnummer: String ->
             journalpostHendelse.enhet = enhetsnummer
+        }
+
+        Og("jeg venter to sekunder slik at hendelsen kan bli behandlet") {
+            LOGGER.info("Vent i to sekunder slik at hendelsen kan bli behandlet")
+            Thread.sleep(2000)
         }
     }
 }
