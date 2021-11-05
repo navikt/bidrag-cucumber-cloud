@@ -85,14 +85,7 @@ class ArbeidsflytEgenskaper : No {
         }
 
         Så("skal jeg finne totalt {int} oppgaver i søkeresultatet") { antallForventet: Int ->
-            FellesEgenskaperService.assertWhenNotSanityCheck(
-                Assertion(
-                    message = "Forventet å finne oppgaver",
-                    value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = antallForventet,
-                    verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
-                ),
-            )
+            OppgaveOgHendelseService.assertThatDetErTotaltEnOppgaveFraSokeresultat(antallForventet)
         }
 
         Så("skal jeg ikke finne oppgave i søkeresultatet") {
