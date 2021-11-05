@@ -19,4 +19,4 @@ Egenskap: en journalpost mottaksregistreres
     Når hendelsen opprettes med aktør id '2889800801806' og journalstatus 'M'
     Og at det finnes en oppgave under behandling med oppgavetype 'JFR'
     Og jeg søker etter opprettet oppgave på fagområde 'BID', maks 3 ganger
-    Så skal jeg finne totalt 1 oppgave(r) i søkeresultatet
+    Så skal jeg finne totalt 1 oppgaver i søkeresultatet

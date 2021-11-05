@@ -84,7 +84,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.assertThatOppgaveHar(oppgavetype = oppgavetype)
         }
 
-        Så("skal jeg finne totalt {int} oppgave(r) i søkeresultatet") { antallForventet: Int ->
+        Så("skal jeg finne totalt {int} oppgaver i søkeresultatet") { antallForventet: Int ->
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     message = "Forventet å finne oppgaver",
