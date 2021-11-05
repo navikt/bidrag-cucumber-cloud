@@ -27,6 +27,12 @@ class GjentaOppgaveSokRequest(
         }
     }
 
+    fun assertThatDetErAntallForventedeOppgaver(antallForventet: Int) {
+        val responseSomMap = finnOppgaveResponseMedMaksGjentakelser()
+
+        assertThatOppgaveSokHarEtTotaltAntallTreff(responseSomMap, antallForventet)
+    }
+
     private fun finnOppgaveResponseMedMaksGjentakelser(): Map<String, Any> {
         var index = 0
         var responseSomMap: Map<String, Any>
@@ -91,6 +97,19 @@ class GjentaOppgaveSokRequest(
                     Assertions.assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
                 }
             )
+        )
+    }
+
+    private fun assertThatOppgaveSokHarEtTotaltAntallTreff(responseSomMap: Map<String, Any>, antallForventet: Int) {
+        FellesEgenskaperService.assertWhenNotSanityCheck(
+            FellesEgenskaperService.Assertion(
+                message = "Forventet å finne oppgaver",
+                value = responseSomMap["antallTreffTotalt"],
+                expectation = antallForventet,
+                verify = { assertion: FellesEgenskaperService.Assertion ->
+                    Assertions.assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
+                }
+            ),
         )
     }
 }

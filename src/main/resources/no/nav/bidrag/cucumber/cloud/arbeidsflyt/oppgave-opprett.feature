@@ -16,6 +16,7 @@ Egenskap: en journalpost mottaksregistreres
     Så skal jeg finne oppgave i søkeresultatet med oppgavetypen 'JFR'
 
   Scenario: Arbeidsflyt skal ikke opprette oppgave med journalpostId ved hendelse
-    Når hendelsen opprettes uten aktør id, men med journalstatus 'M'
-    Og jeg søker etter oppgaver på fagområde 'BID' etter behandling av hendelse
-    Så skal jeg ikke finne oppgave i søkeresultatet
+    Når hendelsen opprettes med aktør id '2889800801806' og journalstatus 'M'
+    Og at det finnes en oppgave under behandling med oppgavetype 'JFR'
+    Og jeg søker etter opprettet oppgave på fagområde 'BID', maks 3 ganger
+    Så skal jeg finne totalt 1 oppgaver i søkeresultatet

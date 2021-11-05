@@ -64,6 +64,14 @@ class ArbeidsflytEgenskaper : No {
             )
         }
 
+        Og("jeg søker etter opprettet oppgave på fagområde {string}") { fagomrade: String ->
+            OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
+                journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
+                tema = fagomrade,
+                antallGjentakelser = 1
+            )
+        }
+
         Og("jeg søker etter opprettet oppgave på fagområde {string}, maks {int} ganger") { fagomrade: String, antallGanger: Int ->
             OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
                 journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
@@ -82,6 +90,10 @@ class ArbeidsflytEgenskaper : No {
 
         Så("skal jeg finne oppgave i søkeresultatet med oppgavetypen {string}") { oppgavetype: String ->
             OppgaveOgHendelseService.assertThatOppgaveHar(oppgavetype = oppgavetype)
+        }
+
+        Så("skal jeg finne totalt {int} oppgaver i søkeresultatet") { antallForventet: Int ->
+            OppgaveOgHendelseService.assertThatDetErTotaltEnOppgaveFraSokeresultat(antallForventet)
         }
 
         Så("skal jeg ikke finne oppgave i søkeresultatet") {
@@ -119,6 +131,11 @@ class ArbeidsflytEgenskaper : No {
 
         Og("hendelsen gjelder enhet {string}") { enhetsnummer: String ->
             journalpostHendelse.enhet = enhetsnummer
+        }
+
+        Og("jeg venter to sekunder slik at hendelsen kan bli behandlet") {
+            LOGGER.info("Vent i to sekunder slik at hendelsen kan bli behandlet")
+            Thread.sleep(2000)
         }
     }
 }

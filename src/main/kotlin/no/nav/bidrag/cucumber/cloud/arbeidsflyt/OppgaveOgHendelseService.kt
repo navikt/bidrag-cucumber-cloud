@@ -93,4 +93,8 @@ object OppgaveOgHendelseService {
     fun assertThatOPpgaveFinnes() {
         GJENTA_OPPGAVE_SOK_REQUEST.get().assertThatOppgaveFinnes()
     }
+
+    fun assertThatDetErTotaltEnOppgaveFraSokeresultat(antallForventet: Int) {
+        GJENTA_OPPGAVE_SOK_REQUEST.get().assertThatDetErAntallForventedeOppgaver(antallForventet)
+    }
 }
