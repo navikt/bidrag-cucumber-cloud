@@ -57,7 +57,7 @@ object OppgaveOgHendelseService {
         OppgaveConsumer.sokOppgaver(journalpostId = hendelse.hentJournalpostIdUtenPrefix(), tema = tema)
     }
 
-    fun sokOpprettetOppgaveForHendelse(journalpostId: Long, tema: String, antallGjentakelser: Int, sleepInMilleseconds: Long = 750) {
+    fun sokOpprettetOppgaveForHendelse(journalpostId: Long, tema: String, antallGjentakelser: Int, sleepInMilleseconds: Long = 1500) {
         GJENTA_OPPGAVE_SOK_REQUEST.set(
             GjentaOppgaveSokRequest(
                 antallGjentakelser = antallGjentakelser,
