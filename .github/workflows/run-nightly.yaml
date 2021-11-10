@@ -169,37 +169,3 @@ jobs:
         env:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @arbeidsflyt-opprett-oppgave feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-
-  run-tests-for-bidrag-beregn:
-    runs-on: ubuntu-latest
-    name: "bidrag-beregn-*"
-
-    env:
-      INGRESS_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.adeo.no
-      INGRESS_FORSKUDD: https://bidrag-beregn-forskudd-rest.dev.adeo.no
-      INGRESS_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.dev.adeo.no
-
-    steps:
-      - name: feature ingresses
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "INGRESS_BARNEBIDRAG=https://bidrag-beregn-barnebidrag-rest-feature.dev.adeo.no" >> $GITHUB_ENV
-          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
-          echo "INGRESS_FORSKUDD=https://bidrag-beregn-forskudd-rest-feature.dev.adeo.no" >> $GITHUB_ENV
-          echo "INGRESS_SAERTILSKUDD=https://bidrag-beregn-saertilskudd-rest-feature.dev.adeo.no" >> $GITHUB_ENV
-      - run: |
-          curl -H "Content-Type: application/json" -i \
-               --request POST \
-               --data '{"ingressesForApps":[
-                   "${{ env.INGRESS_BARNEBIDRAG }}@bidrag-beregn-barnebidrag-rest",
-                   "${{ env.INGRESS_FORSKUDD }}@bidrag-beregn-forskudd-rest",
-                   "${{ env.INGRESS_SAERTILSKUDD }}@bidrag-beregn-saertilskudd-rest"
-                 ]}' \
-               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
-          # cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
-      - run: |
-          curl -X POST --data-urlencode "payload={\"channel\": \"#team-bidrag-dev\", \"username\": \"webhookbot\", \"text\": \"$MELDING\", \"icon_emoji\": \":boom:\"}" $WEBHOOK_URL
-        if: ${{ failure() }}
-        env:
-          MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tags @bidrag-beregn-* feilet"
-          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
