@@ -20,7 +20,7 @@
   <properties>
     <!-- dependency management -->
     <apache-httpcomponenents.version>4.5.13</apache-httpcomponenents.version>
-    <bidrag-commons.version>0.5.16</bidrag-commons.version>
+    <bidrag-commons.version>0.5.17.1</bidrag-commons.version>
     <cucumber.version>7.0.0</cucumber.version>
     <json-path.version>2.6.0</json-path.version>
     <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
