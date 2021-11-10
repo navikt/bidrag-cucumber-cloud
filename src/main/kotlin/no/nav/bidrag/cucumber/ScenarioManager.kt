@@ -30,6 +30,10 @@ object ScenarioManager {
         MDC.clear()
     }
 
+    fun log(message: String) {
+        scenario?.log(message)
+    }
+
     private fun createCorrelationId() {
         correlationIdForScenario = createCorrelationIdValue()
 
