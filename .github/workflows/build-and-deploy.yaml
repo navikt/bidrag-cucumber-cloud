@@ -113,7 +113,7 @@ jobs:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"testUsername":"z992903","ingressesForApps":[
+               --data '{"testUsername":"z991656","ingressesForApps":[
                    "${{ env.INGRESS_SAK }}@bidrag-sak"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result

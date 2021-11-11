@@ -17,6 +17,7 @@ spec:
           - host: {{ access.outbound.bidrag-sak }}
   envFrom:
     - secret: test-auth-z992903
+    - secret: test-auth-z991656
   image: {{ image }}
   kafka:
     pool: nav-dev
