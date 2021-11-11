@@ -4,6 +4,7 @@ import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -33,6 +34,7 @@ class CucumberControllerRestTemplateMockBeanTest {
     private lateinit var httpHeaderRestTemplateMock: HttpHeaderRestTemplate
 
     @Test
+    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal lage endpoint url mot bidrag-sak`() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -64,6 +66,7 @@ class CucumberControllerRestTemplateMockBeanTest {
     }
 
     @Test
+    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal trekke ut logginnslag til egen bønne som brukes i http resultat`() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
