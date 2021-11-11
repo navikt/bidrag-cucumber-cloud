@@ -5,6 +5,7 @@ import no.nav.bidrag.cucumber.TestUtil.assumeThatActuatorHealthIsRunning
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.SoftAssertions
 import org.junit.AssumptionViolatedException
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -42,6 +43,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal feile ved testing av applikasjon med azure ad`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
 
@@ -61,6 +63,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal ikke feile ved testing av applikasjon med azure ad når det er snakk om en sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
 
@@ -105,6 +108,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal ikke feile når det er sanity check selv om det sendes med brukernavn til en testbruker`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-sak.dev.intern.nav.no", "bidrag-sak")
 
@@ -125,6 +129,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal logge eventuelle exception når det feiler under testing`() {
         val testResponse = testRestTemplate.postForEntity(
             "/run",
