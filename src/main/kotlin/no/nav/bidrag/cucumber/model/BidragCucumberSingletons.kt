@@ -7,9 +7,9 @@ import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
-import no.nav.bidrag.cucumber.sikkerhet.SecurityTokenService
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
+import kotlin.reflect.KClass
 
 /**
  * Singletons som er gyldige i en cucumber-kjøring og som er felles for ALLE egenskaper definert i feature-filer
@@ -28,7 +28,7 @@ internal object BidragCucumberSingletons {
     private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
-    fun hentTokenServiceFraContext() = applicationContext?.getBean(SecurityTokenService::class.java)
+    fun hentFraContext(kClass: KClass<*>) = applicationContext?.getBean(kClass.java)
 
     private fun doManualInit(): HttpHeaderRestTemplate {
         val httpComponentsClientHttpRequestFactory = SpringConfig().httpComponentsClientHttpRequestFactorySomIgnorererHttps()

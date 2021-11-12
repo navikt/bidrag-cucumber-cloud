@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.web.util.UriTemplateHandler
@@ -37,14 +38,16 @@ internal object RestTjenesteForApplikasjon {
         httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
         if (Environment.isTestUserPresent) {
-            val tokenService = BidragCucumberSingletons.hentTokenServiceFraContext()
-            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService?.generateBearerToken(applicationName) }
+            val tokenService = BidragCucumberSingletons.hentFraContext(AzureTokenService::class) as AzureTokenService? ?: throw notNullTokenService()
+            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService.generateBearerToken(applicationName) }
         } else {
             LOGGER.info("No user to provide security for when accessing $applicationName")
         }
 
         return RestTjeneste.ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
     }
+
+    private fun notNullTokenService() = IllegalStateException("No token service in spring context")
 
     fun removeAll() {
         REST_TJENESTE_FOR_APPLIKASJON.removeAll()
