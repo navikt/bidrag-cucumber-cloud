@@ -22,14 +22,13 @@ internal object Environment {
     internal var isLive = true
     val isSanityCheck: Boolean get() = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean() ?: CUCUMBER_TESTS.get()?.sanityCheck ?: false
     val testUsername: String? get() = fetchPropertyOrEnvironment(TEST_USER) ?: CUCUMBER_TESTS.get()?.testUsername
-    val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthForTestUser()) ?: unknownProperty(testAuthForTestUser())
+    val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthPropName()) ?: unknownProperty(testAuthPropName())
     val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
     val isNotSanityCheck: Boolean get() = !isSanityCheck
     val isTestUserPresent: Boolean get() = testUsername != null
 
-    private fun fetch(propertyKey: String): String? = System.getProperty(propertyKey)
-    private fun fetchPropertyOrEnvironment(key: String) = fetch(key) ?: System.getenv(key)
-    private fun testAuthForTestUser() = TEST_AUTH + '_' + testUsernameUppercase()
+    private fun fetchPropertyOrEnvironment(key: String) = System.getProperty(key) ?: System.getenv(key)
+    private fun testAuthPropName() = TEST_AUTH + '_' + testUsernameUppercase()
     private fun testUsernameUppercase() = testUsername?.uppercase()
     private fun unknownProperty(property: String): String = throw IllegalStateException("Ingen $property å finne!")
 
