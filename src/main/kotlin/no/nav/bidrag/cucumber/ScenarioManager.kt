@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber
 import io.cucumber.java8.Scenario
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import java.time.LocalDate
@@ -57,6 +58,6 @@ object ScenarioManager {
     fun getCorrelationIdForScenario() = correlationIdForScenario ?: createCorrelationIdValue("unknown")
     fun errorLog(message: String, e: Exception) {
         LOGGER.error("$message - ${e.javaClass.simpleName}")
-        BidragCucumberSingletons.holdExceptionForTest(e)
+        CucumberTestRun.holdExceptionForTest(e)
     }
 }

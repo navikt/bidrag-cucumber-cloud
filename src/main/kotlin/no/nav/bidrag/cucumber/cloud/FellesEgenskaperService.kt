@@ -2,7 +2,7 @@ package no.nav.bidrag.cucumber.cloud
 
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.RestTjeneste
-import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import org.slf4j.LoggerFactory
 
 object FellesEgenskaperService {
@@ -37,7 +37,7 @@ object FellesEgenskaperService {
             try {
                 verify(this)
             } catch (throwable: Throwable) {
-                BidragCucumberSingletons.holdExceptionForTest(throwable)
+                CucumberTestRun.holdExceptionForTest(throwable)
                 throw throwable
             }
         }

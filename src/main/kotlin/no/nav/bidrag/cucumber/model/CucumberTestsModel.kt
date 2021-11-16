@@ -57,16 +57,6 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
 
     fun getSanityCheck() = sanityCheck?.toString() ?: "false"
 
-    fun fetchIngressesForAppsAsString(): String {
-        val string = ingressesForApps.joinToString(separator = ",")
-
-        if (string.isBlank()) {
-            throw IllegalStateException("ingen ingress(er) for nais-app(s)")
-        }
-
-        return string
-    }
-
     fun fetchTags(): String {
         val collectTags = ingressesForApps
             .filterNot { it.contains("@no-tag:") }
@@ -89,6 +79,18 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
         LOGGER.info("Using tags - '$tagsAsStringWithNotIgnored' - from $logValues")
 
         return tagsAsStringWithNotIgnored
+    }
+
+    fun fetchIngress(applicationName: String): String {
+        LOGGER.info("Finding ingress for '$applicationName' in $ingressesForApps")
+
+        return ingressesForApps.map {
+            it.replace("@no-tag:", "@")
+        }.filter {
+            it.substring(it.indexOf('@') + 1) == applicationName
+        }.map {
+            it.split("@")[0]
+        }.first()
     }
 
     private fun transformAssertedTagsToString(tags: List<String>): String {

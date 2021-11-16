@@ -43,8 +43,4 @@ class RunStats {
     }
 
     private fun indentLines(message: String) = message.replace("\n", "\n  ")
-
-    override fun toString(): String {
-        return get()
-    }
 }

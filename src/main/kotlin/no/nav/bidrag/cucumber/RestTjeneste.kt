@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter.X_ENHET_HEADER
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -39,7 +40,7 @@ open class RestTjeneste(
     private fun mapResponseBody(body: String): Map<String, Any> = try {
         ObjectMapper().readValue(body, Map::class.java) as Map<String, Any>
     } catch (e: Exception) {
-        BidragCucumberSingletons.holdExceptionForTest(e)
+        CucumberTestRun.holdExceptionForTest(e)
         throw e
     }
 

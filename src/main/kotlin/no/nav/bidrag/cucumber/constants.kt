@@ -6,6 +6,7 @@ import no.nav.bidrag.cucumber.model.FilePath
 internal const val INGRESSES_FOR_APPS = "INGRESSES_FOR_APPS"
 internal const val NO_CONTEXT_PATH_FOR_APPS = "NO_CONTEXT_PATH_FOR_APPS"
 internal const val SECURITY_TOKEN = "SECURITY_TOKEN"
+internal const val TAGS = "TAGS"
 internal const val TEST_AUTH = "TEST_AUTH"
 internal const val TEST_USER = "TEST_USER"
 internal const val SANITY_CHECK = "SANITY_CHECK"

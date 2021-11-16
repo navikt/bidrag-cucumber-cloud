@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber.controller
 
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.TestFailedException
 import no.nav.bidrag.cucumber.service.CucumberService
@@ -9,6 +10,7 @@ import org.assertj.core.api.Assertions.fail
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +34,6 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
     private lateinit var cucumberServiceMock: CucumberService
 
     @Test
-    @Suppress("NonAsciiCharacters")
     fun `skal ha endpoint som kjører cucumber-tester`() {
         val responseEntity = testRestTemplate.postForEntity("/run", HttpEntity("{}"), Void::class.java)
 
@@ -58,7 +59,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(cucumberServiceMock).run(CucumberTestsModel(listOf("ingress@tag")))
+        verify(cucumberServiceMock).run(CucumberTestRun(CucumberTestsModel(ingressesForApps = listOf("ingress@tag"))))
     }
 
     @Test
@@ -80,7 +81,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(cucumberServiceMock).run(CucumberTestsModel(sanityCheck = true))
+        verify(cucumberServiceMock).run(CucumberTestRun(CucumberTestsModel(sanityCheck = true)))
     }
 
     @Test
@@ -102,7 +103,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
-        verify(cucumberServiceMock).run(CucumberTestsModel(securityToken = "xyz..."))
+        verify(cucumberServiceMock).run(CucumberTestRun(CucumberTestsModel(securityToken = "xyz...")))
     }
 
     @Test
@@ -110,7 +111,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        whenever(cucumberServiceMock.run(CucumberTestsModel())).thenThrow(TestFailedException("not ok", "test failed"))
+        whenever(cucumberServiceMock.run(any())).thenThrow(TestFailedException("not ok", "test failed"))
 
         val testResponse = testRestTemplate.postForEntity(
             "/run", HttpEntity("{}", headers), Void::class.java
@@ -130,7 +131,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        whenever(cucumberServiceMock.run(CucumberTestsModel())).thenThrow(IllegalStateException("something fishy happened"))
+        whenever(cucumberServiceMock.run(any())).thenThrow(IllegalStateException("something fishy happened"))
 
         val testResponse = testRestTemplate.postForEntity(
             "/run", HttpEntity("{}", headers), Void::class.java
@@ -168,8 +169,10 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
             { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
             {
                 verify(cucumberServiceMock).run(
-                    CucumberTestsModel(
-                        sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
+                    CucumberTestRun(
+                        CucumberTestsModel(
+                            sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
+                        )
                     )
                 )
             }
@@ -197,8 +200,10 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
             { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
             {
                 verify(cucumberServiceMock).run(
-                    CucumberTestsModel(
-                        ingressesForApps = listOf("https://some-ingress@some-app"), tags = listOf("@some-tag")
+                    CucumberTestRun(
+                        CucumberTestsModel(
+                            ingressesForApps = listOf("https://some-ingress@some-app"), tags = listOf("@some-tag")
+                        )
                     )
                 )
             }

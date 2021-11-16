@@ -16,16 +16,12 @@ import kotlin.reflect.KClass
  */
 internal object BidragCucumberSingletons {
     @JvmStatic
-    private val RUN_STATS = ThreadLocal<RunStats>()
-
-    @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(BidragCucumberSingletons::class.java)
 
     private var applicationContext: ApplicationContext? = null
     private var exceptionLogger: ExceptionLogger? = null
     private var hendelseProducer: HendelseProducer? = null
     private var objectMapper: ObjectMapper? = null
-    private var testMessagesHolder: TestMessagesHolder? = null
 
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
     fun hentFraContext(kClass: KClass<*>) = applicationContext?.getBean(kClass.java)
@@ -35,42 +31,11 @@ internal object BidragCucumberSingletons {
         return HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
     }
 
-    fun holdTestMessage(testMessage: String) {
-        testMessagesHolder?.hold(testMessage)
-    }
-
-    fun addRunStats(scenario: Scenario) = fetchRunStats()
-        .add(scenario)
+    fun addRunStats(scenario: Scenario) = CucumberTestRun.addToRunStats(scenario)
 
     fun scenarioMessage(scenario: Scenario): String {
         val haveScenario = scenario.name != null && scenario.name.isNotBlank()
         return if (haveScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
-    }
-
-    fun fetchTestMessagesWithRunStats() = fetchTestMessages() + "\n\n" + fetchRunStats()
-
-    private fun fetchTestMessages() = testMessagesHolder?.fetchTestMessages() ?: "ingen loggmeldinger er produsert!"
-
-    private fun fetchRunStats(): RunStats {
-        var runStats = RUN_STATS.get()
-
-        if (runStats == null) {
-            runStats = RunStats()
-            RUN_STATS.set(runStats)
-        }
-
-        return runStats
-    }
-
-    fun removeRunStats() {
-        RUN_STATS.remove()
-    }
-
-    fun holdExceptionForTest(throwable: Throwable) {
-        val assertionMessage = "${throwable.javaClass.simpleName}: ${throwable.message}"
-
-        testMessagesHolder?.hold(assertionMessage)
-        fetchRunStats().addExceptionLogging(listOf(assertionMessage))
     }
 
     fun publiserHendelse(journalpostHendelse: JournalpostHendelse) {
@@ -99,9 +64,5 @@ internal object BidragCucumberSingletons {
 
     fun setObjectMapper(objectMapper: ObjectMapper) {
         BidragCucumberSingletons.objectMapper = objectMapper
-    }
-
-    fun setTestMessagesHolder(testMessagesHolder: TestMessagesHolder) {
-        BidragCucumberSingletons.testMessagesHolder = testMessagesHolder
     }
 }

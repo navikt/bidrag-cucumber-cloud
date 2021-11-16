@@ -64,9 +64,6 @@ class SpringConfig {
 
         return requestFactory
     }
-
-    @Bean
-    fun testMessagesHolder() = TestMessagesHolder()
 }
 
 @Configuration
