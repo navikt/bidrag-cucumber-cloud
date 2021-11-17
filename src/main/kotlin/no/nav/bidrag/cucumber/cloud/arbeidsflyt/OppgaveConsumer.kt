@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestRun
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjeneste
 import no.nav.bidrag.cucumber.model.MedOppgaveId
 import no.nav.bidrag.cucumber.model.OppgaveSokResponse
 import org.slf4j.LoggerFactory

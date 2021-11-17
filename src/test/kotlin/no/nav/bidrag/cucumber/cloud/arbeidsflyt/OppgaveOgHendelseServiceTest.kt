@@ -4,7 +4,6 @@ import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.FAGOMRADE_BIDRAG
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestRun
@@ -47,7 +46,7 @@ internal class OppgaveOgHendelseServiceTest {
     fun konfigurerNaisApplikasjonForOppgave() {
         val naisApplikasjon = "oppgave"
         CucumberTestRun(CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon"))).initEnvironment()
-        FellesEgenskaperService.settOppNaisApp(naisApplikasjon)
+        CucumberTestRun.settOppNaisApp(naisApplikasjon)
     }
 
     @Test

@@ -36,6 +36,7 @@ internal class RestTjenesteForApplikasjon {
     }
 
     private val resttjenesteForNavn: MutableMap<String, ResttjenesteMedBaseUrl> = HashMap()
+    private val sisteResttjenester: MutableList<RestTjeneste> = ArrayList()
 
     fun hentEllerKonfigurer(applicationName: String, konfigurer: () -> ResttjenesteMedBaseUrl): ResttjenesteMedBaseUrl {
         return resttjenesteForNavn.computeIfAbsent(applicationName) { konfigurer() }
@@ -58,6 +59,13 @@ internal class RestTjenesteForApplikasjon {
     }
 
     private fun notNullTokenService() = IllegalStateException("No token service in spring context")
+
+    fun settOppNaisApp(naisApplikasjon: String) {
+        LOGGER.info("Setter opp $naisApplikasjon")
+        sisteResttjenester.add(RestTjeneste(naisApplikasjon))
+    }
+
+    fun hentSisteResttjeneste() = sisteResttjenester.last()
 }
 
 internal class BaseUrlTemplateHandler(private val baseUrl: String) : UriTemplateHandler {

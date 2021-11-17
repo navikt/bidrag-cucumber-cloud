@@ -1,8 +1,9 @@
 package no.nav.bidrag.cucumber.cloud.sak
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjeneste
 
+@Suppress("unused") // brukes av cucumber
 class SakEgenskaper : No {
 
     private lateinit var saksnummer: String

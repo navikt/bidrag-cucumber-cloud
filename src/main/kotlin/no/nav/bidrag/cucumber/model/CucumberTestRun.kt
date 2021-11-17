@@ -47,7 +47,6 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
         return cucumberTestsModel.hashCode()
     }
 
-
     companion object {
         @JvmStatic
         private val CUCUMBER_TEST_RUN = ThreadLocal<CucumberTestRun>()
@@ -83,9 +82,11 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
         fun fetchIngress(applicationName: String) = thisRun().cucumberTestsModel.fetchIngress(applicationName)
         fun fetchTestMessagesWithRunStats() = thisRun().testMessagesHolder.fetchTestMessages() + "\n\n" + thisRun().runStats.get()
         fun hentEllerKonfigurerResttjeneste(applicationName: String) = thisRun().hentEllerKonfigurerResttjenesteMedBaseUrl(applicationName)
+        fun hentRestTjeneste() = thisRun().resttjenesteForApplikasjon.hentSisteResttjeneste()
         fun hold(logMessages: List<String>) = thisRun().testMessagesHolder.hold(logMessages)
         fun holdTestMessage(message: String) = thisRun().testMessagesHolder.hold(message)
         fun isNoContextPathForApp(applicationName: String) = thisRun().cucumberTestsModel.noContextPathForApps.contains(applicationName)
+        fun settOppNaisApp(naisApplikasjon: String) = thisRun().resttjenesteForApplikasjon.settOppNaisApp(naisApplikasjon)
         fun sleepWhenNotSanityCheck(milliseconds: Long) = if (isNotSanityCheck) Thread.sleep(milliseconds) else Unit
 
         fun holdExceptionForTest(throwable: Throwable) {

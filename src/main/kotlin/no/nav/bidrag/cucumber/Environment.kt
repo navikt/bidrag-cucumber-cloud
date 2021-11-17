@@ -33,7 +33,6 @@ internal object Environment {
         System.clearProperty(TAGS)
         System.clearProperty(TEST_USER)
         CucumberTestRun.endRun()
-        FellesEgenskaperService.fjernResttjenester()
     }
 
     fun fetchPropertyOrEnvironment(key: String): String? = System.getProperty(key) ?: System.getenv(key)
