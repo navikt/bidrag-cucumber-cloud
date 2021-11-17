@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
@@ -100,7 +101,7 @@ class ArbeidsflytEgenskaper : No {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
-                    value = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
+                    value = CucumberTestRun.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
                     expectation = 0,
                     verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
                 ),
@@ -135,7 +136,7 @@ class ArbeidsflytEgenskaper : No {
 
         Og("jeg venter to sekunder slik at hendelsen kan bli behandlet") {
             LOGGER.info("Vent i to sekunder slik at hendelsen kan bli behandlet")
-            Thread.sleep(2000)
+            if (CucumberTestRun.isNotSanityCheck) Thread.sleep(2000)
         }
     }
 }

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
-import no.nav.bidrag.cucumber.model.CucumberTestsModel
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.service.CucumberService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -32,6 +32,7 @@ class CucumberController(private val cucumberService: CucumberService) {
     )
     fun run(@RequestBody cucumberTestsApi: CucumberTestsApi): ResponseEntity<String> {
         LOGGER.info("Running cucumber tests with $cucumberTestsApi!")
-        return ResponseEntity(cucumberService.run(CucumberTestsModel(cucumberTestsApi)), HttpStatus.OK)
+        val cucumberTestRun = CucumberTestRun(cucumberTestsApi).initEnvironment()
+        return ResponseEntity(cucumberService.run(cucumberTestRun), HttpStatus.OK)
     }
 }

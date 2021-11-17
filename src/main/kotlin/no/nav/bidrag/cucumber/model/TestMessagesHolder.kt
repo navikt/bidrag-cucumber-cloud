@@ -1,33 +1,9 @@
 package no.nav.bidrag.cucumber.model
 
-class TestMessagesHolder {
-    companion object {
-        @JvmStatic
-        private val TEST_MESSAGES_FOR_THREAD = ThreadLocal<MutableList<String>?>()
+internal class TestMessagesHolder {
+    private val testMessages: MutableList<String> = ArrayList()
 
-        fun fjernTestMessages() {
-            TEST_MESSAGES_FOR_THREAD.remove()
-        }
-    }
-
-    fun fetchTestMessages(): String {
-        val joinToString = hentMeldinger().joinToString(separator = "\n")
-        TEST_MESSAGES_FOR_THREAD.remove()
-
-        return joinToString
-    }
-
-    internal fun hold(testMessage: String) {
-        hentMeldinger().add(testMessage)
-    }
-
-    private fun hentMeldinger(): MutableList<String> {
-        if (TEST_MESSAGES_FOR_THREAD.get() == null) {
-            TEST_MESSAGES_FOR_THREAD.set(ArrayList())
-        }
-
-        return TEST_MESSAGES_FOR_THREAD.get()!!
-    }
-
+    fun fetchTestMessages() = testMessages.joinToString(separator = "\n")
+    fun hold(testMessage: String) = testMessages.add(testMessage)
     fun hold(messages: List<String>) = messages.forEach { hold(it) }
 }

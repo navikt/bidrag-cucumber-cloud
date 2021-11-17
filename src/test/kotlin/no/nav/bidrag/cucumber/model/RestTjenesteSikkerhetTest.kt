@@ -1,14 +1,12 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
+import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
+import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
-import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
-import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean

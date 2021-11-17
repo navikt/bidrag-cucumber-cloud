@@ -1,6 +1,7 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
-import no.nav.bidrag.cucumber.model.CucumberTestsModel
+import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
+import no.nav.bidrag.cucumber.Environment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,24 +11,26 @@ import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 
+@SpringBootTest(classes = [BidragCucumberCloudLocal::class])
 internal class RestTjenesteTest {
 
     @BeforeEach
-    fun `reset Cucumber environment and add test user`() {
+    fun `reset Cucumber environment`() {
         Environment.resetCucumberEnvironment()
-        CucumberTestsModel(testUsername = "James Bond").initCucumberEnvironment()
     }
 
     @Test
     fun `gitt INGRESSES_FOR_APPS med verdi for applikasjon, skal RestTjeneste konfigureres med denne verdien`() {
         val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.com/@nais-app", "https://somewhere.else.com@annen-nais-app")
+            ingressesForApps = listOf("https://somewhere.com/@nais-app", "https://somewhere.else.com@annen-nais-app"),
+            testUsername = "James Bond"
         )
 
         cucumberTestsModel.initCucumberEnvironment()
@@ -44,7 +47,8 @@ internal class RestTjenesteTest {
     @Test
     fun `gitt INGRESSES_FOR_APPS med verdi for applikasjon (konfigurert som er en tag), skal RestTjeneste konfigureres med tag-navnet`() {
         val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.com/@nais-tag", "https://somewhere.else.com@annen-nais-tag")
+            ingressesForApps = listOf("https://somewhere.com/@nais-tag", "https://somewhere.else.com@annen-nais-tag"),
+            testUsername = "James Bond"
         )
 
         cucumberTestsModel.initCucumberEnvironment()
@@ -61,7 +65,7 @@ internal class RestTjenesteTest {
     @Test
     fun `skal hente full url uten advarsel`() {
         val restTemplateMock = mock(RestTemplate::class.java)
-        val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
+        val restTjeneste = RestTjeneste(ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
 
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().build())
@@ -76,7 +80,7 @@ internal class RestTjenesteTest {
     @Test
     fun `skal ha WARNING fra HttpHeaders når rest tjeneste sender med dette som header`() {
         val restTemplateMock = mock(RestTemplate::class.java)
-        val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
+        val restTjeneste = RestTjeneste(ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
         val headers = HttpHeaders(LinkedMultiValueMap(mapOf(HttpHeaders.WARNING to listOf("the truth will emerge!"))))
 
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))

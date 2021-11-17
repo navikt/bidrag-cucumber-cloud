@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber.model
 
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.OppgaveConsumer
 import org.assertj.core.api.Assertions
@@ -38,15 +37,15 @@ class GjentaOppgaveSokRequest(
         var responseSomMap: Map<String, Any>
 
         do {
-            Environment.sleepInMillisecondsWhenWhenLive(sleepInMilleseconds)
+            CucumberTestRun.sleepWhenNotSanityCheck(sleepInMilleseconds)
             OppgaveConsumer.sokOppgaver(journalpostId = journalpostId, tema = tema)
-            responseSomMap = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()
+            responseSomMap = CucumberTestRun.hentRestTjeneste().hentResponseSomMap()
 
             try {
                 assertThatOppgaveFound(responseSomMap)
                 index = antallGjentakelser
             } catch (assertionError: AssertionError) {
-                if (index == antallGjentakelser && Environment.isNotSanityCheck) {
+                if (index == antallGjentakelser && CucumberTestRun.isNotSanityCheck) {
                     throw assertionError
                 }
             } finally {

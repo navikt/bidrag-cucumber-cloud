@@ -2,15 +2,17 @@ package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
+import no.nav.bidrag.cucumber.model.CucumberTestRun
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjeneste
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpStatus
 import java.util.EnumSet
 
+@Suppress("unused") // brukes av cucumber
 class FellesEgenskaper : No {
 
     init {
-        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> FellesEgenskaperService.settOppNaisApp(naisApplikasjon) }
+        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> CucumberTestRun.settOppNaisApp(naisApplikasjon) }
 
         Så("skal http status være {int}") { enHttpStatus: Int ->
             FellesEgenskaperService.assertWhenNotSanityCheck(
