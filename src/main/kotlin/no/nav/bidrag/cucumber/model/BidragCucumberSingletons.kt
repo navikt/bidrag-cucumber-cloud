@@ -40,7 +40,7 @@ internal object BidragCucumberSingletons {
 
     fun publiserHendelse(journalpostHendelse: JournalpostHendelse) {
         hendelseProducer?.publish(journalpostHendelse) ?: LOGGER.warn(
-            "Cannot publish $journalpostHendelse when spring context is not initialized, sanity check: ${Environment.isSanityCheck}"
+            "Cannot publish $journalpostHendelse when spring context is not initialized, sanity check: ${CucumberTestRun.isSanityCheck}"
         )
     }
 

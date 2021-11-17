@@ -1,6 +1,7 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
-import no.nav.bidrag.cucumber.model.CucumberTestsModel
+import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
+import no.nav.bidrag.cucumber.Environment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -64,7 +65,7 @@ internal class RestTjenesteTest {
     @Test
     fun `skal hente full url uten advarsel`() {
         val restTemplateMock = mock(RestTemplate::class.java)
-        val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
+        val restTjeneste = RestTjeneste(ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
 
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
             .thenReturn(ResponseEntity.ok().build())
@@ -79,7 +80,7 @@ internal class RestTjenesteTest {
     @Test
     fun `skal ha WARNING fra HttpHeaders når rest tjeneste sender med dette som header`() {
         val restTemplateMock = mock(RestTemplate::class.java)
-        val restTjeneste = RestTjeneste(RestTjeneste.ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
+        val restTjeneste = RestTjeneste(ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
         val headers = HttpHeaders(LinkedMultiValueMap(mapOf(HttpHeaders.WARNING to listOf("the truth will emerge!"))))
 
         whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))

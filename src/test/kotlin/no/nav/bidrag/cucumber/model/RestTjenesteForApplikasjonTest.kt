@@ -1,6 +1,5 @@
-package no.nav.bidrag.cucumber
+package no.nav.bidrag.cucumber.model
 
-import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -14,9 +13,9 @@ internal class RestTjenesteForApplikasjonTest {
             noContextPathForApps = listOf("this", "that")
         ).initCucumberEnvironment()
 
-        val thisUrl = RestTjenesteForApplikasjon.konfigurerApplikasjonUrl("this")
-        val thatUrl = RestTjenesteForApplikasjon.konfigurerApplikasjonUrl("that")
-        val youUel = RestTjenesteForApplikasjon.konfigurerApplikasjonUrl("you")
+        val thisUrl = RestTjenesteForApplikasjon.konfigurerApplikasjonUrlFor("this")
+        val thatUrl = RestTjenesteForApplikasjon.konfigurerApplikasjonUrlFor("that")
+        val youUel = RestTjenesteForApplikasjon.konfigurerApplikasjonUrlFor("you")
 
         assertAll(
             { assertThat(thisUrl).`as`("this url").isEqualTo("https://outside") },

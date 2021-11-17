@@ -1,7 +1,6 @@
 package no.nav.bidrag.cucumber.cloud
 
-import no.nav.bidrag.cucumber.Environment
-import no.nav.bidrag.cucumber.RestTjeneste
+import no.nav.bidrag.cucumber.model.RestTjeneste
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import org.slf4j.LoggerFactory
 
@@ -16,10 +15,10 @@ object FellesEgenskaperService {
         LOGGER.info(
             "Assertion, actual: '${assertion.value}' - (${assertion.value?.javaClass}), " +
                     "wanted: '${assertion.expectation}' (${assertion.expectation?.javaClass}), " +
-                    "sanity check: ${Environment.isSanityCheck}"
+                    "sanity check: ${CucumberTestRun.isSanityCheck}"
         )
 
-        if (Environment.isNotSanityCheck) {
+        if (CucumberTestRun.isNotSanityCheck) {
             assertion.doVerify()
         }
     }

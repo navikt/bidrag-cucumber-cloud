@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.FAGOMRADE_BIDRAG
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.GjentaOppgaveSokRequest
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
@@ -53,7 +53,7 @@ object OppgaveOgHendelseService {
     }
 
     fun sokOppgaverEtterBehandlingAvHendelse(hendelse: JournalpostHendelse, tema: String, sleepInMilliseconds: Long) {
-        Environment.sleepInMillisecondsWhenWhenLive(sleepInMilliseconds)
+        CucumberTestRun.sleepWhenNotSanityCheck(sleepInMilliseconds)
         OppgaveConsumer.sokOppgaver(journalpostId = hendelse.hentJournalpostIdUtenPrefix(), tema = tema)
     }
 

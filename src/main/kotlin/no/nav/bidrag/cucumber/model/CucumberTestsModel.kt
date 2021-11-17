@@ -122,8 +122,6 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     }
 
     internal fun warningLogDifferences() {
-        @Suppress("NullableBooleanElvis")
-        if (isNotEqual(sanityCheck ?: false, Environment.isSanityCheck)) warningForDifference("sanityCheck", sanityCheck, Environment.isSanityCheck)
         if (isNotEqual(testUsername, Environment.tenantUsername)) warningForDifference("testUsername", testUsername, Environment.testUsername)
     }
 

@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber.hendelse
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.ScenarioManager
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.HendelseTimeoutException
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.slf4j.LoggerFactory
@@ -24,7 +24,7 @@ class JournalpostKafkaHendelseProducer(
 
     override fun publish(journalpostHendelse: JournalpostHendelse) {
         try {
-            if (Environment.isNotSanityCheck) {
+            if (CucumberTestRun.isNotSanityCheck) {
                 LOGGER.info("Publish $journalpostHendelse til topic $topic")
                 publishWithTimeout(
                     publish = Publish(journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse)),

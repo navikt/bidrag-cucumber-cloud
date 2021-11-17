@@ -38,7 +38,7 @@ class GjentaOppgaveSokRequest(
         var responseSomMap: Map<String, Any>
 
         do {
-            Environment.sleepInMillisecondsWhenWhenLive(sleepInMilleseconds)
+            CucumberTestRun.sleepWhenNotSanityCheck(sleepInMilleseconds)
             OppgaveConsumer.sokOppgaver(journalpostId = journalpostId, tema = tema)
             responseSomMap = FellesEgenskaperService.hentRestTjeneste().hentResponseSomMap()
 
@@ -46,7 +46,7 @@ class GjentaOppgaveSokRequest(
                 assertThatOppgaveFound(responseSomMap)
                 index = antallGjentakelser
             } catch (assertionError: AssertionError) {
-                if (index == antallGjentakelser && Environment.isNotSanityCheck) {
+                if (index == antallGjentakelser && CucumberTestRun.isNotSanityCheck) {
                     throw assertionError
                 }
             } finally {

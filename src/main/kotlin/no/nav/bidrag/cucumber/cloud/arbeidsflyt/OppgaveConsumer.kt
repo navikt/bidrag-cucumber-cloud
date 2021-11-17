@@ -1,8 +1,8 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.hentRestTjeneste
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
+import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.MedOppgaveId
 import no.nav.bidrag.cucumber.model.OppgaveSokResponse
 import org.slf4j.LoggerFactory
@@ -25,7 +25,7 @@ object OppgaveConsumer {
         try {
             val response = hentRestTjeneste().hentResponse() ?: return OppgaveSokResponse()
 
-            return if (Environment.isSanityCheck) {
+            return if (CucumberTestRun.isSanityCheck) {
                 OppgaveSokResponse()
             } else {
                 BidragCucumberSingletons.readValue(response, OppgaveSokResponse::class.java)
@@ -34,7 +34,7 @@ object OppgaveConsumer {
             val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
                 "Har OppgaveSokResponse (${hentRestTjeneste().hentResponse()})"
             } else {
-                "Mangler OppgaveSokResponse ${if (Environment.isSanityCheck) "og det er" else "og det er ikke"} sanity check!"
+                "Mangler OppgaveSokResponse ${if (CucumberTestRun.isSanityCheck) "og det er" else "og det er ikke"} sanity check!"
             }
 
             LOGGER.info("$oppgaveSokResponse med http status: ${hentRestTjeneste().hentHttpStatus()}")
