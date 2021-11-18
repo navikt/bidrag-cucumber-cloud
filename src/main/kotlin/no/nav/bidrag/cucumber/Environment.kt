@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import org.slf4j.LoggerFactory

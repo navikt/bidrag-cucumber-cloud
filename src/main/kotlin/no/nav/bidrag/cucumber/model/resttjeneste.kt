@@ -50,7 +50,10 @@ internal class RestTjenesteForApplikasjon {
 
         if (CucumberTestRun.isTestUserPresent) {
             val tokenService = BidragCucumberSingletons.hentFraContext(AzureTokenService::class) as AzureTokenService? ?: throw notNullTokenService()
-            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService.generateBearerToken(applicationName) }
+            val cucumberTestRun = CucumberTestRun.thisRun()
+            val secureToken = cucumberTestRun.useSecurityToken { tokenService.generateBearerToken(applicationName) }
+
+            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { secureToken }
         } else {
             LOGGER.info("No user to provide security for when accessing $applicationName")
         }

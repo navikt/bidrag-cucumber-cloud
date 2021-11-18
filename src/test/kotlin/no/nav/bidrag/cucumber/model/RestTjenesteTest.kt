@@ -2,6 +2,7 @@ package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,6 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -20,6 +22,9 @@ import org.springframework.web.client.RestTemplate
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class])
 internal class RestTjenesteTest {
+
+    @MockBean
+    private lateinit var azureTokenService: AzureTokenService
 
     @BeforeEach
     fun `reset Cucumber environment`() {

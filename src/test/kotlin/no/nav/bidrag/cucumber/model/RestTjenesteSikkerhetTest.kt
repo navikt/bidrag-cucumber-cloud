@@ -1,12 +1,12 @@
 package no.nav.bidrag.cucumber.model
 
+import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
 import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.verify
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -16,6 +16,9 @@ internal class RestTjenesteSikkerhetTest {
 
     @MockBean
     private lateinit var azureTokenServiceMock: AzureTokenService
+
+    @MockBean
+    private lateinit var httpHeaderRestTemplateMock: HttpHeaderRestTemplate
 
     @BeforeEach
     fun `reset Environment`() {
@@ -31,9 +34,7 @@ internal class RestTjenesteSikkerhetTest {
             )
         ).initCucumberEnvironment()
 
-        val restTjeneste = RestTjeneste("nais-app")
-
-        assertThrows<RuntimeException> { restTjeneste.exchangeGet("out-there") } // url eksisterer ikke...
+        RestTjeneste("nais-app")
         verify(azureTokenServiceMock).generateBearerToken("nais-app")
     }
 }

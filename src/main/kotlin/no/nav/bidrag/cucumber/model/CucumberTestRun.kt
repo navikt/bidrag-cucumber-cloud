@@ -47,12 +47,17 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
         return cucumberTestsModel.hashCode()
     }
 
+    fun useSecurityToken(generateToken: () -> String) = if (cucumberTestsModel.securityToken != null)
+        bearer(cucumberTestsModel.securityToken) else bearer(generateToken.invoke())
+
+    private fun bearer(token: String?) = "Bearer $token"
+
     companion object {
         @JvmStatic
         private val CUCUMBER_TEST_RUN = ThreadLocal<CucumberTestRun>()
 
         @JvmStatic
-        private fun thisRun() = CUCUMBER_TEST_RUN.get() ?: initFromEnvironment()
+        fun thisRun() = CUCUMBER_TEST_RUN.get() ?: initFromEnvironment()
 
         @JvmStatic
         private fun initFromEnvironment(): CucumberTestRun {
