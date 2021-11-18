@@ -179,7 +179,8 @@ jobs:
         run: |
           echo "INGRESS_OPPGAVE=https://oppgave-q1.dev-fss-pub.nais.io" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
-      - run: |
+      - name: endre-fagomrade
+        run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-endre-fagomrade"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
@@ -187,7 +188,8 @@ jobs:
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
-      - run: |
+      - name: journalforing
+        run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-journalforing"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
@@ -195,7 +197,8 @@ jobs:
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
-      - run: |
+      - name: opprett-oppgave
+        run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-opprett-oppgave"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
@@ -203,7 +206,8 @@ jobs:
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
-      - run: |
+      - name: overfor-til-annen-enhet
+        run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-overfor-til-annen-enhet"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
