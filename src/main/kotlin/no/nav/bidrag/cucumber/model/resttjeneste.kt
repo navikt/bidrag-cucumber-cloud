@@ -53,7 +53,7 @@ internal class RestTjenesteForApplikasjon {
             val cucumberTestRun = CucumberTestRun.thisRun()
             val secureToken = cucumberTestRun.useSecurityToken { tokenService.generateBearerToken(applicationName) }
 
-            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { secureToken }
+            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { SecurityToken(secureToken).fetch() }
         } else {
             LOGGER.info("No user to provide security for when accessing $applicationName")
         }
@@ -203,6 +203,10 @@ class RestTjeneste(
 }
 
 class ResttjenesteMedBaseUrl(val template: RestTemplate, val baseUrl: String)
+class SecurityToken(private val token: String) {
+    fun fetch() = token
+}
+
 internal class FullUrl(baseUrl: String, endpointUrl: String) {
     private val fullUrl: String = "$baseUrl$endpointUrl"
 
