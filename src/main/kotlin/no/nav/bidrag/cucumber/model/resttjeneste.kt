@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriTemplateHandler
 import java.net.URI
 
-internal class RestTjenesteForApplikasjon {
+internal class RestTjenester {
     companion object {
         @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(CucumberTestRun::class.java)
@@ -35,37 +35,20 @@ internal class RestTjenesteForApplikasjon {
         }
     }
 
-    private val resttjenesteForNavn: MutableMap<String, ResttjenesteMedBaseUrl> = HashMap()
-    private val sisteResttjenester: MutableList<RestTjeneste> = ArrayList()
+    private val restTjenesteForNavn: MutableMap<String, RestTjeneste> = HashMap()
+    private var restTjenesteTilTest: RestTjeneste? = null
 
-    fun hentEllerKonfigurer(applicationName: String, konfigurer: () -> ResttjenesteMedBaseUrl): ResttjenesteMedBaseUrl {
-        return resttjenesteForNavn.computeIfAbsent(applicationName) { konfigurer() }
-    }
+    fun settOppNaisAppTilTesting(naisApplikasjon: String) {
+        LOGGER.info("Setter opp $naisApplikasjon")
 
-    fun konfigurerResttjeneste(applicationName: String): ResttjenesteMedBaseUrl {
-        val applicationUrl = konfigurerApplikasjonUrlFor(applicationName)
-        val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
-
-        httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
-
-        if (CucumberTestRun.isTestUserPresent) {
-            val tokenService = BidragCucumberSingletons.hentFraContext(AzureTokenService::class) as AzureTokenService? ?: throw notNullTokenService()
-            httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService.generateBearerToken(applicationName) }
-        } else {
-            LOGGER.info("No user to provide security for when accessing $applicationName")
+        if (!restTjenesteForNavn.contains(naisApplikasjon)) {
+            restTjenesteForNavn[naisApplikasjon] = RestTjeneste(naisApplikasjon)
         }
 
-        return ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl)
+        restTjenesteTilTest = restTjenesteForNavn[naisApplikasjon]
     }
 
-    private fun notNullTokenService() = IllegalStateException("No token service in spring context")
-
-    fun settOppNaisApp(naisApplikasjon: String) {
-        LOGGER.info("Setter opp $naisApplikasjon")
-        sisteResttjenester.add(RestTjeneste(naisApplikasjon))
-    }
-
-    fun hentSisteResttjeneste() = sisteResttjenester.last()
+    fun hentRestTjenesteTilTesting() = restTjenesteTilTest ?: throw IllegalStateException("RestTjeneste til testing er null!")
 }
 
 internal class BaseUrlTemplateHandler(private val baseUrl: String) : UriTemplateHandler {
@@ -104,12 +87,31 @@ class RestTjeneste(
     companion object {
         @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
+
+        internal fun konfigurerResttjeneste(applicationName: String): RestTjeneste {
+            val applicationUrl = RestTjenester.konfigurerApplikasjonUrlFor(applicationName)
+            val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
+
+            httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
+
+            if (CucumberTestRun.isTestUserPresent) {
+                val tokenService =
+                    BidragCucumberSingletons.hentFraContext(AzureTokenService::class) as AzureTokenService? ?: throw notNullTokenService()
+                httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService.generateBearerToken(applicationName) }
+            } else {
+                LOGGER.info("No user to provide security for when accessing $applicationName")
+            }
+
+            return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
+        }
+
+        private fun notNullTokenService() = IllegalStateException("No token service in spring context")
     }
 
     private lateinit var fullUrl: FullUrl
     internal var responseEntity: ResponseEntity<String?>? = null
 
-    constructor(naisApplication: String) : this(CucumberTestRun.hentEllerKonfigurerResttjeneste(naisApplication))
+    constructor(naisApplication: String) : this(konfigurerResttjeneste(naisApplication).rest)
 
     fun hentFullUrlMedEventuellWarning() = "$fullUrl${appendWarningWhenExists()}"
     fun hentHttpStatus(): HttpStatus = responseEntity?.statusCode ?: HttpStatus.I_AM_A_TEAPOT

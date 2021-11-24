@@ -101,7 +101,7 @@ class ArbeidsflytEgenskaper : No {
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
-                    value = CucumberTestRun.hentRestTjeneste().hentResponseSomMap()["antallTreffTotalt"],
+                    value = CucumberTestRun.hentRestTjenesteTilTesting().hentResponseSomMap()["antallTreffTotalt"],
                     expectation = 0,
                     verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
                 ),

@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud.sak
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjeneste
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
 
 @Suppress("unused") // brukes av cucumber
 class SakEgenskaper : No {
@@ -14,7 +14,7 @@ class SakEgenskaper : No {
         }
 
         Når("jeg henter denne saken") {
-            hentRestTjeneste().exchangeGet("/sak/$saksnummer")
+            hentRestTjenesteTilTesting().exchangeGet("/sak/$saksnummer")
         }
     }
 }

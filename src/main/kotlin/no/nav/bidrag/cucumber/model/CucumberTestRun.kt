@@ -5,7 +5,6 @@ import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.Environment.fetchPropertyOrEnvironment
 import no.nav.bidrag.cucumber.INGRESSES_FOR_APPS
 import no.nav.bidrag.cucumber.NO_CONTEXT_PATH_FOR_APPS
-import no.nav.bidrag.cucumber.model.RestTjeneste
 import no.nav.bidrag.cucumber.SANITY_CHECK
 import no.nav.bidrag.cucumber.SECURITY_TOKEN
 import no.nav.bidrag.cucumber.TAGS
@@ -13,7 +12,7 @@ import no.nav.bidrag.cucumber.TEST_USER
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
 
 class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
-    private val resttjenesteForApplikasjon = RestTjenesteForApplikasjon()
+    private val restTjenester = RestTjenester()
     private val runStats = RunStats()
     private val testMessagesHolder = TestMessagesHolder()
 
@@ -26,10 +25,6 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
         cucumberTestsModel.warningLogDifferences()
 
         return this
-    }
-
-    fun hentEllerKonfigurerResttjenesteMedBaseUrl(applicationName: String): ResttjenesteMedBaseUrl {
-        return resttjenesteForApplikasjon.hentEllerKonfigurer(applicationName) { resttjenesteForApplikasjon.konfigurerResttjeneste(applicationName) }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -81,12 +76,11 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
         fun addToRunStats(scenario: Scenario) = thisRun().runStats.add(scenario)
         fun fetchIngress(applicationName: String) = thisRun().cucumberTestsModel.fetchIngress(applicationName)
         fun fetchTestMessagesWithRunStats() = thisRun().testMessagesHolder.fetchTestMessages() + "\n\n" + thisRun().runStats.get()
-        fun hentEllerKonfigurerResttjeneste(applicationName: String) = thisRun().hentEllerKonfigurerResttjenesteMedBaseUrl(applicationName)
-        fun hentRestTjeneste() = thisRun().resttjenesteForApplikasjon.hentSisteResttjeneste()
+        fun hentRestTjenesteTilTesting() = thisRun().restTjenester.hentRestTjenesteTilTesting()
         fun hold(logMessages: List<String>) = thisRun().testMessagesHolder.hold(logMessages)
         fun holdTestMessage(message: String) = thisRun().testMessagesHolder.hold(message)
         fun isNoContextPathForApp(applicationName: String) = thisRun().cucumberTestsModel.noContextPathForApps.contains(applicationName)
-        fun settOppNaisApp(naisApplikasjon: String) = thisRun().resttjenesteForApplikasjon.settOppNaisApp(naisApplikasjon)
+        fun settOppNaisAppTilTesting(naisApplikasjon: String) = thisRun().restTjenester.settOppNaisAppTilTesting(naisApplikasjon)
         fun sleepWhenNotSanityCheck(milliseconds: Long) = if (isNotSanityCheck) Thread.sleep(milliseconds) else Unit
 
         fun holdExceptionForTest(throwable: Throwable) {

@@ -1,6 +1,5 @@
 package no.nav.bidrag.cucumber
 
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import org.slf4j.LoggerFactory
@@ -13,7 +12,6 @@ internal object Environment {
 
     val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthPropName()) ?: unknownProperty(testAuthPropName())
     val testUsername: String? get() = fetchPropertyOrEnvironment(TEST_USER) ?: CucumberTestRun.testUsername
-    val tenantUsername: String get() = "F_${testUsernameUppercase()}.E_${testUsernameUppercase()}@trygdeetaten.no"
 
     private fun testAuthPropName() = TEST_AUTH + '_' + testUsernameUppercase()
     private fun testUsernameUppercase() = testUsername?.uppercase()
@@ -40,6 +38,4 @@ internal object Environment {
     fun asList(key: String): List<String> {
         return fetchPropertyOrEnvironment(key)?.split(",") ?: emptyList()
     }
-
-    private fun fromPropertyOrEnvironment(applicationName: String) = fetchPropertyOrEnvironment(NO_CONTEXT_PATH_FOR_APPS)?.contains(applicationName)
 }

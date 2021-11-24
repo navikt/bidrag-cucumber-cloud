@@ -46,7 +46,7 @@ internal class OppgaveOgHendelseServiceTest {
     fun konfigurerNaisApplikasjonForOppgave() {
         val naisApplikasjon = "oppgave"
         CucumberTestRun(CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon"))).initEnvironment()
-        CucumberTestRun.settOppNaisApp(naisApplikasjon)
+        CucumberTestRun.settOppNaisAppTilTesting(naisApplikasjon)
     }
 
     @Test

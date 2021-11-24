@@ -3,7 +3,7 @@ package no.nav.bidrag.cucumber.cloud
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
 import no.nav.bidrag.cucumber.model.CucumberTestRun
-import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjeneste
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
 import org.assertj.core.api.Assertions.assertThat
 import org.springframework.http.HttpStatus
 import java.util.EnumSet
@@ -12,13 +12,13 @@ import java.util.EnumSet
 class FellesEgenskaper : No {
 
     init {
-        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> CucumberTestRun.settOppNaisApp(naisApplikasjon) }
+        Gitt("nais applikasjon {string}") { naisApplikasjon: String -> CucumberTestRun.settOppNaisAppTilTesting(naisApplikasjon) }
 
         Så("skal http status være {int}") { enHttpStatus: Int ->
             FellesEgenskaperService.assertWhenNotSanityCheck(
                 Assertion(
-                    "HttpStatus for ${hentRestTjeneste().hentFullUrlMedEventuellWarning()}",
-                    hentRestTjeneste().hentHttpStatus(),
+                    "HttpStatus for ${hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning()}",
+                    hentRestTjenesteTilTesting().hentHttpStatus(),
                     HttpStatus.valueOf(enHttpStatus),
                     this::harForventetHttpStatus
                 )
@@ -26,19 +26,19 @@ class FellesEgenskaper : No {
         }
 
         Og("responsen skal inneholde {string} = {string}") { key: String, value: String ->
-            val responseObject = hentRestTjeneste().hentResponseSomMap()
+            val responseObject = hentRestTjenesteTilTesting().hentResponseSomMap()
             val verdiFraResponse = responseObject[key]?.toString()
 
             assertThat(verdiFraResponse).`as`("json response").isEqualTo(value)
         }
 
         Når("det gjøres et kall til {string}") { endpointUrl: String ->
-            hentRestTjeneste().exchangeGet(endpointUrl)
+            hentRestTjenesteTilTesting().exchangeGet(endpointUrl)
         }
 
         Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
-            assertThat(hentRestTjeneste().hentHttpStatus())
-                .`as`("HttpStatus for " + hentRestTjeneste().hentFullUrlMedEventuellWarning())
+            assertThat(hentRestTjenesteTilTesting().hentHttpStatus())
+                .`as`("HttpStatus for " + hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
         }
     }
