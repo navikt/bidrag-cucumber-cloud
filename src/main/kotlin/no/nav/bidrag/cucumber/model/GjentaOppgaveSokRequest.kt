@@ -39,7 +39,7 @@ class GjentaOppgaveSokRequest(
         do {
             CucumberTestRun.sleepWhenNotSanityCheck(sleepInMilleseconds)
             OppgaveConsumer.sokOppgaver(journalpostId = journalpostId, tema = tema)
-            responseSomMap = CucumberTestRun.hentRestTjeneste().hentResponseSomMap()
+            responseSomMap = CucumberTestRun.hentRestTjenesteTilTesting().hentResponseSomMap()
 
             try {
                 assertThatOppgaveFound(responseSomMap)

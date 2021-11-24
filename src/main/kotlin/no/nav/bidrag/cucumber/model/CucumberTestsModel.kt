@@ -122,7 +122,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     }
 
     internal fun warningLogDifferences() {
-        if (isNotEqual(testUsername, Environment.tenantUsername)) warningForDifference("testUsername", testUsername, Environment.testUsername)
+        if (isNotEqual(testUsername, Environment.testUsername)) warningForDifference("testUsername", testUsername, Environment.testUsername)
     }
 
     private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue != envValue

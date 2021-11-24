@@ -2,7 +2,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestRun
-import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjeneste
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
 import no.nav.bidrag.cucumber.model.MedOppgaveId
 import no.nav.bidrag.cucumber.model.OppgaveSokResponse
 import org.slf4j.LoggerFactory
@@ -14,16 +14,16 @@ object OppgaveConsumer {
     fun opprettOppgave(oppgave: Any) {
         LOGGER.info("oppretter oppgave: $oppgave")
 
-        hentRestTjeneste().exchangePost("/api/v1/oppgaver", oppgave)
+        hentRestTjenesteTilTesting().exchangePost("/api/v1/oppgaver", oppgave)
     }
 
     fun sokOppgaver(journalpostId: Long, tema: String): OppgaveSokResponse {
-        hentRestTjeneste().exchangeGet(
+        hentRestTjenesteTilTesting().exchangeGet(
             "/api/v1/oppgaver?journalpostId=$journalpostId&journalpostId=$tema-$journalpostId&statuskategori=AAPEN&tema=$tema"
         )
 
         try {
-            val response = hentRestTjeneste().hentResponse() ?: return OppgaveSokResponse()
+            val response = hentRestTjenesteTilTesting().hentResponse() ?: return OppgaveSokResponse()
 
             return if (CucumberTestRun.isSanityCheck) {
                 OppgaveSokResponse()
@@ -31,17 +31,17 @@ object OppgaveConsumer {
                 BidragCucumberSingletons.readValue(response, OppgaveSokResponse::class.java)
             }
         } finally {
-            val oppgaveSokResponse = if (hentRestTjeneste().responseEntity != null) {
-                "Har OppgaveSokResponse (${hentRestTjeneste().hentResponse()})"
+            val oppgaveSokResponse = if (hentRestTjenesteTilTesting().responseEntity != null) {
+                "Har OppgaveSokResponse (${hentRestTjenesteTilTesting().hentResponse()})"
             } else {
                 "Mangler OppgaveSokResponse ${if (CucumberTestRun.isSanityCheck) "og det er" else "og det er ikke"} sanity check!"
             }
 
-            LOGGER.info("$oppgaveSokResponse med http status: ${hentRestTjeneste().hentHttpStatus()}")
+            LOGGER.info("$oppgaveSokResponse med http status: ${hentRestTjenesteTilTesting().hentHttpStatus()}")
         }
     }
 
     fun patchOppgave(medOppgaveId: MedOppgaveId) {
-        hentRestTjeneste().exchangePatch("/api/v1/oppgaver/${medOppgaveId.id}", medOppgaveId)
+        hentRestTjenesteTilTesting().exchangePatch("/api/v1/oppgaver/${medOppgaveId.id}", medOppgaveId)
     }
 }
