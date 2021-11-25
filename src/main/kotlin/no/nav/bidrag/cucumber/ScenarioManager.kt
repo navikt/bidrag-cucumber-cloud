@@ -2,7 +2,6 @@ package no.nav.bidrag.cucumber
 
 import io.cucumber.java8.Scenario
 import no.nav.bidrag.commons.CorrelationId
-import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
@@ -17,18 +16,23 @@ object ScenarioManager {
     private var scenario: Scenario? = null
 
     fun use(scenario: Scenario) {
-        LOGGER.info("Starting ${BidragCucumberSingletons.scenarioMessage(scenario)}")
         this.scenario = scenario
         createCorrelationId()
         MDC.put(CORRELATION_ID, correlationIdForScenario)
+        LOGGER.info("Starting ${scenarioMessage(scenario)}")
     }
 
     fun reset(scenario: Scenario) {
-        LOGGER.info("Finished ${BidragCucumberSingletons.scenarioMessage(scenario)}")
-        BidragCucumberSingletons.addRunStats(scenario)
+        LOGGER.info("Finished ${scenarioMessage(scenario)}")
+        CucumberTestRun.addToRunStats(scenario)
         this.scenario = null
         this.correlationIdForScenario = null
         MDC.clear()
+    }
+
+    private fun scenarioMessage(scenario: Scenario): String {
+        val haveScenario = scenario.name != null && scenario.name.isNotBlank()
+        return if (haveScenario) "'${scenario.name}'" else "scenario in ${scenario.uri}"
     }
 
     fun log(message: String) {
