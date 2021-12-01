@@ -14,7 +14,7 @@ data class JournalpostHendelse(
     var journalstatus: String? = null,
 ) {
     @Suppress("unused") // brukes for sporing av data som publiseres
-    var sporing: Sporingsdata = Sporingsdata(brukerident = Environment.testUsername)
+    var sporing: Sporingsdata = Sporingsdata(brukerident = CucumberTestRun.testUsername)
 
     constructor(hendelseApi: HendelseApi) : this(
         journalpostId = hendelseApi.journalpostId,

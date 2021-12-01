@@ -1,10 +1,11 @@
 package no.nav.bidrag.cucumber.model
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.CorrelationId
+import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.EnhetFilter
 import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.service.AzureTokenService
+import no.nav.bidrag.cucumber.service.TokenService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -36,19 +37,32 @@ internal class RestTjenester {
     }
 
     private val restTjenesteForNavn: MutableMap<String, RestTjeneste> = HashMap()
-    private var restTjenesteTilTest: RestTjeneste? = null
+    private var restTjenesteTilTesting: RestTjeneste? = null
 
-    fun settOppNaisAppTilTesting(naisApplikasjon: String) {
+    fun isApplicationConfigured(applicationName: String) = restTjenesteForNavn.contains(applicationName)
+    fun hentRestTjenesteTilTesting() = restTjenesteTilTesting ?: throw IllegalStateException("RestTjeneste til testing er null!")
+    fun hentRestTjeneste(applicationName: String) = restTjenesteForNavn[applicationName] ?: throw IllegalStateException(
+        "RestTjeneste $applicationName er ikke funnet!"
+    )
+
+    fun settOppNaisApp(naisApplikasjon: String): RestTjeneste {
         LOGGER.info("Setter opp $naisApplikasjon")
 
+        val restTjeneste: RestTjeneste
+
         if (!restTjenesteForNavn.contains(naisApplikasjon)) {
-            restTjenesteForNavn[naisApplikasjon] = RestTjeneste(naisApplikasjon)
+            restTjeneste = RestTjeneste.konfigurerResttjeneste(naisApplikasjon)
+            restTjenesteForNavn[naisApplikasjon] = restTjeneste
+        } else {
+            restTjeneste = restTjenesteForNavn[naisApplikasjon]!!
         }
 
-        restTjenesteTilTest = restTjenesteForNavn[naisApplikasjon]
+        return restTjeneste
     }
 
-    fun hentRestTjenesteTilTesting() = restTjenesteTilTest ?: throw IllegalStateException("RestTjeneste til testing er null!")
+    fun settOppNaisAppTilTesting(naisApplikasjon: String) {
+        restTjenesteTilTesting = settOppNaisApp(naisApplikasjon)
+    }
 }
 
 internal class BaseUrlTemplateHandler(private val baseUrl: String) : UriTemplateHandler {
@@ -89,20 +103,36 @@ class RestTjeneste(
         private val LOGGER = LoggerFactory.getLogger(RestTjeneste::class.java)
 
         internal fun konfigurerResttjeneste(applicationName: String): RestTjeneste {
-            val applicationUrl = RestTjenester.konfigurerApplikasjonUrlFor(applicationName)
-            val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
-
-            httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
-
-            if (CucumberTestRun.isTestUserPresent) {
-                val tokenService =
-                    BidragCucumberSingletons.hentFraContext(AzureTokenService::class) as AzureTokenService? ?: throw notNullTokenService()
-                httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenService.generateBearerToken(applicationName) }
-            } else {
-                LOGGER.info("No user to provide security for when accessing $applicationName")
+            if (CucumberTestRun.isApplicationConfigured(applicationName)) {
+                return CucumberTestRun.hentRestTjenste(applicationName)
             }
 
-            return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
+            try {
+                val applicationUrl = RestTjenester.konfigurerApplikasjonUrlFor(applicationName)
+                val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
+                httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
+
+                if (CucumberTestRun.isTestUserPresent) {
+                    val tokenValue = hentSaksbehandlerToken(applicationName)
+                    httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
+                } else {
+                    LOGGER.info("No user to provide security for when accessing $applicationName")
+                }
+
+                return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
+            } catch (throwable: Throwable) {
+                CucumberTestRun.holdExceptionForTest(throwable)
+                BidragCucumberSingletons.hentEllerInit<ExceptionLogger>(ExceptionLogger::class)
+                    .logException(throwable, "konfigurering av resttjeneste")
+
+                throw throwable
+            }
+        }
+
+        private fun hentSaksbehandlerToken(applicationName: String): TokenValue {
+            val tokenService: TokenService = BidragCucumberSingletons.hentEllerInit(AzureTokenService::class) ?: throw notNullTokenService()
+
+            return TokenValue(tokenService.cacheGeneratedToken(applicationName))
         }
 
         private fun notNullTokenService() = IllegalStateException("No token service in spring context")
@@ -111,23 +141,10 @@ class RestTjeneste(
     private lateinit var fullUrl: FullUrl
     internal var responseEntity: ResponseEntity<String?>? = null
 
-    constructor(naisApplication: String) : this(konfigurerResttjeneste(naisApplication).rest)
-
     fun hentFullUrlMedEventuellWarning() = "$fullUrl${appendWarningWhenExists()}"
     fun hentHttpStatus(): HttpStatus = responseEntity?.statusCode ?: HttpStatus.I_AM_A_TEAPOT
     fun hentResponse(): String? = responseEntity?.body
-    fun hentResponseSomMap(): Map<String, Any> = if (responseEntity?.statusCode == HttpStatus.OK && responseEntity?.body != null)
-        mapResponseBody(responseEntity?.body!!)
-    else
-        HashMap()
-
-    @Suppress("UNCHECKED_CAST")
-    private fun mapResponseBody(body: String): Map<String, Any> = try {
-        ObjectMapper().readValue(body, Map::class.java) as Map<String, Any>
-    } catch (e: Exception) {
-        CucumberTestRun.holdExceptionForTest(e)
-        throw e
-    }
+    fun hentResponseSomMap() = BidragCucumberSingletons.mapResponseSomMap(responseEntity)
 
     private fun appendWarningWhenExists(): String {
         val warnings = responseEntity?.headers?.get(HttpHeaders.WARNING) ?: emptyList()
@@ -135,12 +152,16 @@ class RestTjeneste(
         return if (warnings.isNotEmpty()) " - ${warnings[0]}" else ""
     }
 
-    fun exchangeGet(endpointUrl: String): ResponseEntity<String?> {
-        fullUrl = FullUrl(rest.baseUrl, endpointUrl)
+    fun exchangeGet(endpointUrl: String, failOnNotFound: Boolean = true): ResponseEntity<String?> {
 
         val header = initHttpHeadersWithCorrelationIdAndEnhet()
 
-        exchange(HttpEntity(null, header), endpointUrl, HttpMethod.GET)
+        exchange(
+            jsonEntity = HttpEntity(null, header),
+            endpointUrl = endpointUrl,
+            httpMethod = HttpMethod.GET,
+            failOnNotFound = failOnNotFound
+        )
 
         LOGGER.info(
             if (responseEntity?.body != null) "response with body and status ${responseEntity!!.statusCode}"
@@ -156,52 +177,61 @@ class RestTjeneste(
 
     private fun initHttpHeadersWithCorrelationIdAndEnhet(): HttpHeaders {
         val headers = HttpHeaders()
-        headers.add(CorrelationId.CORRELATION_ID_HEADER, ScenarioManager.getCorrelationIdForScenario())
+        headers.add(CorrelationId.CORRELATION_ID_HEADER, ScenarioManager.fetchCorrelationIdForScenario())
         headers.add(EnhetFilter.X_ENHET_HEADER, "4802")
 
         return headers
     }
 
     fun exchangePost(endpointUrl: String, body: Any) {
-        val jsonEntity = httpEntity(endpointUrl, BidragCucumberSingletons.toJson(body))
+        val jsonEntity = httpEntity(BidragCucumberSingletons.toJson(body))
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
 
     fun exchangePatch(endpointUrl: String, body: Any) {
-        val jsonEntity = httpEntity(endpointUrl, BidragCucumberSingletons.toJson(body))
+        val jsonEntity = httpEntity(BidragCucumberSingletons.toJson(body))
         exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
     }
 
-    private fun httpEntity(endpointUrl: String, body: Any): HttpEntity<*> {
-        this.fullUrl = FullUrl(rest.baseUrl, endpointUrl)
+    private fun httpEntity(body: Any): HttpEntity<*> {
         val headers = initHttpHeadersWithCorrelationIdAndEnhet()
         headers.contentType = MediaType.APPLICATION_JSON
 
         return HttpEntity(body, headers)
     }
 
-    private fun exchange(jsonEntity: HttpEntity<*>, endpointUrl: String, httpMethod: HttpMethod) {
+    private fun exchange(jsonEntity: HttpEntity<*>, endpointUrl: String, httpMethod: HttpMethod, failOnNotFound: Boolean = true) {
+        fullUrl = FullUrl(rest.baseUrl, endpointUrl)
         LOGGER.info("$httpMethod: $fullUrl")
 
         try {
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
         } catch (e: Exception) {
-            ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl)", e)
-
             responseEntity = if (e is HttpStatusCodeException) {
-                ResponseEntity.status(e.statusCode).body<String>("${e.javaClass.simpleName}: ${e.message}")
+                ResponseEntity.status(e.statusCode).body<String>("${e::class.simpleName}: ${e.message}")
             } else {
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e.javaClass.simpleName}: ${e.message}")
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>("${e::class.simpleName}: ${e.message}")
             }
 
-            if (CucumberTestRun.isNotSanityCheck) {
-                throw e
+            if (isError(e, failOnNotFound)) {
+                ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl)", e)
+
+                if (CucumberTestRun.isNotSanityCheck) {
+                    throw e
+                }
             }
         }
     }
+
+    private fun isError(e: Exception, failOn404: Boolean) = if (isNotFound(e)) failOn404 else true
+    private fun isNotFound(e: Exception) = e is HttpStatusCodeException && e.statusCode == HttpStatus.NOT_FOUND
 }
 
 class ResttjenesteMedBaseUrl(val template: RestTemplate, val baseUrl: String)
+class TokenValue(private val token: String) {
+    fun initBearerToken() = "Bearer $token"
+}
+
 internal class FullUrl(baseUrl: String, endpointUrl: String) {
     private val fullUrl: String = "$baseUrl$endpointUrl"
 
