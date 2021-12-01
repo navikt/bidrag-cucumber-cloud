@@ -11,7 +11,7 @@ import no.nav.bidrag.cucumber.TAGS
 import no.nav.bidrag.cucumber.TEST_USER
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
 
-class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
+class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
     private val restTjenester = RestTjenester()
     private val runStats = RunStats()
     private val testMessagesHolder = TestMessagesHolder()
@@ -22,7 +22,6 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
 
     fun initEnvironment(): CucumberTestRun {
         CUCUMBER_TEST_RUN.set(this)
-        cucumberTestsModel.warningLogDifferences()
 
         return this
     }
@@ -33,9 +32,7 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
 
         other as CucumberTestRun
 
-        if (cucumberTestsModel != other.cucumberTestsModel) return false
-
-        return true
+        return cucumberTestsModel == other.cucumberTestsModel
     }
 
     override fun hashCode(): Int {
@@ -43,6 +40,7 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
     }
 
     companion object {
+
         @JvmStatic
         private val CUCUMBER_TEST_RUN = ThreadLocal<CucumberTestRun>()
 
@@ -67,21 +65,26 @@ class CucumberTestRun(internal val cucumberTestsModel: CucumberTestsModel) {
         }
 
         val isNotSanityCheck: Boolean get() = !isSanityCheck
-        val isSanityCheck: Boolean get() = Environment.isSanityCheckFromApplication ?: thisRun().cucumberTestsModel.sanityCheck ?: false
+        val isSanityCheck: Boolean get() = Environment.isSanityCheck ?: thisRun().cucumberTestsModel.sanityCheck ?: false
         val isTestRunStarted: Boolean get() = CUCUMBER_TEST_RUN.get() != null
         val isTestUserPresent: Boolean get() = fetchPropertyOrEnvironment(TEST_USER) != null || thisRun().cucumberTestsModel.testUsername != null
-
+        val securityToken: String? get() = thisRun().cucumberTestsModel.securityToken
         val testUsername: String? get() = thisRun().cucumberTestsModel.testUsername
+        val withSecurityToken: Boolean get() = securityToken != null
 
         fun addToRunStats(scenario: Scenario) = thisRun().runStats.add(scenario)
         fun fetchIngress(applicationName: String) = thisRun().cucumberTestsModel.fetchIngress(applicationName)
         fun fetchTestMessagesWithRunStats() = thisRun().testMessagesHolder.fetchTestMessages() + "\n\n" + thisRun().runStats.get()
+        fun hentRestTjenste(applicationName: String) = thisRun().restTjenester.hentRestTjeneste(applicationName)
         fun hentRestTjenesteTilTesting() = thisRun().restTjenester.hentRestTjenesteTilTesting()
         fun hold(logMessages: List<String>) = thisRun().testMessagesHolder.hold(logMessages)
         fun holdTestMessage(message: String) = thisRun().testMessagesHolder.hold(message)
+        fun isApplicationConfigured(applicationName: String) = thisRun().restTjenester.isApplicationConfigured(applicationName)
         fun isNoContextPathForApp(applicationName: String) = thisRun().cucumberTestsModel.noContextPathForApps.contains(applicationName)
+        fun settOppNaisApp(naisApplikasjon: String) =  thisRun().restTjenester.settOppNaisApp(naisApplikasjon)
         fun settOppNaisAppTilTesting(naisApplikasjon: String) = thisRun().restTjenester.settOppNaisAppTilTesting(naisApplikasjon)
         fun sleepWhenNotSanityCheck(milliseconds: Long) = if (isNotSanityCheck) Thread.sleep(milliseconds) else Unit
+        fun updateSecurityToken(securityToken: String?) = thisRun().cucumberTestsModel.updateSecurityToken(securityToken)
 
         fun holdExceptionForTest(throwable: Throwable) {
             val exceptionMessage = "${throwable.javaClass.simpleName}: ${throwable.message}"

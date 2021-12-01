@@ -9,17 +9,17 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
 import org.springframework.stereotype.Service
 
 @Service
-class AzureTokenService(@Lazy val authorizedClientManager: OAuth2AuthorizedClientManager) {
+class AzureTokenService(@Lazy val authorizedClientManager: OAuth2AuthorizedClientManager): TokenService() {
 
     private val ANONYMOUS_AUTHENTICATION: Authentication = AnonymousAuthenticationToken(
         "anonymous", "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")
     )
 
-    fun generateBearerToken(clientRegistrationId: String): String {
+    override fun generateToken(application: String): String {
             val accessToken = authorizedClientManager
                 .authorize(
                     OAuth2AuthorizeRequest
-                        .withClientRegistrationId(clientRegistrationId)
+                        .withClientRegistrationId(application)
                         .principal(ANONYMOUS_AUTHENTICATION)
                         .build()
                 )!!.accessToken
