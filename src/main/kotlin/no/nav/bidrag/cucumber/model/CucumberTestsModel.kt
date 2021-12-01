@@ -34,6 +34,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     val ingressesForApps: List<String> get() = cucumberTestsApi.ingressesForApps
     val noContextPathForApps: List<String> get() = cucumberTestsApi.noContextPathForApps
     val sanityCheck: Boolean? get() = cucumberTestsApi.sanityCheck
+    val securityToken: String? get() = cucumberTestsApi.securityToken
     val tags: List<String> get() = cucumberTestsApi.tags
     val testUsername: String? get() = cucumberTestsApi.testUsername
 
@@ -56,6 +57,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     )
 
     fun getSanityCheck() = sanityCheck?.toString() ?: "false"
+    fun isFeatureBranch() = cucumberTestsApi.ingressesForApps.any { it.contains("-feature") }
 
     fun fetchTags(): String {
         val collectTags = ingressesForApps
@@ -84,13 +86,9 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     fun fetchIngress(applicationName: String): String {
         LOGGER.info("Finding ingress for '$applicationName' in $ingressesForApps")
 
-        return ingressesForApps.map {
-            it.replace("@no-tag:", "@")
-        }.filter {
-            it.substring(it.indexOf('@') + 1) == applicationName
-        }.map {
-            it.split("@")[0]
-        }.first()
+        return ingressesForApps.filter { it.endsWith(applicationName) }
+            .map { it.split("@")[0]  }
+            .first()
     }
 
     private fun transformAssertedTagsToString(tags: List<String>): String {
@@ -117,22 +115,13 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
         .filter { file: File -> isTagPresent(file, tag) }
         .findFirst().isEmpty
 
-    internal fun initCucumberEnvironment() {
+    internal fun initCucumberEnvironment(): CucumberTestsModel {
         Environment.initCucumberEnvironment(this)
+
+        return this
     }
 
-    internal fun warningLogDifferences() {
-        if (isNotEqual(testUsername, Environment.testUsername)) warningForDifference("testUsername", testUsername, Environment.testUsername)
-    }
-
-    private fun isNotEqual(dtoValue: Any?, envValue: Any?) = dtoValue != envValue
-
-    private fun warningForDifference(name: String, property: Any?, envValue: Any?) {
-        val propVal: String = property?.toString() ?: "null"
-        val envVal: String = envValue?.toString() ?: "null"
-
-        if (propVal != envVal && property != envValue) {
-            LOGGER.warn("$property vs $envValue: (${this.javaClass.simpleName}.$name vs ${Environment::class.java.simpleName})")
-        }
+    fun updateSecurityToken(securityToken: String?) {
+        cucumberTestsApi.securityToken = securityToken
     }
 }

@@ -3,10 +3,13 @@ package no.nav.bidrag.cucumber.model
 import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
+import no.nav.bidrag.cucumber.BidragCucumberCloud
 import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import kotlin.reflect.KClass
 
 /**
@@ -21,8 +24,19 @@ internal object BidragCucumberSingletons {
     private var hendelseProducer: HendelseProducer? = null
     private var objectMapper: ObjectMapper? = null
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T> hentEllerInit(kClass: KClass<*>): T = applicationContext?.getBean(kClass.java) as T? ?: init(kClass)
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
-    fun hentFraContext(kClass: KClass<*>) = applicationContext?.getBean(kClass.java)
+    private fun fetchObjectMapper() = objectMapper ?: ObjectMapper()
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> init(kClass: KClass<*>): T {
+        if (kClass == ExceptionLogger::class) {
+            return ExceptionLogger("${BidragCucumberCloud::class.simpleName}") as T
+        }
+
+        throw IllegalStateException("Mangler manuell initialisering av ${kClass.simpleName}")
+    }
 
     private fun doManualInit(): HttpHeaderRestTemplate {
         val httpComponentsClientHttpRequestFactory = SpringConfig().httpComponentsClientHttpRequestFactorySomIgnorererHttps()
@@ -33,6 +47,21 @@ internal object BidragCucumberSingletons {
         hendelseProducer?.publish(journalpostHendelse) ?: LOGGER.warn(
             "Cannot publish $journalpostHendelse when spring context is not initialized, sanity check: ${CucumberTestRun.isSanityCheck}"
         )
+    }
+
+    fun mapResponseSomMap(responseEntity: ResponseEntity<String?>?): Map<String, Any> {
+        return if (responseEntity?.statusCode == HttpStatus.OK && responseEntity.body != null)
+            mapResponseSomMap(responseEntity.body!!)
+        else
+            HashMap()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun mapResponseSomMap(body: String): Map<String, Any> = try {
+        fetchObjectMapper().readValue(body, Map::class.java) as Map<String, Any>
+    } catch (e: Exception) {
+        CucumberTestRun.holdExceptionForTest(e)
+        throw e
     }
 
     fun <T> readValue(value: String, mapClass: Class<T>): T = objectMapper?.readValue(value, mapClass) ?: throw IllegalStateException(

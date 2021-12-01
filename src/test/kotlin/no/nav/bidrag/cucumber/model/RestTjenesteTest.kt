@@ -12,18 +12,35 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
+import org.springframework.security.oauth2.core.OAuth2AccessToken
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class])
 internal class RestTjenesteTest {
 
+    @MockBean
+    private lateinit var oAuth2AuthorizedClientManagerMock: OAuth2AuthorizedClientManager
+
     @BeforeEach
     fun `reset Cucumber environment`() {
-        Environment.resetCucumberEnvironment()
+        Environment.reset()
+    }
+
+    @BeforeEach
+    fun `stub azure security`() {
+        val oaut2AuthorizedClientMock = mock(OAuth2AuthorizedClient::class.java)
+        val oauth2AccessTokenMock = mock(OAuth2AccessToken::class.java)
+
+        whenever(oAuth2AuthorizedClientManagerMock.authorize(any())).thenReturn(oaut2AuthorizedClientMock)
+        whenever(oaut2AuthorizedClientMock.accessToken).thenReturn(oauth2AccessTokenMock)
+        whenever(oauth2AccessTokenMock.tokenValue).thenReturn("my secured token")
     }
 
     @Test
@@ -35,8 +52,8 @@ internal class RestTjenesteTest {
 
         cucumberTestsModel.initCucumberEnvironment()
 
-        val restTjeneste = RestTjeneste("nais-app")
-        val annenRestTjeneste = RestTjeneste("annen-nais-app")
+        val restTjeneste = RestTjeneste.konfigurerResttjeneste("nais-app")
+        val annenRestTjeneste = RestTjeneste.konfigurerResttjeneste("annen-nais-app")
 
         assertAll(
             { assertThat(restTjeneste.rest.baseUrl).`as`("tjeneste-app").isEqualTo("https://somewhere.com/nais-app") },
@@ -53,8 +70,8 @@ internal class RestTjenesteTest {
 
         cucumberTestsModel.initCucumberEnvironment()
 
-        val restTjeneste = RestTjeneste("nais-tag")
-        val annenRestTjeneste = RestTjeneste("annen-nais-tag")
+        val restTjeneste = RestTjeneste.konfigurerResttjeneste("nais-tag")
+        val annenRestTjeneste = RestTjeneste.konfigurerResttjeneste("annen-nais-tag")
 
         assertAll(
             { assertThat(restTjeneste.rest.baseUrl).`as`("tjeneste-app").isEqualTo("https://somewhere.com/nais-tag") },
