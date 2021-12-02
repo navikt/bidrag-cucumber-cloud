@@ -92,7 +92,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-cucumber-cloud.ekstern.dev.nav.no@bidrag-cucumber-cloud"],
+                  "ingressesForApps":["https://bidrag-cucumber-cloud.ekstern.dev.nav.no@tag:bidrag-cucumber-cloud"],
                   "sanityCheck":true
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
@@ -129,7 +129,6 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
-    @Disabled("bidrag-sak eksisterer ikke i feature-filer mer...")
     fun `skal logge eventuelle exception når det feiler under testing`() {
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -137,7 +136,7 @@ internal class CucumberControllerIntegrationTest {
                 """
                 {
                   "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
-                  "testUsername":"ukjent"
+                  "testUsername":"ukjent","tags":["@bidrag-cucumber-cloud"]
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
             ),

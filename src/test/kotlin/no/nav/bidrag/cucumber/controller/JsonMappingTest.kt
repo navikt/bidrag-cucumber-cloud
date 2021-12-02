@@ -25,7 +25,7 @@ class JsonMappingTest {
             "tags":["@arbeidsflyt-endre-fagomrade"],
             "testUsername":"z992903",
             "noContextPathForApps":["oppgave"],
-            "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@no-tag:oppgave"]
+            "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@oppgave"]
           }
           """.trimIndent()
 
@@ -38,7 +38,7 @@ class JsonMappingTest {
             { assertThat(cucumberTestsModel.noContextPathForApps).`as`("noContextPathForApps").isEqualTo(listOf("oppgave")) },
             {
                 assertThat(cucumberTestsModel.ingressesForApps).`as`("ingressesForApps")
-                    .isEqualTo(listOf("https://oppgave-q1.dev-fss-pub.nais.io@no-tag:oppgave"))
+                    .isEqualTo(listOf("https://oppgave-q1.dev-fss-pub.nais.io@oppgave"))
             }
         )
     }
