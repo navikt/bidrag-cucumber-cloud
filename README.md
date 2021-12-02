@@ -70,8 +70,8 @@ Nedenfor så vises de nødvendige input for kjøring (1 og 2):
 
 1. ingress som skal testes
 2. tag som bruker denne ingressen
-  * hvis ingressen er for en applikasjon (og ikke en tag), brukes `ingress@no-tag:<nais applikasjon>`
-  * det finnes en egen liste for å liste opp tags uten ingress for applikasjon, `tags`
+  * hvis ingressen til applikasjon også skal fungere som en tag, brukes `ingress@tag:<nais applikasjon>`
+  * det finnes en egen liste for å liste opp tags, `tags`
   * **PS!** det er standard at appnavn blir brukt som context path etter ingress. Hvis det ikke skal gjøres må `noContextPathForApps` også listes opp
 
 Dette er hva som må til for å kjøre testing av en applikasjon som ikke har sikkerhet. Når applikasjonen har sikkerhet implementert, må også en
@@ -96,9 +96,9 @@ og testUser er valgfri):
 ```json
 {
   "ingressesForApps": [
-    "<ingress>@app.a/tag.1>",
-    "<ingress>@app.b/tag.2>",
-    "<ingress>@no-tag:app.c>"
+    "<ingress>@tag:app.a/tag.1>",
+    "<ingress>@tag:app.b/tag.2>",
+    "<ingress>@app.c>"
   ],
   "tags": ["<@tag.3>"],
   "noContextPathForApps": ["<app.b>"],

@@ -21,7 +21,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"ingressesForApps":[
-                   "${{ env.INGRESS_CUCUMBER }}@bidrag-cucumber-cloud"
+                   "${{ env.INGRESS_CUCUMBER }}@tag:bidrag-cucumber-cloud"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
@@ -44,7 +44,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"testUsername":"z992903","ingressesForApps":[
-                   "${{ env.INGRESS_SAK }}@bidrag-sak"
+                   "${{ env.INGRESS_SAK }}@tag:bidrag-sak"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
@@ -67,7 +67,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"ingressesForApps":[
-                   "${{ env.INGRESS_STONAD }}@bidrag-stonad"
+                   "${{ env.INGRESS_STONAD }}@tag:bidrag-stonad"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
@@ -90,7 +90,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"ingressesForApps":[
-                   "${{ env.INGRESS_VEDTAK }}@bidrag-vedtak"
+                   "${{ env.INGRESS_VEDTAK }}@tag:bidrag-vedtak"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
@@ -113,7 +113,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-endre-fagomrade"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
-                   "${{ env.INGRESS_OPPGAVE }}@no-tag:oppgave"
+                   "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
@@ -136,7 +136,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-journalforing"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
-                   "${{ env.INGRESS_OPPGAVE }}@no-tag:oppgave"
+                   "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
@@ -159,7 +159,7 @@ jobs:
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"tags":["@arbeidsflyt-opprett-oppgave"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
-                   "${{ env.INGRESS_OPPGAVE }}@no-tag:oppgave"
+                   "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
