@@ -106,14 +106,14 @@ jobs:
     name: "bidrag-grunnlag"
 
     env:
-      INGRESS_VEDTAK: https://bidrag-grunnlag.dev.intern.nav.no
+      INGRESS_GRUNNLAG: https://bidrag-grunnlag.dev.intern.nav.no
 
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
                --data '{"ingressesForApps":[
-                   "${{ env.INGRESS_VEDTAK }}@tag:bidrag-grunnlag"
+                   "${{ env.INGRESS_GRUNNLAG }}@tag:bidrag-grunnlag"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
