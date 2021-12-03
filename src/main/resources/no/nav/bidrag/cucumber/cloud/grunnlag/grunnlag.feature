@@ -8,5 +8,5 @@ Egenskap: bidrag-grunnlag
     Gitt nais applikasjon 'bidrag-grunnlag'
 
   Scenario: Sjekk om swagger-ui til bidrag-grunnlag er operativt
-    Når det gjøres et kall til '/swagger-ui/index.html?configUrl=/bidrag-grunnlag/v3/api-docs/swagger-config#'
+    Når det gjøres et kall til '/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#'
     Så skal http status være 200
