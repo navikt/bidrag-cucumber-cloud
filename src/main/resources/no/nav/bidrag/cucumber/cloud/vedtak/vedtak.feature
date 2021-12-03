@@ -8,5 +8,5 @@ Egenskap: bidrag-vedtak
     Gitt nais applikasjon 'bidrag-vedtak'
 
   Scenario: Sjekk om swagger-ui til bidrag-vedtak er operativt
-    Når det gjøres et kall til '/swagger-ui/index.html?configUrl=/bidrag-vedtak/v3/api-docs/swagger-config#'
+    Når det gjøres et kall til '/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#'
     Så skal http status være 200
