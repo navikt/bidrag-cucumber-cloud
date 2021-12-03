@@ -172,7 +172,7 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_VEDTAK: https://bidrag-grunnlag.dev.intern.nav.no
+      INGRESS_GRUNNLAG: https://bidrag-grunnlag.dev.intern.nav.no
 
     steps:
       - name: feature ingresses
