@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - '**'
+      - '!feature/cron-fix'
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
