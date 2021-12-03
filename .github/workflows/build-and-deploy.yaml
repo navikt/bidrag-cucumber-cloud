@@ -239,35 +239,3 @@ jobs:
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
-
-  bump_dev_version:
-    runs-on: ubuntu-latest
-    name: Bump SNAPSHOT version
-    if: github.ref == 'refs/heads/main'
-    needs:
-      - run-tests-for-cucumber-cloud
-      - run-tests-for-arbeidsflyt
-      - run-tests-for-bidrag-sak
-      - run-tests-for-bidrag-stonad
-      - run-tests-for-bidrag-vedtak
-      - run-tests-for-bidrag-grunnlag
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - run: mvn release:update-versions
-      - run: |
-          BUMPED_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo ::set-output name=version::${BUMPED_VERSION}
-        id: snapshot
-      - uses: navikt/bidrag-git/commit@v5
-        with:
-          commit_message: "Bumped to new version: ${{ steps.snapshot.outputs.version }}"
-          pattern: "pom.xml"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
