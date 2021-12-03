@@ -173,22 +173,23 @@ mvn exec:java                                        \
 * åpne terminal og kjør kommandoen `mvn spring-boot:run`
 * for sanity check, åpne ny terminal kjør kommandoen
   ```
-  curl -H "Content-Type: application/json" \
-       --request POST \
-       --data '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag>"]}' \
+  curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -d '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag>"]}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
   ```
-  curl -H "Content-Type: application/json" \
-       --request POST \
-       --data '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag>"],"securityToken"="<security token (uten Bearer)}' \
-       http://localhost:8080/bidrag-cucumber-cloud/run
+  curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -d '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tagnavn>"],"securityToken"="<security token (uten Bearer)}'
   ```
 
 ##### Kjøring med IntelliJ
 
-Man kan ogå bruke IntelliJ til å kjøre cucumber testene direkte. IntelliJ har innebygd støtte for cucumber (java), men hvis du vil navigeere i koden
+Man kan ogå bruke IntelliJ til å kjøre cucumber testene direkte. IntelliJ har innebygd støtte for cucumber (java), men hvis du vil navigere i koden
 ut fra testene som kjøres, så bør du installere plugin `Cucumber Kotlin` (IntelliJ settings/prefrences -> Plugins)
 
 ###### Kjør cucumber features
@@ -210,17 +211,17 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 * start spring-boot applikasjonen med IntelliJ
 * for sanity check: åpne ny terminal kjør kommandoen
   ```
-  curl -H "Content-Type: application/json" \
-       --request POST \
-       --data '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tagnavn>"]}' \
-       http://localhost:8080/bidrag-cucumber-cloud/run
+  curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -d '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tagnavn>"]}'
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
   ```
-  curl -H "Content-Type: application/json" \
-       --request POST \
-       --data '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tagnavn>"],"securityToken"="<security token (uten Bearer)}' \
-       http://localhost:8080/bidrag-cucumber-cloud/run
+   curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
+    -H 'accept: */*' \
+    -H 'Content-Type: application/json' \
+    -d '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tagnavn>"],"securityToken"="<security token (uten Bearer)}'
   ```
 
 ##### Kjøring med swagger
