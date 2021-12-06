@@ -254,4 +254,4 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: navikt/bidrag-git/tag-snap@v1-git-tag-snap
+      - uses: navikt/bidrag-git/tag-snap@v1-tag-snap
