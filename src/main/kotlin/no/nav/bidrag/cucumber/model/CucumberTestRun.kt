@@ -1,14 +1,17 @@
 package no.nav.bidrag.cucumber.model
 
 import io.cucumber.java8.Scenario
+import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.Environment.fetchPropertyOrEnvironment
 import no.nav.bidrag.cucumber.INGRESSES_FOR_APPS
 import no.nav.bidrag.cucumber.NO_CONTEXT_PATH_FOR_APPS
 import no.nav.bidrag.cucumber.SANITY_CHECK
 import no.nav.bidrag.cucumber.SECURITY_TOKEN
+import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.TAGS
 import no.nav.bidrag.cucumber.TEST_USER
+import no.nav.bidrag.cucumber.cloud.FellesEgenskaper
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
 
 class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
@@ -71,6 +74,7 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         val securityToken: String? get() = thisRun().cucumberTestsModel.securityToken
         val testUsername: String? get() = thisRun().cucumberTestsModel.testUsername
         val withSecurityToken: Boolean get() = securityToken != null
+        private var exceptionLogger: ExceptionLogger? = null
 
         fun addToRunStats(scenario: Scenario) = thisRun().runStats.add(scenario)
         fun fetchIngress(applicationName: String) = thisRun().cucumberTestsModel.fetchIngress(applicationName)
@@ -81,17 +85,30 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         fun holdTestMessage(message: String) = thisRun().testMessagesHolder.hold(message)
         fun isApplicationConfigured(applicationName: String) = thisRun().restTjenester.isApplicationConfigured(applicationName)
         fun isNoContextPathForApp(applicationName: String) = thisRun().cucumberTestsModel.noContextPathForApps.contains(applicationName)
-        fun settOppNaisApp(naisApplikasjon: String) =  thisRun().restTjenester.settOppNaisApp(naisApplikasjon)
+        fun settOppNaisApp(naisApplikasjon: String) = thisRun().restTjenester.settOppNaisApp(naisApplikasjon)
         fun settOppNaisAppTilTesting(naisApplikasjon: String) = thisRun().restTjenester.settOppNaisAppTilTesting(naisApplikasjon)
         fun sleepWhenNotSanityCheck(milliseconds: Long) = if (isNotSanityCheck) Thread.sleep(milliseconds) else Unit
         fun updateSecurityToken(securityToken: String?) = thisRun().cucumberTestsModel.updateSecurityToken(securityToken)
 
         fun holdExceptionForTest(throwable: Throwable) {
-            val exceptionMessage = "${throwable.javaClass.simpleName}: ${throwable.message}"
+            if (exceptionLogger == null) {
+                exceptionLogger = BidragCucumberSingletons.hentEllerInit(ExceptionLogger::class)
+            }
+
+            val exceptionLog = exceptionLogger!!.logException(
+                throwable, throwable.stackTrace.first {
+                    (it.className.contains("no.nav") || it?.fileName?.contains("feature") ?: false)
+                            && !it.className.contains(CucumberTestRun::class.simpleName!!)
+                            && !it.className.contains(FellesEgenskaper::class.simpleName!!)
+                            && !it.className.contains(ScenarioManager::class.simpleName!!)
+                }.className
+            )
+
+            val exceptionMessage = exceptionLog[0]
             val cucumberTestRun = thisRun()
 
             cucumberTestRun.testMessagesHolder.hold(exceptionMessage)
-            cucumberTestRun.runStats.addExceptionLogging(listOf(exceptionMessage))
+            cucumberTestRun.runStats.addExceptionLogging(exceptionLog)
         }
 
         fun endRun() {
