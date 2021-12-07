@@ -1,7 +1,6 @@
 package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.commons.CorrelationId
-import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.EnhetFilter
 import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.service.AzureTokenService
@@ -122,8 +121,6 @@ class RestTjeneste(
                 return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
             } catch (throwable: Throwable) {
                 CucumberTestRun.holdExceptionForTest(throwable)
-                BidragCucumberSingletons.hentEllerInit<ExceptionLogger>(ExceptionLogger::class)
-                    .logException(throwable, "konfigurering av resttjeneste")
 
                 throw throwable
             }

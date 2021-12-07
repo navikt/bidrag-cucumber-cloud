@@ -16,20 +16,20 @@ internal class CucumberTestsModelTest {
     }
 
     @Test
-    fun `skal hente tags basert på ingressesForApps`() {
-        val cucumberTestsModel = CucumberTestsModel(ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-sak"))
+    fun `skal hente tags fra ingressesForApps`() {
+        val cucumberTestsModel = CucumberTestsModel(ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"))
 
-        assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-sak and not @ignored")
+        assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-grunnlag and not @ignored")
     }
 
     @Test
-    fun `skal også bruke tags som ikke er listet i ingressesForApps`() {
+    fun `skal også bruke tags som ikke er oppgitt i ingressesForApps`() {
         val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-sak"), tags = listOf("@arbeidsflyt-endre-fagomrade")
+            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"), tags = listOf("@arbeidsflyt-endre-fagomrade")
         )
 
         assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags")
-            .isEqualTo("(@bidrag-sak or @arbeidsflyt-endre-fagomrade) and not @ignored")
+            .isEqualTo("(@bidrag-grunnlag or @arbeidsflyt-endre-fagomrade) and not @ignored")
     }
 
     @Test
@@ -59,8 +59,11 @@ internal class CucumberTestsModelTest {
 
     @Test
     fun `skal ikke hente ut tags dobbelt opp`() {
-        val cucumberTestsModel = CucumberTestsModel(ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-sak"), tags = listOf("@bidrag-sak"))
+        val cucumberTestsModel = CucumberTestsModel(
+            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"),
+            tags = listOf("@bidrag-grunnlag")
+        )
 
-        assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-sak and not @ignored")
+        assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-grunnlag and not @ignored")
     }
 }
