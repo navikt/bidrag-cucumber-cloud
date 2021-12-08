@@ -5,7 +5,7 @@ jobs:
   build-pull-request:
     name: Test pull-request
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/feature/cron-fix'
+    if: github.ref != 'refs/heads/feature/cron-fix'
 
     steps:
       - uses: actions/checkout@v2
