@@ -7,7 +7,6 @@ import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import no.nav.bidrag.cucumber.model.BidragCucumberSingletons
 import no.nav.bidrag.cucumber.model.CucumberTestRun
-import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.SuppressStackTraceText
 import no.nav.bidrag.cucumber.model.TestFailedException
 import org.springframework.context.ApplicationContext
@@ -31,17 +30,17 @@ class CucumberService(
     internal fun run(cucumberTestRun: CucumberTestRun): String {
         val result = runCucumberTests(cucumberTestRun.tags)
 
-        val suppressedStackText = suppressStackTraceText.suppress(
+        val suppressedStackTraceLog = suppressStackTraceText.suppress(
             CucumberTestRun.fetchTestMessagesWithRunStats()
         )
 
         CucumberTestRun.endRun()
 
         if (result != 0.toByte()) {
-            throw TestFailedException("Cucumber tests failed! (tags: ${cucumberTestRun.tags})!", suppressedStackText)
+            throw TestFailedException("Cucumber tests failed! (tags: ${cucumberTestRun.tags})!", suppressedStackTraceLog)
         }
 
-        return suppressedStackText
+        return suppressedStackTraceLog
     }
 
     private fun runCucumberTests(tags: String): Byte {
