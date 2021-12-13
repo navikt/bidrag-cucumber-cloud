@@ -50,7 +50,7 @@ internal object BidragCucumberSingletons {
     }
 
     fun mapResponseSomMap(responseEntity: ResponseEntity<String?>?): Map<String, Any> {
-        return if (responseEntity?.statusCode == HttpStatus.OK && responseEntity.body != null)
+        return if (responseEntity?.statusCode?.is2xxSuccessful == true && responseEntity.body != null)
             mapResponseSomMap(responseEntity.body!!)
         else
             HashMap()
