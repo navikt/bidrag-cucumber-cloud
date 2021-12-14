@@ -211,7 +211,7 @@ class RestTjeneste(
             }
 
             if (isError(e, failOnNotFound)) {
-                ScenarioManager.errorLog("$httpMethod FEILET! ($fullUrl)", e)
+                ScenarioManager.errorLog(">>> $httpMethod FEILET! ($fullUrl) ${failureBody(jsonEntity, e)}", e)
 
                 if (CucumberTestRun.isNotSanityCheck) {
                     throw e
@@ -222,6 +222,10 @@ class RestTjeneste(
 
     private fun isError(e: Exception, failOn404: Boolean) = if (isNotFound(e)) failOn404 else true
     private fun isNotFound(e: Exception) = e is HttpStatusCodeException && e.statusCode == HttpStatus.NOT_FOUND
+    private fun failureBody(jsonEntity: HttpEntity<*>, e: Exception) = """|
+     - data: $jsonEntity
+     - feil: "${e::class.simpleName}: ${e.message}"
+     """.trimIndent()
 }
 
 class ResttjenesteMedBaseUrl(val template: RestTemplate, val baseUrl: String)

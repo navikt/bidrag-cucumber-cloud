@@ -17,9 +17,8 @@ object ScenarioManager {
 
     fun use(scenario: Scenario) {
         this.scenario = scenario
-        createCorrelationId()
+        createCorrelationId(scenario)
         MDC.put(CORRELATION_ID, correlationIdForScenario)
-        LOGGER.info("Starting ${scenarioMessage(scenario)}")
     }
 
     fun reset(scenario: Scenario) {
@@ -39,7 +38,7 @@ object ScenarioManager {
         scenario?.log(message)
     }
 
-    private fun createCorrelationId() {
+    private fun createCorrelationId(scenario: Scenario) {
         correlationIdForScenario = createCorrelationIdValue()
 
         val pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -53,20 +52,20 @@ object ScenarioManager {
 
         LOGGER.info(
             """
-            =|>   ${linkMessage()}
+            --------------
+            =|>   Starting ${scenarioMessage(scenario)} with correlationId:
             =|>   https://logs.adeo.no/app/kibana#/discover?_g=($time)&_a=($columns,$index,interval:auto,$query,$sort)
-            """.trimMargin()
+            """.trimIndent()
         )
     }
 
-    private fun createCorrelationIdValue(value: String = "cuce"): String {
+    internal fun createCorrelationIdValue(value: String = "cuke"): String {
         return CorrelationId.generateTimestamped(value).get()
     }
 
-    private fun linkMessage() = "Link for correlation-id ($correlationIdForScenario)"
     fun fetchCorrelationIdForScenario() = correlationIdForScenario ?: createCorrelationIdValue("unknown")
     fun errorLog(message: String, e: Exception) {
-        LOGGER.error("$message - ${e.javaClass.simpleName}")
+        LOGGER.error(message)
         CucumberTestRun.holdExceptionForTest(e)
     }
 }
