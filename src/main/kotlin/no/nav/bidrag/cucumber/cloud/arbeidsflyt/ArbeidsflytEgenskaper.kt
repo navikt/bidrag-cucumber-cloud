@@ -2,7 +2,7 @@ package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
+import no.nav.bidrag.cucumber.model.Assertion
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.assertj.core.api.Assertions.assertThat
@@ -102,9 +102,8 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
                     value = CucumberTestRun.hentRestTjenesteTilTesting().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = 0,
-                    verify = { assertion: Assertion -> assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation) }
-                ),
+                    expectation = 0
+                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
             )
         }
 

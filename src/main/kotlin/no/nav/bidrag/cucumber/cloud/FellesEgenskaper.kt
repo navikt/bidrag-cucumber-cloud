@@ -1,7 +1,7 @@
 package no.nav.bidrag.cucumber.cloud
 
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService.Assertion
+import no.nav.bidrag.cucumber.model.Assertion
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
 import org.assertj.core.api.Assertions.assertThat
@@ -19,9 +19,8 @@ class FellesEgenskaper : No {
                 Assertion(
                     "HttpStatus for ${hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning()}",
                     hentRestTjenesteTilTesting().hentHttpStatus(),
-                    HttpStatus.valueOf(enHttpStatus),
-                    this::harForventetHttpStatus
-                )
+                    HttpStatus.valueOf(enHttpStatus)
+                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
             )
         }
 
@@ -41,9 +40,5 @@ class FellesEgenskaper : No {
                 .`as`("HttpStatus for " + hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
         }
-    }
-
-    private fun harForventetHttpStatus(assertion: Assertion) {
-        assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
     }
 }

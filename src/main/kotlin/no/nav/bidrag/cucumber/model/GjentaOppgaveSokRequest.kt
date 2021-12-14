@@ -2,7 +2,7 @@ package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.cloud.arbeidsflyt.OppgaveConsumer
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 
 class GjentaOppgaveSokRequest(
     private val antallGjentakelser: Int,
@@ -58,14 +58,11 @@ class GjentaOppgaveSokRequest(
 
     private fun assertThatOppgaveFound(responseSomMap: Map<String, Any>) {
         FellesEgenskaperService.assertWhenNotSanityCheck(
-            FellesEgenskaperService.Assertion(
+            Assertion(
                 message = "Forventet å finne oppgaven",
                 value = responseSomMap["antallTreffTotalt"],
-                expectation = 1,
-                verify = { assertion: FellesEgenskaperService.Assertion ->
-                    Assertions.assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
-                }
-            ),
+                expectation = 1
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
 
@@ -73,14 +70,11 @@ class GjentaOppgaveSokRequest(
         @Suppress("UNCHECKED_CAST") val tildeltEnhetsnr = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("tildeltEnhetsnr")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
-            FellesEgenskaperService.Assertion(
+            Assertion(
                 message = "Oppgaven er tildelt enhet",
                 value = tildeltEnhetsnr,
                 expectation = enhet,
-                verify = { assertion: FellesEgenskaperService.Assertion ->
-                    Assertions.assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
-                }
-            )
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
 
@@ -88,27 +82,21 @@ class GjentaOppgaveSokRequest(
         @Suppress("UNCHECKED_CAST") val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("oppgavetype")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
-            FellesEgenskaperService.Assertion(
+            Assertion(
                 message = "Oppgaven har riktig oppgavetype",
                 value = oppgavetypeFraMap,
-                expectation = oppgavetype,
-                verify = { assertion: FellesEgenskaperService.Assertion ->
-                    Assertions.assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
-                }
-            )
+                expectation = oppgavetype
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
 
     private fun assertThatOppgaveSokHarEtTotaltAntallTreff(responseSomMap: Map<String, Any>, antallForventet: Int) {
         FellesEgenskaperService.assertWhenNotSanityCheck(
-            FellesEgenskaperService.Assertion(
+            Assertion(
                 message = "Forventet å finne oppgaver",
                 value = responseSomMap["antallTreffTotalt"],
-                expectation = antallForventet,
-                verify = { assertion: FellesEgenskaperService.Assertion ->
-                    Assertions.assertThat(assertion.value).`as`(assertion.message).isEqualTo(assertion.expectation)
-                }
-            ),
+                expectation = antallForventet
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
 }
