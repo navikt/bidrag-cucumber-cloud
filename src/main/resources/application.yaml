@@ -11,6 +11,7 @@ springdoc:
   packages-to-scan: no.nav.bidrag.cucumber.controller
 
 spring:
+  main.banner-mode: "off"
   security:
     oauth2:
       resourceserver:

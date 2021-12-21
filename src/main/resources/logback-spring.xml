@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+    <encoder class="no.nav.bidrag.cucumber.logback.TestMessageBeforeLayoutHolder">
       <providers>
         <mdc/>
         <timestamp/>
@@ -14,9 +14,6 @@
         <stackTrace/>
       </providers>
     </encoder>
-    <layout class="no.nav.bidrag.cucumber.logback.TestMessageBeforeLayoutHolder">
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </layout>
   </appender>
 
   <springProfile name="test">
