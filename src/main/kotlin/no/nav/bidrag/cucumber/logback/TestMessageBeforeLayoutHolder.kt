@@ -1,20 +1,19 @@
 package no.nav.bidrag.cucumber.logback
 
-import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
+import net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder
 import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.model.CucumberTestRun
-import java.lang.IllegalStateException
 
-class TestMessageBeforeLayoutHolder : PatternLayout() {
+class TestMessageBeforeLayoutHolder : LoggingEventCompositeJsonEncoder() {
 
-    override fun doLayout(event: ILoggingEvent?): String {
+    override fun encode(event: ILoggingEvent?): ByteArray {
         if (CucumberTestRun.isTestRunStarted) {
-            val message = event?.message ?: throw IllegalStateException("event or event.message should not be null!")
+            val message = event?.message ?: throw IllegalStateException("ILoggingEvent should not be null!")
             CucumberTestRun.holdTestMessage(message)
             ScenarioManager.log(message)
         }
 
-        return super.doLayout(event)
+        return super.encode(event)
     }
 }
