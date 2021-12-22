@@ -195,13 +195,6 @@ class RestTjeneste(
         exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
     }
 
-    private fun httpEntity(body: Any): HttpEntity<*> {
-        val headers = initHttpHeadersWithCorrelationIdAndEnhet()
-        headers.contentType = MediaType.APPLICATION_JSON
-
-        return HttpEntity(body, headers)
-    }
-
     private fun httpEntity(body: String): HttpEntity<String> {
         val headers = initHttpHeadersWithCorrelationIdAndEnhet()
         headers.contentType = MediaType.APPLICATION_JSON
