@@ -250,6 +250,7 @@ jobs:
       - run-tests-for-bidrag-stonad
       - run-tests-for-bidrag-vedtak
       - run-tests-for-bidrag-grunnlag
+      - run-tests-for-bidrag-beregn-saertilskudd
 
     steps:
       - uses: actions/checkout@v2
