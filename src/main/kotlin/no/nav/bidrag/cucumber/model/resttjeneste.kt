@@ -185,15 +185,19 @@ class RestTjeneste(
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
 
+    fun exchangePost(endpointUrl: String, body: String) {
+        val jsonEntity = httpEntity(body)
+        exchange(jsonEntity, endpointUrl, HttpMethod.POST)
+    }
+
     fun exchangePatch(endpointUrl: String, body: Any) {
         val jsonEntity = httpEntity(BidragCucumberSingletons.toJson(body))
         exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
     }
 
-    private fun httpEntity(body: Any): HttpEntity<*> {
+    private fun httpEntity(body: String): HttpEntity<String> {
         val headers = initHttpHeadersWithCorrelationIdAndEnhet()
         headers.contentType = MediaType.APPLICATION_JSON
-
         return HttpEntity(body, headers)
     }
 

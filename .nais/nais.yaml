@@ -51,3 +51,5 @@ spec:
       value: {{ scope.oppgave }}
     - name: SAK_SCOPE
       value: {{ scope.sak }}
+    - name: BEREGN_SAERTILSKUDD_SCOPE
+      value: {{ scope.beregn_saertilskudd}}
