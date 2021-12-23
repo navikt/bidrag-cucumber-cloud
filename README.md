@@ -176,7 +176,7 @@ mvn exec:java                                        \
   curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-    -d '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag>"]}' \
+    -d '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag:navn>"]}' \
        http://localhost:8080/bidrag-cucumber-cloud/run
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
@@ -184,7 +184,7 @@ mvn exec:java                                        \
   curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-    -d '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tagnavn>"],"securityToken"="<security token (uten Bearer)}'
+    -d '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag:navn>"],"securityToken"="<security token (uten Bearer)}'
   ```
 
 ##### Kjøring med IntelliJ
@@ -214,14 +214,14 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
   curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-    -d '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tagnavn>"]}'
+    -d '{"tags":["@tag1","@tag2"],"sanityCheck":true,"ingressesForApps":["<ingress.som.testes@tag:navn>"]}'
   ```
 * for fullstendig test, åpne ny terminal og kjør kommandoen
   ```
    curl -X 'POST' http://localhost:8080/bidrag-cucumber-cloud/run \
     -H 'accept: */*' \
     -H 'Content-Type: application/json' \
-    -d '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tagnavn>"],"securityToken"="<security token (uten Bearer)}'
+    -d '{"tags":["@tag1","@tag2"],"testUsername":"<z123456>","ingressesForApps":["<ingress.som.testes@tag:navn>"],"securityToken"="<security token (uten Bearer)}'
   ```
 
 ##### Kjøring med swagger
