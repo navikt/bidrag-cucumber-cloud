@@ -169,3 +169,26 @@ jobs:
         env:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @arbeidsflyt-opprett-oppgave feilet"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+
+  run-tests-for-bidrag-beregn-saertilskudd:
+    runs-on: ubuntu-latest
+    name: "bidrag-beregn-saertilskudd"
+
+    env:
+      INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no
+
+    steps:
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"noContextPathForApps":["bidrag-beregn-saertilskudd-rest"],"ingressesForApps":[
+                   "${{ env.INGRESS_BEREGN_SAERTILSKUDD }}@tag:bidrag-beregn-saertilskudd-rest"
+                 ], "testUsername":"z992903"}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+      - run: |
+          curl -X POST --data-urlencode "payload={\"channel\": \"#team-bidrag-dev\", \"username\": \"webhookbot\", \"text\": \"$MELDING\", \"icon_emoji\": \":boom:\"}" $WEBHOOK_URL
+        if: ${{ failure() }}
+        env:
+          MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-beregn-saertilskudd-rest feilet"
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}

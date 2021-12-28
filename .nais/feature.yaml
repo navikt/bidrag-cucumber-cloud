@@ -9,3 +9,4 @@ kafka-topic-journalpost: bidrag.journalpost-feature
 scope:
   oppgave: dev-fss.oppgavehandtering.oppgave-q1
   sak: dev-fss.bidrag.bidrag-sak-feature
+  beregn_saertilskudd: dev-gcp.bidrag.bidrag-beregn-saertilskudd-rest-feature
