@@ -28,12 +28,10 @@ class BeregnEgenskaper : No {
       val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
       val json = jsonFile.readText(Charsets.UTF_8)
       hentRestTjenesteTilTesting().exchangePost(endpoint, json)
-//      settOppNaisApp(application).exchangePost(endpoint, json)
     }
 
     Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
       val response = hentRestTjenesteTilTesting().hentResponse()
-//      val response = settOppNaisApp("bidrag-beregn-saertilskudd-rest").hentResponse()
       var resultatBelop = parseJson(response, sti) ?: "-1"
 
       if (resultatBelop.endsWith(".0")) {
@@ -52,7 +50,6 @@ class BeregnEgenskaper : No {
     Og("responsen skal inneholde resultatkoden {string} under stien {string}")
     { resultatkode: String, sti: String ->
       val response = hentRestTjenesteTilTesting().hentResponse()
-//      val response = settOppNaisApp("bidrag-beregn-saertilskudd-rest").hentResponse()
       val kode = parseJson(response, sti) ?: "null"
 
       FellesEgenskaperService.assertWhenNotSanityCheck(
