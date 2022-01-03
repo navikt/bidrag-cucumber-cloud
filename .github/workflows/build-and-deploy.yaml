@@ -195,7 +195,7 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-forskudd-rest.dev.intern.nav.no
+      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.dev.intern.nav.no
 
     steps:
       - name: feature ingresses
