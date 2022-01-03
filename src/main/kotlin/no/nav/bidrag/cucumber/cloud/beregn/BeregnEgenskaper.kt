@@ -22,7 +22,7 @@ class BeregnEgenskaper : No {
   }
 
   init {
-    Når("jeg bruker endpoint {string} i applikasjon {string} med json fra {string}") { application: String, endpoint: String, jsonFilePath: String ->
+    Når("jeg bruker endpoint {string} i applikasjon {string} med json fra {string}") { endpoint: String, application: String, jsonFilePath: String ->
       LOGGER.info("Leser $BEREGN_RESOURCES/$jsonFilePath")
       val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
       val json = jsonFile.readText(Charsets.UTF_8)
