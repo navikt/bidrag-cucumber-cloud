@@ -12,7 +12,7 @@ Egenskap: bidrag-beregn-saertilskudd-rest
     Så skal http status være 200
 
   Scenario: beregn særtilskudd
-    Når jeg bruker endpoint '/beregn/saertilskudd' med json fra 'saertilskudd/saertilskudd_eksempel.json'
+    Når jeg bruker endpoint '/beregn/saertilskudd' i applikasjon 'bidrag-beregn-saertilskudd-rest' med json fra 'saertilskudd/saertilskudd_eksempel.json'
     Så skal http status være 200
     Og responsen skal inneholde beløpet '4242' under stien '$.beregnetSaertilskuddPeriodeListe[0].resultat.belop'
     Og responsen skal inneholde resultatkoden 'SAERTILSKUDD_INNVILGET' under stien '$.beregnetSaertilskuddPeriodeListe[0].resultat.kode'
