@@ -10,3 +10,4 @@ scope:
   oppgave: dev-fss.oppgavehandtering.oppgave
   sak: dev-fss.bidrag.bidrag-sak
   beregn_saertilskudd: dev-gcp.bidrag.bidrag-beregn-saertilskudd-rest
+  beregn_forskudd: dev-gcp.bidrag.bidrag-beregn-forskudd-rest

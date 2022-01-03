@@ -52,4 +52,6 @@ spec:
     - name: SAK_SCOPE
       value: {{ scope.sak }}
     - name: BEREGN_SAERTILSKUDD_SCOPE
-      value: {{ scope.beregn_saertilskudd}}
+      value: {{ scope.beregn_saertilskudd }}
+    - name: BEREGN_FORSKUDD_SCOPE
+      value: {{ scope.beregn_forskudd }}

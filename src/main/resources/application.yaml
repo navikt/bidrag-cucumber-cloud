@@ -38,6 +38,12 @@ spring:
             client-secret: ${AZURE_APP_CLIENT_SECRET}
             authorization-grant-type: client_credentials
             scope: api://${BEREGN_SAERTILSKUDD_SCOPE}/.default
+          bidrag-beregn-forskudd-rest:
+            provider: aad
+            client-id: ${AZURE_APP_CLIENT_ID}
+            client-secret: ${AZURE_APP_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope: api://${BEREGN_FORSKUDD_SCOPE}/.default
         provider:
           aad:
             token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
