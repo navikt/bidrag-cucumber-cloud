@@ -5,6 +5,8 @@ import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.model.Assertion
+import no.nav.bidrag.cucumber.model.CucumberTestRun
+import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
 import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.settOppNaisApp
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
@@ -25,12 +27,11 @@ class BeregnEgenskaper : No {
       LOGGER.info("Leser $BEREGN_RESOURCES/$jsonFilePath")
       val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
       val json = jsonFile.readText(Charsets.UTF_8)
-
-      settOppNaisApp("bidrag-beregn-saertilskudd-rest").exchangePost(endpoint, json)
+      hentRestTjenesteTilTesting().exchangePost(endpoint, json)
     }
 
     Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
-      val response = settOppNaisApp("bidrag-beregn-saertilskudd-rest").hentResponse()
+      val response = hentRestTjenesteTilTesting().hentResponse()
       var resultatBelop = parseJson(response, sti) ?: "-1"
 
       if (resultatBelop.endsWith(".0")) {
@@ -48,7 +49,7 @@ class BeregnEgenskaper : No {
 
     Og("responsen skal inneholde resultatkoden {string} under stien {string}")
     { resultatkode: String, sti: String ->
-      val response = settOppNaisApp("bidrag-beregn-saertilskudd-rest").hentResponse()
+      val response = hentRestTjenesteTilTesting().hentResponse()
       val kode = parseJson(response, sti) ?: "null"
 
       FellesEgenskaperService.assertWhenNotSanityCheck(
