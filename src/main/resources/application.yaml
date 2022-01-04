@@ -49,7 +49,7 @@ spring:
             client-id: ${AZURE_APP_CLIENT_ID}
             client-secret: ${AZURE_APP_CLIENT_SECRET}
             authorization-grant-type: client_credentials
-            scope: api://${BEREGN_FORSKUDD_SCOPE}/.default
+            scope: api://${BEREGN_BARNEBIDRAG_SCOPE}/.default
         provider:
           aad:
             token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
