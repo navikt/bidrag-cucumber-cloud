@@ -11,3 +11,4 @@ scope:
   sak: dev-fss.bidrag.bidrag-sak
   beregn_saertilskudd: dev-gcp.bidrag.bidrag-beregn-saertilskudd-rest
   beregn_forskudd: dev-gcp.bidrag.bidrag-beregn-forskudd-rest
+  beregn_barnebidrag: dev-gcp.bidrag.bidrag-beregn-barnebidrag-rest

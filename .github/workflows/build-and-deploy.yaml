@@ -298,6 +298,7 @@ jobs:
       - run-tests-for-bidrag-grunnlag
       - run-tests-for-bidrag-beregn-saertilskudd
       - run-tests-for-bidrag-beregn-forskudd
+      - run-tests-for-bidrag-beregn-barnebidrag
 
     steps:
       - uses: actions/checkout@v2
