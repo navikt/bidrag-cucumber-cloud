@@ -212,6 +212,29 @@ jobs:
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
 
+  run-tests-for-bidrag-beregn-barnebidrag:
+    runs-on: ubuntu-latest
+    name: bidrag-beregn-barnebidrag
+    needs: deploy
+
+    env:
+      INGRESS_BEREGN_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.intern.nav.no
+
+    steps:
+      - name: feature ingresses
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "INGRESS_BEREGN_BARNEBIDRAG=https://bidrag-beregn-barnebidrag-rest-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+               --request POST \
+               --data '{"noContextPathForApps":["bidrag-beregn-barnebidrag-rest"],"ingressesForApps":[
+                   "${{ env.INGRESS_BEREGN_BARNEBIDRAG }}@tag:bidrag-beregn-barnebidrag-rest"
+                 ], "testUsername":"z992903"}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+
   run-tests-for-arbeidsflyt:
     runs-on: ubuntu-latest
     name: bidrag-arbeidsflyt
