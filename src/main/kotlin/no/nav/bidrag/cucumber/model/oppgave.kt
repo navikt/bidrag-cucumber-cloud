@@ -17,7 +17,7 @@ data class PatchStatusOppgaveRequest(
 data class PostOppgaveRequest(
     var journalpostId: String,
     var tema: String,
-    var oppgavetype: String = "BEH_SAK",
+    var oppgavetype: String = "JFR",
     var prioritet: String = "HOY",
     var aktivDato: LocalDate = LocalDate.now().minusDays(1),
     var tildeltEnhetsnr: String = "1001"

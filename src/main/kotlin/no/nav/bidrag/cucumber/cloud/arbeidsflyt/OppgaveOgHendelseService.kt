@@ -28,7 +28,7 @@ object OppgaveOgHendelseService {
                     journalpostId = journalpostHendelse.hentJournalpostIdStrengUtenPrefix(),
                     tema = fagomrade,
                     tildeltEnhetsnr = enhetsnummer,
-                    oppgavetype = oppgavetype ?: "BEH_SAK"
+                    oppgavetype = oppgavetype ?: "JFR"
                 )
             )
         } else if (sokResponse.oppgaver.isNotEmpty()) {
