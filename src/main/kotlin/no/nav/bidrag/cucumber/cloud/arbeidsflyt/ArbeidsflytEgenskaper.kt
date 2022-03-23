@@ -48,7 +48,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.sokOppgaverEtterBehandlingAvHendelse(
                 hendelse = journalpostHendelse,
                 tema = journalpostHendelse.fagomrade ?: throw IllegalStateException("Cucumber test må sørge for at fagområde er satt!"),
-                sleepInMilliseconds = 2500
+                sleepInMilliseconds = 4000
             )
         }
 
@@ -61,7 +61,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.sokOppgaverEtterBehandlingAvHendelse(
                 hendelse = journalpostHendelse,
                 tema = fagomrade,
-                sleepInMilliseconds = 2500
+                sleepInMilliseconds = 4000
             )
         }
 
