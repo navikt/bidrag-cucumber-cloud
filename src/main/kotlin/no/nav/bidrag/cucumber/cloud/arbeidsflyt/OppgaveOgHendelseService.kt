@@ -68,18 +68,17 @@ object OppgaveOgHendelseService {
         )
     }
 
-    fun ferdigstillEventuellOppgave(journalpostId: Long, tema: String) {
+    fun ferdigstillEventuellOppgave(journalpostIdMedPrefix: String, journalpostId: Long, tema: String) {
         val sokResponse = OppgaveConsumer.sokOppgaver(journalpostId, tema)
 
         if (sokResponse.antallTreffTotalt > 0) {
             sokResponse.oppgaver.forEach {
-                OppgaveConsumer.patchOppgave(
-                    PatchStatusOppgaveRequest(
-                        id = it.id,
-                        status = "FERDIGSTILT",
-                        tema = tema,
-                        versjon = it.versjon.toInt(),
-                        tildeltEnhetsnr = it.tildeltEnhetsnr
+                opprettJournalpostHendelse(
+                    JournalpostHendelse(
+                        journalpostId = journalpostIdMedPrefix,
+                        journalstatus = "J",
+                        fagomrade= "BID",
+                        enhet = "4806"
                     )
                 )
             }
