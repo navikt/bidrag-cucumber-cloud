@@ -91,6 +91,9 @@ object OppgaveOgHendelseService {
                     ))
             }
         }
+
+        // Wait for hendelse to finish
+        Thread.sleep(2000)
     }
 
     fun assertThatOppgaveHar(enhet: String? = null, oppgavetype: String? = null) {
