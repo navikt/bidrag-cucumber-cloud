@@ -73,15 +73,6 @@ object OppgaveOgHendelseService {
 
         if (sokResponse.antallTreffTotalt > 0) {
             sokResponse.oppgaver.forEach {
-                OppgaveConsumer.patchOppgave(
-                    PatchStatusOppgaveRequest(
-                        id = it.id,
-                        status = "FERDIGSTILT",
-                        tema = tema,
-                        versjon = it.versjon.toInt(),
-                        tildeltEnhetsnr = it.tildeltEnhetsnr
-                    )
-                )
                 opprettJournalpostHendelse(
                     JournalpostHendelse(
                         journalpostId = journalpostIdMedPrefix,
