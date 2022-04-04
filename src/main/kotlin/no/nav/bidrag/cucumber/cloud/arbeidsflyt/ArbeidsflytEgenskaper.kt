@@ -109,6 +109,7 @@ class ArbeidsflytEgenskaper : No {
 
         Og("at det ikke finnes en åpen oppgave") {
             OppgaveOgHendelseService.ferdigstillEventuellOppgave(
+                journalpostIdMedPrefix = journalpostHendelse.journalpostId,
                 journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
                 tema = journalpostHendelse.fagomrade!!
             )
