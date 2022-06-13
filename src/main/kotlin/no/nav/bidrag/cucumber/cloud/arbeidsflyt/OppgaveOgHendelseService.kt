@@ -20,7 +20,7 @@ object OppgaveOgHendelseService {
     fun tilbyOppgave(journalpostHendelse: JournalpostHendelse, oppgavetype: String? = null) {
         val sokResponse = OppgaveConsumer.sokOppgaver(journalpostHendelse.hentJournalpostIdUtenPrefix(), journalpostHendelse.fagomrade!!)
         val fagomrade: String = journalpostHendelse.fagomrade ?: FAGOMRADE_BIDRAG
-        val enhetsnummer: String = journalpostHendelse.enhet ?: "4806"
+        val enhetsnummer: String = journalpostHendelse.enhet ?: "4812"
 
         if (sokResponse.antallTreffTotalt == 0) {
             OppgaveConsumer.opprettOppgave(
@@ -78,7 +78,7 @@ object OppgaveOgHendelseService {
                         journalpostId = journalpostIdMedPrefix,
                         journalstatus = "J",
                         fagomrade= "BID",
-                        enhet = "4806"
+                        enhet = "4812"
                     ))
             }
         }

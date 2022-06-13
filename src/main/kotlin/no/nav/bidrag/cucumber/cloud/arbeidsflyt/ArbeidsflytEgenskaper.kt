@@ -21,7 +21,7 @@ class ArbeidsflytEgenskaper : No {
         Og("en journalpostHendelse med journalpostId {long} og fagområde {string}") { journalpostId: Long, fagomrade: String ->
             journalpostHendelse = JournalpostHendelse(
                 journalpostId = "$fagomrade-$journalpostId",
-                enhet = "4806",
+                enhet = "4812",
                 fagomrade = fagomrade
             )
         }
