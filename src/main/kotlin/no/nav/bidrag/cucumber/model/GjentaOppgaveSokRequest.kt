@@ -82,14 +82,14 @@ class GjentaOppgaveSokRequest(
         )
     }
 
-    private fun assertAktorid(responseSomMap: Map<String, Any>, aktorid: String) {
-        @Suppress("UNCHECKED_CAST") val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("aktorid")
+    private fun assertAktorid(responseSomMap: Map<String, Any>, aktoerId: String) {
+        @Suppress("UNCHECKED_CAST") val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("aktoerId")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
             Assertion(
-                message = "Oppgaven har riktig aktorid",
+                message = "Oppgaven har riktig aktoerId",
                 value = oppgavetypeFraMap,
-                expectation = aktorid
+                expectation = aktoerId
             ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
