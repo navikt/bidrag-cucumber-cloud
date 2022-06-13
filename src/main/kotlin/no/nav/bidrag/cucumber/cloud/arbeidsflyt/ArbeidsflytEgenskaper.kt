@@ -93,6 +93,10 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.assertThatOppgaveHar(oppgavetype = oppgavetype)
         }
 
+        Så("skal jeg finne oppgave i søkeresultatet med aktorId {string}") { aktorId: String ->
+            OppgaveOgHendelseService.assertThatOppgaveHar(aktorId = aktorId)
+        }
+
         Så("skal jeg finne totalt {int} oppgaver i søkeresultatet") { antallForventet: Int ->
             OppgaveOgHendelseService.assertThatDetErTotaltEnOppgaveFraSokeresultat(antallForventet)
         }
@@ -116,6 +120,12 @@ class ArbeidsflytEgenskaper : No {
         }
 
         Når("hendelsen opprettes") {
+            OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
+        }
+
+        Når("hendelsen opprettes med fnr {string} og journalstatus {string}") { fnr: String, journalstatus: String ->
+            journalpostHendelse.fnr = fnr
+            journalpostHendelse.journalstatus = journalstatus
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 

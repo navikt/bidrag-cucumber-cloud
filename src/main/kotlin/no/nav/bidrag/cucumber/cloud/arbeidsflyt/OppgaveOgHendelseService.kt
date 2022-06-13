@@ -87,8 +87,8 @@ object OppgaveOgHendelseService {
         Thread.sleep(2000)
     }
 
-    fun assertThatOppgaveHar(enhet: String? = null, oppgavetype: String? = null) {
-        GJENTA_OPPGAVE_SOK_REQUEST.get().assertThatOppgaveHar(enhet, oppgavetype)
+    fun assertThatOppgaveHar(enhet: String? = null, oppgavetype: String? = null, aktorId: String? = null) {
+        GJENTA_OPPGAVE_SOK_REQUEST.get().assertThatOppgaveHar(enhet, oppgavetype, aktorId)
     }
 
     fun assertThatOPpgaveFinnes() {
