@@ -45,13 +45,12 @@ class ForsendelseEgenskaper : No {
 
     Og("forsendelse skal inneholde dokument med dokumentmal {string} og status {string}") { malid: String, status: String ->
       val forsendelseId = CucumberTestRun.thisRun().testData.hentDataMedNøkkel("forsendelse")?.get("forsendelseId") as String
-      await.pollInSameThread().ignoreExceptions().atMost(Duration.ofSeconds(10)).until {
+      await.pollInSameThread().pollInterval(Duration.ofMillis(500)).ignoreExceptions().atMost(Duration.ofSeconds(5)).until {
         val response = hentRestTjenesteTilTesting().exchangeGet("/api/forsendelse/journal/$forsendelseId").body
 
         val json = parseJson(response)
         val dokumenter = json!!.get("journalpost").get("dokumenter").toList()
 
-        println("hererer")
         val dokument = dokumenter.find { it.get("dokumentmalId").asText() == malid }
         FellesEgenskaperService.assertWhenNotSanityCheck(
           Assertion(
