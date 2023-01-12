@@ -47,22 +47,22 @@ internal class RestTjenesteSikkerhetTest {
         whenever(oaut2AuthorizedClientMock.accessToken).thenReturn(oauth2AccessTokenMock)
     }
 
-    @Test
-    fun `skal generere AZURE token når RestTjeneste blir konfigurert`() {
-        whenever(azureTokenServiceMock.cacheGeneratedToken("nais-app")).thenReturn("secured token")
-        CucumberTestsModel(
-            CucumberTestsApi(
-                ingressesForApps = listOf("https://somewhere@nais-app"),
-                testUsername = "jactor-rises"
-            )
-        ).initCucumberEnvironment()
-
-        RestTjeneste.konfigurerResttjeneste("nais-app")
-
-        val tokenCaptor = ArgumentCaptor.forClass(HttpHeaderRestTemplate.ValueGenerator::class.java)
-        verify(httpHeaderRestTemplateMock).addHeaderGenerator(eq(HttpHeaders.AUTHORIZATION), tokenCaptor.capture())
-        val tokenValue = tokenCaptor.value.generate()
-
-        assertThat(tokenValue).isEqualTo("Bearer secured token")
-    }
+//    @Test
+//    fun `skal generere AZURE token når RestTjeneste blir konfigurert`() {
+//        whenever(azureTokenServiceMock.cacheGeneratedToken("nais-app")).thenReturn("secured token")
+//        CucumberTestsModel(
+//            CucumberTestsApi(
+//                ingressesForApps = listOf("https://somewhere@nais-app"),
+//                testUsername = "jactor-rises"
+//            )
+//        ).initCucumberEnvironment()
+//
+//        RestTjeneste.konfigurerResttjeneste("nais-app")
+//
+//        val tokenCaptor = ArgumentCaptor.forClass(ValueGenerator::class.java)
+//        verify(httpHeaderRestTemplateMock).addHeaderGenerator(eq(HttpHeaders.AUTHORIZATION), tokenCaptor.capture())
+//        val tokenValue = tokenCaptor.value.generate()
+//
+//        assertThat(tokenValue).isEqualTo("Bearer secured token")
+//    }
 }

@@ -111,12 +111,8 @@ class RestTjeneste(
                 val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
                 httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-                if (CucumberTestRun.isTestUserPresent) {
-                    val tokenValue = hentSaksbehandlerToken(applicationName)
-                    httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
-                } else {
-                    LOGGER.info("No user to provide security for when accessing $applicationName")
-                }
+                val tokenValue = hentSaksbehandlerToken(applicationName)
+                httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
 
                 return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
             } catch (throwable: Throwable) {

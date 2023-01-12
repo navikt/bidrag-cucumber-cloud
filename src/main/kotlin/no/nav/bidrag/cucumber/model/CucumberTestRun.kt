@@ -15,6 +15,7 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaper
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
 
 class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
+    internal val testData = TestData()
     private val restTjenester = RestTjenester()
     private val runStats = RunStats()
     private val testMessagesHolder = TestMessagesHolder()
@@ -48,7 +49,7 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         private val CUCUMBER_TEST_RUN = ThreadLocal<CucumberTestRun>()
 
         @JvmStatic
-        private fun thisRun() = CUCUMBER_TEST_RUN.get() ?: initFromEnvironment()
+        fun thisRun() = CUCUMBER_TEST_RUN.get() ?: initFromEnvironment()
 
         @JvmStatic
         private fun initFromEnvironment(): CucumberTestRun {

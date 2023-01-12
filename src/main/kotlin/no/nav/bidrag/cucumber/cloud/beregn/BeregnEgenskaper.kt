@@ -17,18 +17,9 @@ class BeregnEgenskaper : No {
   companion object {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
-
-    @JvmStatic
-    private val BEREGN_RESOURCES = "$ABSOLUTE_CLOUD_PATH/beregn"
   }
 
   init {
-    Når("jeg bruker endpoint {string} med json fra {string}") { endpoint: String, jsonFilePath: String ->
-      LOGGER.info("Leser $BEREGN_RESOURCES/$jsonFilePath")
-      val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
-      val json = jsonFile.readText(Charsets.UTF_8)
-      hentRestTjenesteTilTesting().exchangePost(endpoint, json)
-    }
 
     Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
       val response = hentRestTjenesteTilTesting().hentResponse()

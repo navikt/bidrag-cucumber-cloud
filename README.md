@@ -245,3 +245,30 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 4. Trykk på "Try it out"
 5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
 6. Press `Execute`
+
+
+
+#### Kjøre lokalt mot nais tjenester
+For å kunne kjøre lokalt mot sky må du gjøre følgende
+
+Åpne terminal på root mappen til `bidrag-cucumber-cloud`
+Konfigurer kubectl til å gå mot kluster `dev-gcp`
+```bash
+# Log inn til GPC
+gcp auth login --update-adc
+# Sett cluster til dev-fss
+kubectx dev-gcp
+# Sett namespace til bidrag
+kubens bidrag 
+
+# -- Eller hvis du ikke har kubectx/kubens installert 
+# (da må -n=bidrag legges til etter exec i neste kommando)
+kubectl config use dev-gcp
+```
+Deretter kjør følgende kommando for å importere secrets. Viktig at filen som opprettes ikke committes til git
+
+```bash
+kubectl exec --tty deployment/bidrag-cucumber-cloud-feature printenv | grep -E 'AZURE_|_URL|SCOPE' > src/main/resources/application-lokal-nais-secrets.properties
+```
+
+Start opp applikasjonen ved å kjøre [BidragDokumentBestillingLokal.kt](src/test/kotlin/no/nav/bidrag/dokument/bestilling/BidragDokumentBestillingLokal.kt).

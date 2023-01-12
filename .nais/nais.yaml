@@ -57,3 +57,5 @@ spec:
       value: {{ scope.beregn_forskudd }}
     - name: BEREGN_BARNEBIDRAG_SCOPE
       value: {{ scope.beregn_barnebidrag }}
+    - name: DOKUMENT_FORSENDELSE_SCOPE
+      value: {{ scope.dokument_forsendelse }}
