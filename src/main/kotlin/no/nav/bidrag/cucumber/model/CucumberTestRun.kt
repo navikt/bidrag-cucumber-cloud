@@ -74,6 +74,7 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         val isTestUserPresent: Boolean get() = fetchPropertyOrEnvironment(TEST_USER) != null || thisRun().cucumberTestsModel.testUsername != null
         val securityToken: String? get() = thisRun().cucumberTestsModel.securityToken
         val testUsername: String? get() = thisRun().cucumberTestsModel.testUsername
+        val skipAuth: Boolean get() = thisRun().cucumberTestsModel.skipAuth
         val withSecurityToken: Boolean get() = securityToken != null
         private var exceptionLogger: ExceptionLogger? = null
 

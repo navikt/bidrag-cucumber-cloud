@@ -111,8 +111,10 @@ class RestTjeneste(
                 val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
                 httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-                val tokenValue = hentSaksbehandlerToken(applicationName)
-                httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
+                if (!CucumberTestRun.skipAuth){
+                    val tokenValue = hentToken(applicationName)
+                    httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
+                }
 
                 return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
             } catch (throwable: Throwable) {
@@ -122,7 +124,7 @@ class RestTjeneste(
             }
         }
 
-        private fun hentSaksbehandlerToken(applicationName: String): TokenValue {
+        private fun hentToken(applicationName: String): TokenValue {
             val tokenService: TokenService = BidragCucumberSingletons.hentEllerInit(AzureTokenService::class) ?: throw notNullTokenService()
 
             return TokenValue(tokenService.cacheGeneratedToken(applicationName))

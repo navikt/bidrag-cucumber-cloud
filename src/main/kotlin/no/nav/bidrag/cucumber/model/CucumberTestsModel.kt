@@ -37,6 +37,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     val securityToken: String? get() = cucumberTestsApi.securityToken
     val tags: List<String> get() = cucumberTestsApi.tags
     val testUsername: String? get() = cucumberTestsApi.testUsername
+    val skipAuth: Boolean get() = cucumberTestsApi.skipAuth ?: false
 
     constructor(
         ingressesForApps: List<String> = emptyList(),

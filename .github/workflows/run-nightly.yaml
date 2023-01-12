@@ -22,7 +22,7 @@ jobs:
                --request POST \
                --data '{"ingressesForApps":[
                    "${{ env.INGRESS_CUCUMBER }}@tag:bidrag-cucumber-cloud"
-                 ]}' \
+                 ], "skipAuth": true}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -45,7 +45,7 @@ jobs:
                --request POST \
                --data '{"noContextPathForApps":["bidrag-stonad"],"ingressesForApps":[
                    "${{ env.INGRESS_STONAD }}@tag:bidrag-stonad"
-                 ]}' \
+                 ], "skipAuth": true}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -68,7 +68,7 @@ jobs:
                --request POST \
                --data '{"noContextPathForApps":["bidrag-vedtak"],"ingressesForApps":[
                    "${{ env.INGRESS_VEDTAK }}@tag:bidrag-vedtak"
-                 ]}' \
+                 ], "skipAuth": true}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -91,7 +91,7 @@ jobs:
                --request POST \
                --data '{"noContextPathForApps":["bidrag-grunnlag"],"ingressesForApps":[
                    "${{ env.INGRESS_GRUNNLAG }}@tag:bidrag-grunnlag"
-                 ]}' \
+                 ], "skipAuth": true}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -112,7 +112,7 @@ jobs:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"tags":["@arbeidsflyt-endre-fagomrade"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+               --data '{"tags":["@arbeidsflyt-endre-fagomrade"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
@@ -135,7 +135,7 @@ jobs:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"tags":["@arbeidsflyt-journalforing"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+               --data '{"tags":["@arbeidsflyt-journalforing"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
@@ -158,7 +158,7 @@ jobs:
       - run: |
           curl -H "Content-Type: application/json" -i \
                --request POST \
-               --data '{"tags":["@arbeidsflyt-opprett-oppgave"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+               --data '{"tags":["@arbeidsflyt-opprett-oppgave"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
@@ -183,7 +183,7 @@ jobs:
                --request POST \
                --data '{"noContextPathForApps":["bidrag-beregn-saertilskudd-rest"],"ingressesForApps":[
                    "${{ env.INGRESS_BEREGN_SAERTILSKUDD }}@tag:bidrag-beregn-saertilskudd-rest"
-                 ], "testUsername":"z992903"}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -206,7 +206,7 @@ jobs:
                --request POST \
                --data '{"noContextPathForApps":["bidrag-beregn-forskudd-rest"],"ingressesForApps":[
                    "${{ env.INGRESS_BEREGN_FORSKUDD }}@tag:bidrag-beregn-forskudd-rest"
-                 ], "testUsername":"z992903"}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -229,7 +229,7 @@ jobs:
                --request POST \
                --data '{"noContextPathForApps":["bidrag-beregn-barnebidrag-rest"],"ingressesForApps":[
                    "${{ env.INGRESS_BEREGN_BARNEBIDRAG }}@tag:bidrag-beregn-barnebidrag-rest"
-                 ], "testUsername":"z992903"}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
