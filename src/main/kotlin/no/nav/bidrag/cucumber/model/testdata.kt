@@ -3,12 +3,22 @@ package no.nav.bidrag.cucumber.model
 
 internal class TestData {
     val dataForNokkel: MutableMap<String, Data> = HashMap()
+    var nokkel: String? = null
 
-    fun hentDataMedNøkkel(nokkel: String): Data? = dataForNokkel[nokkel]
-    fun lagreDataMedNøkkel(nokkel: String, data: Data) {
-        dataForNokkel[nokkel] = data
+    fun hentData(nokkel: String? = null) = dataForNokkel[nokkel ?: this.nokkel] ?: throw IllegalArgumentException("Fant ingen data for nøkkel")
+    fun hentDataMedNøkkel(dataNøkkel: String? = null) = hentData()[dataNøkkel]
+    fun lagreData(data: Pair<String, Any>) {
+        hentData()?.put(data.first, data.second)
+    }
+    fun initialiserData(nokkel: String){
+        if (!dataForNokkel.contains(nokkel)){
+            this.nokkel = nokkel
+            dataForNokkel[nokkel] = HashMap()
+        }
+
     }
 
 }
 
-typealias Data = Map<String, Any>
+
+typealias Data = MutableMap<String, Any>

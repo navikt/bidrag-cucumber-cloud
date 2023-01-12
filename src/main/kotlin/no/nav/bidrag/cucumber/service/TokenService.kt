@@ -17,7 +17,7 @@ abstract class TokenService {
             "sanity check: no token"
         }
 
-        CucumberTestRun.updateSecurityToken(token)
+//        CucumberTestRun.updateSecurityToken(token)
 
         return token
     }

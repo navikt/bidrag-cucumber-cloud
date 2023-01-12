@@ -59,3 +59,5 @@ spec:
       value: {{ scope.beregn_barnebidrag }}
     - name: DOKUMENT_FORSENDELSE_SCOPE
       value: {{ scope.dokument_forsendelse }}
+    - name: BIDRAG_DOKUMENT_SCOPE
+      value: { { scope.bidrag_dokument } }
