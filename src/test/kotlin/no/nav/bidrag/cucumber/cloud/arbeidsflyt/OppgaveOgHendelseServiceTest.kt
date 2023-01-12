@@ -10,6 +10,7 @@ import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
+import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -35,7 +36,8 @@ internal class OppgaveOgHendelseServiceTest {
     private val journalpostHendelse = JournalpostHendelse(
         journalpostId = "BID-1010101010", fagomrade = FAGOMRADE_BIDRAG
     )
-
+    @MockBean
+    private lateinit var azureTokenService: AzureTokenService
     @MockBean
     private lateinit var hendelseProducerMock: HendelseProducer
 
@@ -44,6 +46,7 @@ internal class OppgaveOgHendelseServiceTest {
 
     @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
+        whenever(azureTokenService.generateToken(anyString())).thenReturn("")
         val naisApplikasjon = "oppgave"
         CucumberTestRun(CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon"))).initEnvironment()
         CucumberTestRun.settOppNaisAppTilTesting(naisApplikasjon)
