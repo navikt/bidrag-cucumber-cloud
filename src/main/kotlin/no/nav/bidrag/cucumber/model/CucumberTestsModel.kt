@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.model
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
+import no.nav.bidrag.cucumber.dto.SaksbehandlerType
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.InputStream
@@ -38,6 +39,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
     val tags: List<String> get() = cucumberTestsApi.tags
     val testUsername: String? get() = cucumberTestsApi.testUsername
     val skipAuth: Boolean get() = cucumberTestsApi.skipAuth ?: false
+    val saksbehandlerType: SaksbehandlerType? get() = cucumberTestsApi.medSaksbehandlerType
 
     constructor(
         ingressesForApps: List<String> = emptyList(),

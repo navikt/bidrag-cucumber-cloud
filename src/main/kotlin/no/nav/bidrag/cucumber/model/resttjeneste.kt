@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.model
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter
 import no.nav.bidrag.cucumber.ScenarioManager
+import no.nav.bidrag.cucumber.dto.SaksbehandlerType
 import no.nav.bidrag.cucumber.service.AzureTokenService
 import no.nav.bidrag.cucumber.service.TokenService
 import org.slf4j.LoggerFactory
@@ -112,7 +113,7 @@ class RestTjeneste(
                 httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
                 if (!CucumberTestRun.skipAuth){
-                    val tokenValue = hentToken(applicationName)
+                    val tokenValue = hentToken(applicationName, CucumberTestRun.saksbehandlerType)
                     httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
                 }
 
@@ -124,10 +125,10 @@ class RestTjeneste(
             }
         }
 
-        private fun hentToken(applicationName: String): TokenValue {
+        private fun hentToken(applicationName: String, saksbehandlerType: SaksbehandlerType? = null): TokenValue {
             val tokenService: TokenService = BidragCucumberSingletons.hentEllerInit(AzureTokenService::class) ?: throw notNullTokenService()
 
-            return TokenValue(tokenService.cacheGeneratedToken(applicationName))
+            return TokenValue(tokenService.getToken(applicationName, saksbehandlerType))
         }
 
         private fun notNullTokenService() = IllegalStateException("No token service in spring context")

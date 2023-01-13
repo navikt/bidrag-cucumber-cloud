@@ -7,7 +7,7 @@ internal class TestData {
 
     fun hentData(nokkel: String? = null) = dataForNokkel[nokkel ?: this.nokkel] ?: throw IllegalArgumentException("Fant ingen data for nøkkel")
     fun hentDataMedNøkkel(dataNøkkel: String? = null) = hentData()[dataNøkkel]
-    fun lagreData(data: Pair<String, Any>) {
+    fun lagreData(data: Pair<String, String>) {
         hentData()?.put(data.first, data.second)
     }
     fun initialiserData(nokkel: String){

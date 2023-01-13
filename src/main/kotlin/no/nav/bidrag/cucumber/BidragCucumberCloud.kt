@@ -3,8 +3,12 @@ package no.nav.bidrag.cucumber
 import org.slf4j.LoggerFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.ComponentScan.Filter
+import org.springframework.context.annotation.FilterType
 
 @SpringBootApplication
+@ComponentScan(excludeFilters=[Filter(pattern = ["no.nav.bidrag.commons..*", "no.nav.security..*"], type = FilterType.ASPECTJ)])
 class BidragCucumberCloud {
     companion object {
         @JvmStatic

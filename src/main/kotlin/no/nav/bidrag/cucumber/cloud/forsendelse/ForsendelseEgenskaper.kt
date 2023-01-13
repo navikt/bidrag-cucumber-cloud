@@ -36,7 +36,7 @@ class ForsendelseEgenskaper : No {
       val journalpostId = json!!.get("journalpostId").asText()
       val dokumenter = json.get("dokumenter").toList().map { it.get("dokumentreferanse").asText() }
       CucumberTestRun.thisRun().testData.lagreData("journalpostId" to journalpostId)
-      CucumberTestRun.thisRun().testData.lagreData("joark_dokumentreferanse" to dokumenter.get(0))
+      CucumberTestRun.thisRun().testData.lagreData("joark_dokumentreferanse" to dokumenter[0])
     }
 
     Og("forsendelse inneholder dokument med dokumentmal {string} og status {string}") { malid: String, status: String ->
@@ -47,6 +47,7 @@ class ForsendelseEgenskaper : No {
         val json = parseJson(response)
         val dokumenter = json!!.get("journalpost").get("dokumenter").toList()
 
+        lagreDokumentreferanserFraRespons(json.get("journalpost"))
         val dokument = dokumenter.find { it.get("dokumentmalId").asText() == malid }
         FellesEgenskaperService.assertWhenNotSanityCheck(
           Assertion(
@@ -64,6 +65,7 @@ class ForsendelseEgenskaper : No {
 
       val json = parseJson(response)
       val dokumenter = json!!.get("journalpost").get("dokumenter").toList()
+      lagreDokumentreferanserFraRespons(json.get("journalpost"))
 
       FellesEgenskaperService.assertWhenNotSanityCheck(
         Assertion(
@@ -90,6 +92,11 @@ class ForsendelseEgenskaper : No {
     }
   }
 
+
+  private fun lagreDokumentreferanserFraRespons(journalpost: JsonNode){
+    val dokumenter = journalpost.get("dokumenter").toList()
+    dokumenter.forEachIndexed { i, it -> CucumberTestRun.thisRun().testData.lagreData("dokumentreferanse$i" to it.get("dokumentreferanse").asText()) }
+  }
 
   private fun parseJson(response: String?): JsonNode? {
     if (response == null) {

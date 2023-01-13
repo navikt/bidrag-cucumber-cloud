@@ -17,6 +17,7 @@ spec:
           - host: {{ access.outbound.bidrag-sak }}
   envFrom:
     - secret: test-auth-z992903
+    - secret: bidrag-cucumber-cloud-secrets
   image: {{ image }}
   kafka:
     pool: nav-dev

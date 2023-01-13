@@ -10,5 +10,11 @@ data class CucumberTestsApi(
     @Schema(description = "Security (azure) token som skal brukes ved lokal kjøring") var securityToken: String? = null,
     @Schema(description = "liste med tags som skal testes uten å oppgi ingress") var tags: List<String> = emptyList(),
     @Schema(description = "Brukernavn (test ident) for testkjøring, eks: z123456") var testUsername: String? = null,
-    @Schema(description = "Om autentisering skal brukes ved kall mot API") var skipAuth: Boolean? = false
+    @Schema(description = "Om autentisering skal brukes ved kall mot API") var skipAuth: Boolean? = false,
+    @Schema(description = "Hvilken type saksbehandler som skal brukes ved autentiseringen") var medSaksbehandlerType: SaksbehandlerType? = null
 )
+
+
+enum class SaksbehandlerType {
+    BISYS_BASIS
+}

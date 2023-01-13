@@ -13,6 +13,7 @@ import no.nav.bidrag.cucumber.TAGS
 import no.nav.bidrag.cucumber.TEST_USER
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaper
 import no.nav.bidrag.cucumber.dto.CucumberTestsApi
+import no.nav.bidrag.cucumber.dto.SaksbehandlerType
 
 class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
     internal val testData = TestData()
@@ -75,6 +76,7 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         val securityToken: String? get() = thisRun().cucumberTestsModel.securityToken
         val testUsername: String? get() = thisRun().cucumberTestsModel.testUsername
         val skipAuth: Boolean get() = thisRun().cucumberTestsModel.skipAuth
+        val saksbehandlerType: SaksbehandlerType? get() = thisRun().cucumberTestsModel.saksbehandlerType
         val withSecurityToken: Boolean get() = securityToken != null
         private var exceptionLogger: ExceptionLogger? = null
 

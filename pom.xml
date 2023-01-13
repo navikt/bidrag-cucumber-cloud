@@ -37,6 +37,16 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>3.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>msal4j</artifactId>
+      <version>1.13.3</version>
+    </dependency>
     <!-- nav -->
     <dependency>
       <groupId>no.nav.bidrag</groupId>

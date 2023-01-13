@@ -1,15 +1,17 @@
 package no.nav.bidrag.cucumber.sikkerhet
 
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
+
 
 @Configuration
-class SecurityConfiguration : WebSecurityConfigurerAdapter() {
+open class SecurityConfiguration {
 
-    @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
+    @Bean
+    open fun filterChain(http: HttpSecurity): SecurityFilterChain? {
         http.sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
@@ -20,6 +22,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             .permitAll()
             .anyRequest()
             .fullyAuthenticated()
+        return http.build()
     }
 
 }
