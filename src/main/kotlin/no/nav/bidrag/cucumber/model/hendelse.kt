@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter
 data class JournalpostHendelse(
     var journalpostId: String = "na",
     var aktorId: String? = null,
+    var fnr: String? = null,
     var fagomrade: String? = null,
     var enhet: String? = null,
     var journalstatus: String? = null,

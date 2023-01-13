@@ -14,7 +14,7 @@ class GjentaOppgaveSokRequest(
         finnOppgaveResponseMedMaksGjentakelser()
     }
 
-    fun assertThatOppgaveHar(enhet: String?, oppgavetype: String?) {
+    fun assertThatOppgaveHar(enhet: String?, oppgavetype: String?, aktorId: String?) {
         val responseSomMap = finnOppgaveResponseMedMaksGjentakelser()
 
         if (enhet != null) {
@@ -23,6 +23,10 @@ class GjentaOppgaveSokRequest(
 
         if (oppgavetype != null) {
             assertOppgavetype(responseSomMap, oppgavetype)
+        }
+
+        if (aktorId != null) {
+            assertAktorid(responseSomMap, aktorId)
         }
     }
 
@@ -74,6 +78,18 @@ class GjentaOppgaveSokRequest(
                 message = "Oppgaven er tildelt enhet",
                 value = tildeltEnhetsnr,
                 expectation = enhet,
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+        )
+    }
+
+    private fun assertAktorid(responseSomMap: Map<String, Any>, aktoerId: String) {
+        @Suppress("UNCHECKED_CAST") val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("aktoerId")
+
+        FellesEgenskaperService.assertWhenNotSanityCheck(
+            Assertion(
+                message = "Oppgaven har riktig aktoerId",
+                value = oppgavetypeFraMap,
+                expectation = aktoerId
             ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
