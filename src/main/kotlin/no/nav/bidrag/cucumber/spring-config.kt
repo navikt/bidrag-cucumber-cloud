@@ -17,7 +17,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.Scope
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.kafka.core.KafkaTemplate
+
 
 @Configuration
 @OpenAPIDefinition(info = io.swagger.v3.oas.annotations.info.Info(
@@ -46,7 +48,7 @@ class SpringConfig {
     @Bean
     @Scope("prototype")
     fun httpHeaderRestTemplate(): HttpHeaderRestTemplate {
-        return HttpHeaderRestTemplate()
+        return HttpHeaderRestTemplate(HttpComponentsClientHttpRequestFactory())
     }
 }
 
