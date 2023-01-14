@@ -255,6 +255,7 @@ jobs:
       - name: journalforing
         run: |
           curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"tags":["@arbeidsflyt-journalforing"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
@@ -274,6 +275,7 @@ jobs:
       - name: overfor-til-annen-enhet
         run: |
           curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \ 
                --request POST \
                --data '{"tags":["@arbeidsflyt-overfor-til-annen-enhet"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
