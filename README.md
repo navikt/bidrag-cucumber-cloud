@@ -122,12 +122,12 @@ i `nais.yaml`. Følgende azure data blir brukt til å hente sikkerhetstoken for 
 
 ### Variabler for kjøring
 
-json | Beskrivelse | Kommentar
----|---|---
-`ingressesForApps` | kommaseparert liste over ingress og nais-applikasjon som testes | Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b
-`noContextPathForApps` | kommaseparert liste over applikasjoner (fra `ingressesForApps`) som ikke bruker appnavn som context-path etter ingress
-`tags` | kommaseparert liste over tags som skal kjøres (som ikke nevnes blant ingressene)
-`testUser` | Testbruker (saksbehandler) med ident ala z123456 | unødvendig for sanity check, men må brukes med `securityToken` (hvis kjøring lokalt).
+| json                   | Beskrivelse                                                                                                            | Kommentar                                                                    |
+|------------------------|------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| `ingressesForApps`     | kommaseparert liste over ingress og nais-applikasjon som testes                                                        | Eks: https://somewhere.com@nais.app.a,https://something.com@annen.nais.app.b |
+| `noContextPathForApps` | kommaseparert liste over applikasjoner (fra `ingressesForApps`) som ikke bruker appnavn som context-path etter ingress |                                                                              |
+| `tags`                 | kommaseparert liste over tags som skal kjøres (som ikke nevnes blant ingressene)                                       |                                                                              |
+| `medSaksbehandlerType` | Typen på testbruker hvis autentisering skal gjøres i form av saksbehandler token                                       | BISYS_BASIS                                                                  |
 
 #### Miljøvariabler for kjøring lokalt
 
@@ -231,16 +231,18 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 
 1. Start spring-boot applikasjon
 2. Gå til url: http://localhost:8080/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
-3. Ekspander endpoint `/run`
-4. Trykk på "Try it out"
-5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
-6. Press `Execute`
+3. Logg inn med brukernavn/passord for basic auth. Du finner brukernavn/passord i filen [application-lokal-nais.yaml](src/test/resources/application-lokal-nais.yaml)
+4. Ekspander endpoint `/run`
+5. Trykk på "Try it out"
+6. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
+7. Press `Execute`
 
 ###### gcp
 
-2. Gå til url for main eller feature branch
+1. Gå til url for main eller feature branch
    * main - https://bidrag-cucumber-cloud.ekstern.dev.nav.no/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
    * feature - https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no/bidrag-cucumber-cloud/swagger-ui/index.html?configUrl=/bidrag-cucumber-cloud/v3/api-docs/swagger-config#/
+2. Logg inn med brukernavn/passord for basic auth. Du finner brukernavn/passord i kubernetes secrets `bidrag-cucumber-cloud-secrets`
 3. Ekspander endpoint `/run`
 4. Trykk på "Try it out"
 5. Endre json-schema med ingress@tag, sanity check evt. testbruker med security token
@@ -248,7 +250,7 @@ Det anbefales at man lagrer ovennevnte konfigurasjon, slik dette ikke må settes
 
 
 
-#### Kjøre lokalt mot nais tjenester
+#### Kjøre lokalt
 For å kunne kjøre lokalt mot sky må du gjøre følgende
 
 Åpne terminal på root mappen til `bidrag-cucumber-cloud`
@@ -268,7 +270,7 @@ kubectl config use dev-gcp
 Deretter kjør følgende kommando for å importere secrets. Viktig at filen som opprettes ikke committes til git
 
 ```bash
-kubectl exec --tty deployment/bidrag-cucumber-cloud-feature printenv | grep -E 'AZURE_|_URL|SCOPE' > src/main/resources/application-lokal-nais-secrets.properties
+kubectl exec --tty deployment/bidrag-cucumber-cloud-feature printenv | grep -E 'AZURE_|_URL|SCOPE|REST_AUTH|user_password' > src/main/resources/application-lokal-nais-secrets.properties
 ```
 
-Start opp applikasjonen ved å kjøre [BidragDokumentBestillingLokal.kt](src/test/kotlin/no/nav/bidrag/dokument/bestilling/BidragDokumentBestillingLokal.kt).
+Start opp applikasjonen ved å kjøre [BidragCucumberCloudLokalNais.kt](src/test/kotlin/no/nav/bidrag/BidragCucumberCloudLokalNais.kt).

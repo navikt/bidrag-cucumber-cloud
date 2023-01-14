@@ -39,7 +39,7 @@ class AppScopes {
 @Component
 @ConfigurationProperties("testbrukere")
 class TestBrukere {
-    lateinit var identer: Map<String, String>
+    lateinit var identer: Map<SaksbehandlerType, String>
 }
 
 @Service
@@ -75,7 +75,7 @@ class AzureTokenService(
     }
     private fun generateOnBehalfOfToken(appName: String, saksbehandlerType: SaksbehandlerType): Tokens {
         val appScope = scopes.clients[appName]
-        val userId = testusers.identer[saksbehandlerType.name] ?: usernameNotFound()
+        val userId = testusers.identer[saksbehandlerType] ?: usernameNotFound()
         val usertoken = getUserToken(userId)
         LOGGER.trace("Henter ny Azure on-behalf-of token for scope {}", appScope)
         return try {

@@ -2,3 +2,5 @@ user_password: dummy
 AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: http://dummy
 AZURE_APP_CLIENT_ID: asdasd
 AZURE_APP_CLIENT_SECRET: sdsadsaad
+REST_AUTH_BRUKERNAVN: username
+REST_AUTH_PASSORD: psw
