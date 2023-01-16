@@ -95,7 +95,7 @@ class ForsendelseEgenskaper : No {
 
   private fun lagreDokumentreferanserFraRespons(journalpost: JsonNode){
     val dokumenter = journalpost.get("dokumenter").toList()
-    dokumenter.forEachIndexed { i, it -> CucumberTestRun.thisRun().testData.lagreData("dokumentreferanse$i" to it.get("dokumentreferanse").asText()) }
+    dokumenter.forEachIndexed { i, it -> CucumberTestRun.thisRun().testData.lagreData("dokumentreferanse${i+1}" to it.get("dokumentreferanse").asText()) }
   }
 
   private fun parseJson(response: String?): JsonNode? {

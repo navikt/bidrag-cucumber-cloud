@@ -20,8 +20,8 @@ Egenskap: oppretter forsendelse med dokumenter
     Så skal http status være 200
     Og forsendelse inneholder 2 dokumenter
 
-#  Scenario: Slett dokument
-#    Når jeg bruker endpoint '/forsendelse/{forsendelseId}/{dokumentreferanse2}' med json fra '/forsendelse/legg_til_joark_dokument.json'
-#    Så skal http status være 200
-#    Og forsendelse inneholder 2 dokumenter
+  Scenario: Slett dokument
+    Når jeg kaller endepunkt '/api/forsendelse/{forsendelseId}/{dokumentreferanse2}' med http metode 'DELETE'
+    Så skal http status være 200
+    Og forsendelse inneholder 1 dokumenter
 

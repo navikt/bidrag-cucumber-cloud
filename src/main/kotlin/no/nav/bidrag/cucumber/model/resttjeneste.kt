@@ -193,6 +193,11 @@ class RestTjeneste(
         exchange(httpEntity("{}"), endpointUrl, HttpMethod.POST)
     }
 
+    fun exchangeDelete(endpointUrl: String, body: String) {
+        val jsonEntity = httpEntity(body)
+        exchange(jsonEntity, endpointUrl, HttpMethod.DELETE)
+    }
+
     fun exchangePatch(endpointUrl: String, body: Any) {
         val jsonEntity = httpEntity(BidragCucumberSingletons.toJson(body))
         exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
