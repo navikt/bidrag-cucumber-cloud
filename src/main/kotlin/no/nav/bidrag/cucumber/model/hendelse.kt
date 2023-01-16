@@ -35,11 +35,14 @@ data class Sporingsdata(
     var correlationId: String = System.currentTimeMillis().toString()
 
     init {
-        val fromThread = CorrelationId.fetchCorrelationIdForThread()
+        try {
+            val fromThread = CorrelationId.fetchCorrelationIdForThread()
 
-        if (fromThread != null) {
-            correlationId = fromThread
-        }
+            if (fromThread != null) {
+                correlationId = fromThread
+            }
+        } catch (_: Exception){}
+
     }
 }
 

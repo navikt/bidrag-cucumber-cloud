@@ -17,6 +17,7 @@ spec:
           - host: {{ access.outbound.bidrag-sak }}
   envFrom:
     - secret: test-auth-z992903
+    - secret: bidrag-cucumber-cloud-secrets
   image: {{ image }}
   kafka:
     pool: nav-dev
@@ -57,3 +58,7 @@ spec:
       value: {{ scope.beregn_forskudd }}
     - name: BEREGN_BARNEBIDRAG_SCOPE
       value: {{ scope.beregn_barnebidrag }}
+    - name: DOKUMENT_FORSENDELSE_SCOPE
+      value: {{ scope.dokument_forsendelse }}
+    - name: BIDRAG_DOKUMENT_SCOPE
+      value: {{ scope.bidrag_dokument }}

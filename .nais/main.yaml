@@ -1,6 +1,7 @@
 name: bidrag-cucumber-cloud
 ingresses:
   - https://bidrag-cucumber-cloud.ekstern.dev.nav.no
+  - https://bidrag-cucumber-cloud.dev.intern.nav.no
 access:
   outbound:
     bidrag-sak: bidrag-sak.dev-fss-pub.nais.io
@@ -12,3 +13,5 @@ scope:
   beregn_saertilskudd: dev-gcp.bidrag.bidrag-beregn-saertilskudd-rest
   beregn_forskudd: dev-gcp.bidrag.bidrag-beregn-forskudd-rest
   beregn_barnebidrag: dev-gcp.bidrag.bidrag-beregn-barnebidrag-rest
+  dokument_forsendelse: dev-gcp.bidrag.bidrag-dokument-forsendelse
+  bidrag_dokument: dev-fss.bidrag.bidrag-dokument

@@ -1,25 +1,49 @@
 package no.nav.bidrag.cucumber.sikkerhet
 
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.provisioning.InMemoryUserDetailsManager
+import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
+
 
 @Configuration
-class SecurityConfiguration : WebSecurityConfigurerAdapter() {
+@EnableWebSecurity
+class SecurityConfiguration(
+    @Value("\${REST_AUTH_BRUKERNAVN}") val authBrukernavn: String,
+    @Value("\${REST_AUTH_PASSORD}") val authPassord: String) {
 
-    @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
+    @Bean
+    fun userDetailsService(): UserDetailsService {
+        val user: UserDetails = User
+            .withUsername(authBrukernavn)
+            .password("{noop}$authPassord").roles("USER")
+            .build()
+        return InMemoryUserDetailsManager(user)
+    }
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .csrf()
             .disable()
             .authorizeRequests()
-            .antMatchers("/**")
+            .antMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**")
             .permitAll()
             .anyRequest()
-            .fullyAuthenticated()
+            .authenticated()
+            .and()
+            .httpBasic()
+            .authenticationEntryPoint(Http403ForbiddenEntryPoint())
+        return http.build()
     }
 
 }
