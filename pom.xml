@@ -19,7 +19,7 @@
 
   <properties>
     <!-- dependency management -->
-    <apache-httpcomponenents.version>4.5.13</apache-httpcomponenents.version>
+    <apache-httpcomponenents.version>4.5.14</apache-httpcomponenents.version>
     <bidrag-commons.version>0.5.19</bidrag-commons.version>
     <cucumber.version>7.2.3</cucumber.version>
     <json-path.version>2.7.0</json-path.version>
