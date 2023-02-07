@@ -62,3 +62,5 @@ spec:
       value: {{ scope.dokument_forsendelse }}
     - name: BIDRAG_DOKUMENT_SCOPE
       value: {{ scope.bidrag_dokument }}
+    - name: BIDRAG_VEDTAK_SCOPE
+      value: {{ scope.bidrag_vedtak }}
