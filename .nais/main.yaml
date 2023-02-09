@@ -15,4 +15,5 @@ scope:
   beregn_barnebidrag: dev-gcp.bidrag.bidrag-beregn-barnebidrag-rest
   dokument_forsendelse: dev-gcp.bidrag.bidrag-dokument-forsendelse
   bidrag_vedtak: dev-gcp.bidrag.bidrag-vedtak
+  bidrag_grunnlag: dev-gcp.bidrag.bidrag-grunnlag
   bidrag_dokument: dev-fss.bidrag.bidrag-dokument

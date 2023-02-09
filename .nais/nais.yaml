@@ -64,3 +64,5 @@ spec:
       value: {{ scope.bidrag_dokument }}
     - name: BIDRAG_VEDTAK_SCOPE
       value: {{ scope.bidrag_vedtak }}
+    - name: BIDRAG_GRUNNLAG_SCOPE
+      value: { { scope.bidrag_grunnlag } }
