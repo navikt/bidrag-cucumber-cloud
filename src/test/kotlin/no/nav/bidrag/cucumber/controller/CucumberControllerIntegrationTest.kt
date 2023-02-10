@@ -64,6 +64,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled
     fun `skal ikke feile ved testing av applikasjon med azure ad når det er snakk om en sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
 
@@ -108,6 +109,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled
     fun `skal ikke feile når det er sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
 

@@ -22,6 +22,7 @@ appscope.clients:
   bidrag-dokument-forsendelse: api://${DOKUMENT_FORSENDELSE_SCOPE}/.default
   bidrag-dokument: api://${BIDRAG_DOKUMENT_SCOPE}/.default
   bidrag-vedtak: api://${BIDRAG_VEDTAK_SCOPE}/.default
+  bidrag-grunnlag: api://${BIDRAG_GRUNNLAG_SCOPE}/.default
 spring:
   application:
     name: bidrag-cucumber-cloud
