@@ -4,7 +4,7 @@ Egenskap: bidrag-grunnlag
 
   Tester REST-api til bidrag-grunnlag
 
-  Bakgrunn: Rest-tjeneste.
+  Bakgrunn: Rest-tjeneste
     Gitt nais applikasjon 'bidrag-grunnlag'
     Og nøkkel for testdata 'GRUNNLAG_NØKKEL'
 

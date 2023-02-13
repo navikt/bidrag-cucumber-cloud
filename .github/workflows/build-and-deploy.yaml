@@ -91,20 +91,31 @@ jobs:
 
     env:
       INGRESS_STONAD: https://bidrag-stonad.dev.intern.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
           echo "INGRESS_STONAD=https://bidrag-stonad-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_VEDTAK=https://bidrag-vedtak-feature.dev.intern.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
+               --request POST \
+               --data '{"tags":["@bidrag-stonad-vedtak"],"noContextPathForApps":["bidrag-vedtak"],"ingressesForApps":[
+                   "${{ env.INGRESS_VEDTAK }}@bidrag-vedtak"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
           curl -H "Content-Type: application/json" -i \
               -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-stonad"],"ingressesForApps":[
                    "${{ env.INGRESS_STONAD }}@tag:bidrag-stonad"
-                 ], "skipAuth": true}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
 

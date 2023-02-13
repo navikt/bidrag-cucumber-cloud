@@ -4,7 +4,7 @@ Egenskap: bidrag-vedtak
 
   Tester REST-api til bidrag-vedtak
 
-  Bakgrunn: Rest-tjeneste.
+  Bakgrunn: Rest-tjeneste
     Gitt nais applikasjon 'bidrag-vedtak'
     Og nøkkel for testdata 'VEDTAK_NØKKEL'
 
