@@ -16,4 +16,5 @@ scope:
   dokument_forsendelse: dev-gcp.bidrag.bidrag-dokument-forsendelse-feature
   bidrag_vedtak: dev-gcp.bidrag.bidrag-vedtak-feature
   bidrag_grunnlag: dev-gcp.bidrag.bidrag-grunnlag-feature
+  bidrag_stonad: dev-gcp.bidrag.bidrag-stonad-feature
   bidrag_dokument: dev-fss.bidrag.bidrag-dokument-feature

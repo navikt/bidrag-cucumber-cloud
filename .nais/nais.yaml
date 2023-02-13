@@ -66,3 +66,5 @@ spec:
       value: {{ scope.bidrag_vedtak }}
     - name: BIDRAG_GRUNNLAG_SCOPE
       value: {{ scope.bidrag_grunnlag }}
+    - name: BIDRAG_STONAD_SCOPE
+      value: {{ scope.bidrag_stonad }}
