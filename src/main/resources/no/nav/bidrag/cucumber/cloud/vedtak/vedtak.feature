@@ -20,3 +20,4 @@ Egenskap: bidrag-vedtak
   Scenario: hent vedtak
     Når det gjøres et kall til '/vedtak/{vedtakId}' med testdataparameter
     Så skal http status være 200
+    Og responsen skal ikke være null

@@ -75,5 +75,12 @@ class FellesEgenskaper : No {
                 .`as`("HttpStatus for " + hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
         }
+
+        Og("responsen skal ikke være null") {
+            val response = hentRestTjenesteTilTesting().hentResponse()
+            if (CucumberTestRun.isNotSanityCheck) {
+                assertThat(response).isNotNull
+            }
+        }
     }
 }

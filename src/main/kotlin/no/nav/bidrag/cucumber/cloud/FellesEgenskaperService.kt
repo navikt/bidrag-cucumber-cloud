@@ -3,7 +3,6 @@ package no.nav.bidrag.cucumber.cloud
 import no.nav.bidrag.cucumber.model.Assertion
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import org.slf4j.LoggerFactory
-import java.util.concurrent.atomic.AtomicBoolean
 
 object FellesEgenskaperService {
     @JvmStatic

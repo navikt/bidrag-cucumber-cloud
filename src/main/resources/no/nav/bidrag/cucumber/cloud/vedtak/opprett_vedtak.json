@@ -768,7 +768,7 @@
       "mottakerId": "44444444444",
       "indeksreguleringAar": "2023",
       "innkreving": "JA",
-      "endring": false,
+      "endring": true,
       "periodeListe": [
         {
           "fomDato": "2022-02-01",
