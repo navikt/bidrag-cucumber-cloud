@@ -10,3 +10,4 @@ Egenskap: bidrag-stonad-vedtak
   Scenario: opprett vedtak
     Når jeg bruker endpoint '/vedtak/' med json fra '/vedtak/opprett_vedtak.json'
     Så skal http status være 200
+    Og responsen skal ikke være null

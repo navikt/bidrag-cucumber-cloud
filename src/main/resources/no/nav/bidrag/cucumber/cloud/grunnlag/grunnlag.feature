@@ -26,3 +26,4 @@ Egenskap: bidrag-grunnlag
   Scenario: hent grunnlagspakke
     Når det gjøres et kall til '/grunnlagspakke/{grunnlagspakkeId}' med testdataparameter
     Så skal http status være 200
+    Og responsen skal ikke være null

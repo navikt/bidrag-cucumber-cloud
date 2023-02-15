@@ -12,6 +12,7 @@ Egenskap: bidrag-stonad
     Så skal http status være 200
 
   Scenario: hent stønad
+    Når jeg venter i 2000 millisekunder slik at vedtakhendelsen kan bli behandlet
     Når jeg bruker endpoint '/hent-stonad' med json:
           """
            {
@@ -21,5 +22,5 @@ Egenskap: bidrag-stonad
             "type": "BIDRAG"
            }
           """
-    Og jeg venter i to sekunder slik at vedtakhendelsen kan bli behandlet
     Så skal http status være 200
+    Og responsen under stien '$.endretTidspunkt' skal være maks 10 sekunder gammel
