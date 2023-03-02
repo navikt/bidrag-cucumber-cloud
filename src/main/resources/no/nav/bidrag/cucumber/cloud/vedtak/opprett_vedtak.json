@@ -776,7 +776,7 @@
           "belop": 1830.00,
           "valutakode": "NOK",
           "resultatkode": "6MB",
-          "referanse": "26677601",
+          "referanse": null,
           "grunnlagReferanseListe": [
             "Delberegning_SluttberegningBBM_SB1_20220201"
           ]
@@ -787,7 +787,7 @@
           "belop": 930.00,
           "valutakode": "NOK",
           "resultatkode": "6MB",
-          "referanse": "26677602",
+          "referanse": null,
           "grunnlagReferanseListe": [
             "Delberegning_SluttberegningBBM_SB1_20220401"
           ]
@@ -798,7 +798,7 @@
           "belop": 1010.00,
           "valutakode": "NOK",
           "resultatkode": "6MB",
-          "referanse": "26677603",
+          "referanse": null,
           "grunnlagReferanseListe": [
             "Delberegning_SluttberegningBBM_SB1_20220501"
           ]
@@ -809,7 +809,7 @@
           "belop": 2230.00,
           "valutakode": "NOK",
           "resultatkode": "6MB",
-          "referanse": "26677604",
+          "referanse": null,
           "grunnlagReferanseListe": [
             "Delberegning_SluttberegningBBM_SB1_20220601"
           ]
@@ -828,7 +828,7 @@
       "belop": null,
       "valutakode": null,
       "resultatkode": "GIFR",
-      "referanse": "26677606",
+      "referanse": null,
       "innkreving": "NEI",
       "endring": false,
       "grunnlagReferanseListe": [
@@ -846,7 +846,7 @@
       "belop": 1223.00,
       "valutakode": "NOK",
       "resultatkode": "GIGI",
-      "referanse": "26677605",
+      "referanse": null,
       "innkreving": "NEI",
       "endring": false,
       "grunnlagReferanseListe": [
