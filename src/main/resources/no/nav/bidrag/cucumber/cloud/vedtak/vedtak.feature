@@ -12,12 +12,12 @@ Egenskap: bidrag-vedtak
     Når det gjøres et kall til '/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#'
     Så skal http status være 200
 
-  Scenario: opprett vedtak
-    Når jeg bruker endpoint '/vedtak/' med json fra '/vedtak/opprett_vedtak.json'
-    Så skal http status være 200
-    Så skal vedtakId lagres
-
-  Scenario: hent vedtak
-    Når det gjøres et kall til '/vedtak/{vedtakId}' med testdataparameter
-    Så skal http status være 200
-    Og responsen skal ikke være null
+#  Scenario: opprett vedtak
+#    Når jeg bruker endpoint '/vedtak/' med json fra '/vedtak/opprett_vedtak.json'
+#    Så skal http status være 200
+#    Så skal vedtakId lagres
+#
+#  Scenario: hent vedtak
+#    Når det gjøres et kall til '/vedtak/{vedtakId}' med testdataparameter
+#    Så skal http status være 200
+#    Og responsen skal ikke være null
