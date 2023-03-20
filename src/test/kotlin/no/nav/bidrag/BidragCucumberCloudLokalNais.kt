@@ -15,7 +15,7 @@ class BidragCucumberCloudLokalNais {
         fun main(args: Array<String>) {
             val app = SpringApplication(BidragCucumberCloudLokalNais::class.java)
 
-            app.setAdditionalProfiles("lokal-nais-secrets", "lokal-nais")
+            app.setAdditionalProfiles("lokal-nais-secrets")
             app.run(*args)
         }
     }
