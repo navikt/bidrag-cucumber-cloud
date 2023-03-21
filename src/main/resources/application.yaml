@@ -12,7 +12,8 @@ springdoc:
 
 testbrukere:
   identer:
-    BISYS_BASIS: Z994977
+    BIDRAG_BASIS: Z994681
+    BIDRAG_VIKAFOSSEN: Z994687
 appscope.clients:
   oppgave: api://${OPPGAVE_SCOPE}/.default
   bidrag-sak: api://${SAK_SCOPE}/.default
