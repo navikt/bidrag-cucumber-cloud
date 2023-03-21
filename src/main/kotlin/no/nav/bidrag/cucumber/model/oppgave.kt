@@ -1,10 +1,11 @@
 package no.nav.bidrag.cucumber.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.time.LocalDate
 
 data class OppgaveSokResponse(var antallTreffTotalt: Int = 0, var oppgaver: List<Oppgave> = emptyList())
-data class Oppgave(var id: Long = -1, var versjon: String = "na", var tildeltEnhetsnr: String = "na", val oppgavetype: String)
-
+data class Oppgave(var id: Long = -1, var versjon: String = "na", var tildeltEnhetsnr: String = "na", val oppgavetype: String? = null)
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class PatchStatusOppgaveRequest(
     override var id: Long,
     var status: String,
