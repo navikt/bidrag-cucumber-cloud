@@ -46,7 +46,7 @@ internal class CucumberControllerIntegrationTest {
 
     @Test
     fun `skal feile ved testing av applikasjon med azure ad`() {
-        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
+        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.intern.dev.nav.no", "bidrag-grunnlag")
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
@@ -66,14 +66,14 @@ internal class CucumberControllerIntegrationTest {
     @Test
     @Disabled
     fun `skal ikke feile ved testing av applikasjon med azure ad når det er snakk om en sanity check`() {
-        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
+        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.intern.dev.nav.no", "bidrag-grunnlag")
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-grunnlag.dev.intern.nav.no@tag:bidrag-grunnlag"],
+                  "ingressesForApps":["https://bidrag-grunnlag.intern.dev.nav.no@tag:bidrag-grunnlag"],
                   "sanityCheck":true
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
@@ -111,7 +111,7 @@ internal class CucumberControllerIntegrationTest {
     @Test
     @Disabled
     fun `skal ikke feile når det er sanity check`() {
-        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
+        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.intern.dev.nav.no", "bidrag-grunnlag")
 
         val testResponse = testRestTemplate.postForEntity(
             "/run",

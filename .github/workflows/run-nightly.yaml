@@ -38,8 +38,8 @@ jobs:
     name: "bidrag-stonad"
 
     env:
-      INGRESS_STONAD: https://bidrag-stonad.dev.intern.nav.no
-      INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
+      INGRESS_STONAD: https://bidrag-stonad.intern.dev.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak.intern.dev.nav.no
 
     steps:
       - run: |
@@ -72,7 +72,7 @@ jobs:
     name: "bidrag-vedtak"
 
     env:
-      INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak.intern.dev.nav.no
 
     steps:
       - run: |
@@ -96,7 +96,7 @@ jobs:
     name: "bidrag-grunnlag"
 
     env:
-      INGRESS_GRUNNLAG: https://bidrag-grunnlag.dev.intern.nav.no
+      INGRESS_GRUNNLAG: https://bidrag-grunnlag.intern.dev.nav.no
 
     steps:
       - run: |
@@ -192,7 +192,7 @@ jobs:
     name: "bidrag-beregn-saertilskudd"
 
     env:
-      INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no
+      INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.intern.dev.nav.no
 
     steps:
       - run: |
@@ -216,7 +216,7 @@ jobs:
     name: "bidrag-beregn-forskudd"
 
     env:
-      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.dev.intern.nav.no
+      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.intern.dev.nav.no
 
     steps:
       - run: |
@@ -240,7 +240,7 @@ jobs:
     name: "bidrag-beregn-barnebidrag"
 
     env:
-      INGRESS_BEREGN_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.intern.nav.no
+      INGRESS_BEREGN_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.intern.dev.nav.no
 
     steps:
       - run: |
