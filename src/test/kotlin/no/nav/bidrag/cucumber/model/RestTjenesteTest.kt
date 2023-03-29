@@ -2,11 +2,13 @@ package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.Environment
+import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.mockito.Mockito.anyString
+import org.mockito.Mockito.isNull
 import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
@@ -19,14 +21,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
 import org.springframework.security.oauth2.core.OAuth2AccessToken
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class])
+@ActiveProfiles("test")
 internal class RestTjenesteTest {
 
     @MockBean
-    private lateinit var oAuth2AuthorizedClientManagerMock: OAuth2AuthorizedClientManager
+    private lateinit var azureTokenService: AzureTokenService
 
     @BeforeEach
     fun `reset Cucumber environment`() {
@@ -38,7 +42,8 @@ internal class RestTjenesteTest {
         val oaut2AuthorizedClientMock = mock(OAuth2AuthorizedClient::class.java)
         val oauth2AccessTokenMock = mock(OAuth2AccessToken::class.java)
 
-        whenever(oAuth2AuthorizedClientManagerMock.authorize(any())).thenReturn(oaut2AuthorizedClientMock)
+        whenever(azureTokenService.generateToken(any(), any())).thenReturn("oaut2AuthorizedClientMock")
+        whenever(azureTokenService.generateToken(anyString(), isNull())).thenReturn("")
         whenever(oaut2AuthorizedClientMock.accessToken).thenReturn(oauth2AccessTokenMock)
         whenever(oauth2AccessTokenMock.tokenValue).thenReturn("my secured token")
     }

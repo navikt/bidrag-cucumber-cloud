@@ -39,8 +39,7 @@ internal object BidragCucumberSingletons {
     }
 
     private fun doManualInit(): HttpHeaderRestTemplate {
-        val httpComponentsClientHttpRequestFactory = SpringConfig().httpComponentsClientHttpRequestFactorySomIgnorererHttps()
-        return HttpHeaderRestTemplate(httpComponentsClientHttpRequestFactory)
+        return HttpHeaderRestTemplate()
     }
 
     fun publiserHendelse(journalpostHendelse: JournalpostHendelse) {

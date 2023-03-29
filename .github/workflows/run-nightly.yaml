@@ -19,10 +19,11 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"ingressesForApps":[
                    "${{ env.INGRESS_CUCUMBER }}@tag:bidrag-cucumber-cloud"
-                 ]}' \
+                 ], "skipAuth": true}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -38,10 +39,21 @@ jobs:
 
     env:
       INGRESS_STONAD: https://bidrag-stonad.dev.intern.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
 
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
+               --request POST \
+               --data '{"tags":["@bidrag-stonad-vedtak"],"noContextPathForApps":["bidrag-vedtak"],"ingressesForApps":[
+                   "${{ env.INGRESS_VEDTAK }}@bidrag-vedtak"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-stonad"],"ingressesForApps":[
                    "${{ env.INGRESS_STONAD }}@tag:bidrag-stonad"
@@ -65,6 +77,7 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+              -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-vedtak"],"ingressesForApps":[
                    "${{ env.INGRESS_VEDTAK }}@tag:bidrag-vedtak"
@@ -88,6 +101,7 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-grunnlag"],"ingressesForApps":[
                    "${{ env.INGRESS_GRUNNLAG }}@tag:bidrag-grunnlag"
@@ -111,8 +125,9 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
-               --data '{"tags":["@arbeidsflyt-endre-fagomrade"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+               --data '{"tags":["@arbeidsflyt-endre-fagomrade"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
@@ -134,8 +149,9 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
-               --data '{"tags":["@arbeidsflyt-journalforing"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+               --data '{"tags":["@arbeidsflyt-journalforing"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
@@ -157,8 +173,9 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
-               --data '{"tags":["@arbeidsflyt-opprett-oppgave"],"testUsername":"z992903","noContextPathForApps":["oppgave"],"ingressesForApps":[
+               --data '{"tags":["@arbeidsflyt-opprett-oppgave"],"noContextPathForApps":["oppgave"],"ingressesForApps":[
                    "${{ env.INGRESS_OPPGAVE }}@oppgave"
                  ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
@@ -180,10 +197,11 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-beregn-saertilskudd-rest"],"ingressesForApps":[
                    "${{ env.INGRESS_BEREGN_SAERTILSKUDD }}@tag:bidrag-beregn-saertilskudd-rest"
-                 ], "testUsername":"z992903"}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -203,10 +221,11 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-beregn-forskudd-rest"],"ingressesForApps":[
                    "${{ env.INGRESS_BEREGN_FORSKUDD }}@tag:bidrag-beregn-forskudd-rest"
-                 ], "testUsername":"z992903"}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -226,10 +245,11 @@ jobs:
     steps:
       - run: |
           curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
                --request POST \
                --data '{"noContextPathForApps":["bidrag-beregn-barnebidrag-rest"],"ingressesForApps":[
                    "${{ env.INGRESS_BEREGN_BARNEBIDRAG }}@tag:bidrag-beregn-barnebidrag-rest"
-                 ], "testUsername":"z992903"}' \
+                 ]}' \
                ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
           cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
       - run: |
@@ -237,4 +257,28 @@ jobs:
         if: ${{ failure() }}
         env:
           MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-beregn-barnebidrag-rest feilet"
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+
+  run-tests-for-bidrag-dokument-forsendelse:
+    runs-on: ubuntu-latest
+    name: "bidrag-dokument-forsendelse"
+
+    env:
+      INGRESS_DOKUMENT_FORSENDELSE: https://bidrag-dokument-forsendelse.dev.intern.nav.no
+
+    steps:
+      - run: |
+          curl -H "Content-Type: application/json" -i \
+          -H "Authorization: Basic ${{ secrets.BIDRAG_CUCUMBER_CLOUD_AUTH }}" \
+               --request POST \
+               --data '{"noContextPathForApps":["bidrag-dokument-forsendelse"],"ingressesForApps":[
+                   "${{ env.INGRESS_DOKUMENT_FORSENDELSE }}@tag:bidrag-dokument-forsendelse"
+                 ]}' \
+               ${{ env.INGRESS_CUCUMBER }}/bidrag-cucumber-cloud/run | tee .cucumber-result
+          cat .cucumber-result | grep HTTP/2 | grep -c 200 > /dev/null # fails if count is 0 (http status is not ok, aka http status code is not 200)
+      - run: |
+          curl -X POST --data-urlencode "payload={\"channel\": \"#team-bidrag-dev\", \"username\": \"webhookbot\", \"text\": \"$MELDING\", \"icon_emoji\": \":boom:\"}" $WEBHOOK_URL
+        if: ${{ failure() }}
+        env:
+          MELDING: "<https://github.com/navikt/bidrag-cucumber-cloud/actions|Cucumber tests> for tag @bidrag-dokument-forsendelse"
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}

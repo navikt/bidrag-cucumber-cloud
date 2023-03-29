@@ -2,33 +2,20 @@ package no.nav.bidrag.cucumber.cloud.beregn
 
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
-import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
 import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.model.Assertion
-import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
-import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.settOppNaisApp
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
-import java.io.File
 
 @Suppress("unused") // used by cucumber
 class BeregnEgenskaper : No {
   companion object {
     @JvmStatic
     private val LOGGER = LoggerFactory.getLogger(BeregnEgenskaper::class.java)
-
-    @JvmStatic
-    private val BEREGN_RESOURCES = "$ABSOLUTE_CLOUD_PATH/beregn"
   }
 
   init {
-    Når("jeg bruker endpoint {string} med json fra {string}") { endpoint: String, jsonFilePath: String ->
-      LOGGER.info("Leser $BEREGN_RESOURCES/$jsonFilePath")
-      val jsonFile = File("$BEREGN_RESOURCES/$jsonFilePath")
-      val json = jsonFile.readText(Charsets.UTF_8)
-      hentRestTjenesteTilTesting().exchangePost(endpoint, json)
-    }
 
     Og("responsen skal inneholde beløpet {string} under stien {string}") { belop: String, sti: String ->
       val response = hentRestTjenesteTilTesting().hentResponse()

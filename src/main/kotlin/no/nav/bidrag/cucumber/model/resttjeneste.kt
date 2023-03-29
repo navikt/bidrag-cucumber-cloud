@@ -3,6 +3,7 @@ package no.nav.bidrag.cucumber.model
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.EnhetFilter
 import no.nav.bidrag.cucumber.ScenarioManager
+import no.nav.bidrag.cucumber.dto.SaksbehandlerType
 import no.nav.bidrag.cucumber.service.AzureTokenService
 import no.nav.bidrag.cucumber.service.TokenService
 import org.slf4j.LoggerFactory
@@ -111,11 +112,9 @@ class RestTjeneste(
                 val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
                 httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-                if (CucumberTestRun.isTestUserPresent) {
-                    val tokenValue = hentSaksbehandlerToken(applicationName)
+                if (!CucumberTestRun.skipAuth){
+                    val tokenValue = hentToken(applicationName, CucumberTestRun.saksbehandlerType)
                     httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
-                } else {
-                    LOGGER.info("No user to provide security for when accessing $applicationName")
                 }
 
                 return RestTjeneste(ResttjenesteMedBaseUrl(httpHeaderRestTemplate, applicationUrl))
@@ -126,10 +125,10 @@ class RestTjeneste(
             }
         }
 
-        private fun hentSaksbehandlerToken(applicationName: String): TokenValue {
+        private fun hentToken(applicationName: String, saksbehandlerType: SaksbehandlerType? = null): TokenValue {
             val tokenService: TokenService = BidragCucumberSingletons.hentEllerInit(AzureTokenService::class) ?: throw notNullTokenService()
 
-            return TokenValue(tokenService.cacheGeneratedToken(applicationName))
+            return TokenValue(tokenService.getToken(applicationName, saksbehandlerType))
         }
 
         private fun notNullTokenService() = IllegalStateException("No token service in spring context")
@@ -188,6 +187,15 @@ class RestTjeneste(
     fun exchangePost(endpointUrl: String, body: String) {
         val jsonEntity = httpEntity(body)
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
+    }
+
+    fun exchangePost(endpointUrl: String) {
+        exchange(httpEntity("{}"), endpointUrl, HttpMethod.POST)
+    }
+
+    fun exchangeDelete(endpointUrl: String, body: String) {
+        val jsonEntity = httpEntity(body)
+        exchange(jsonEntity, endpointUrl, HttpMethod.DELETE)
     }
 
     fun exchangePatch(endpointUrl: String, body: Any) {

@@ -32,6 +32,7 @@ object OppgaveOgHendelseService {
                 )
             )
         } else if (sokResponse.oppgaver.isNotEmpty()) {
+            val oppgave = sokResponse.oppgaver.first()
             val id = sokResponse.oppgaver.first().id
             val versjon = sokResponse.oppgaver.first().versjon
 
@@ -42,7 +43,7 @@ object OppgaveOgHendelseService {
                     tema = fagomrade,
                     versjon = versjon.toInt(),
                     tildeltEnhetsnr = enhetsnummer,
-                    oppgavetype = oppgavetype
+                    oppgavetype = oppgave.oppgavetype
                 )
             )
         } else throw IllegalStateException("Antall treff: ${sokResponse.antallTreffTotalt}, men liste i response er tom!!!")

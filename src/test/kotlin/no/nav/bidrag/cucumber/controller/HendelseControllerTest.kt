@@ -17,9 +17,11 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("HendelseController (mocked HendelseProducer)")
+@ActiveProfiles("test")
 internal class HendelseControllerTest {
 
     @Autowired

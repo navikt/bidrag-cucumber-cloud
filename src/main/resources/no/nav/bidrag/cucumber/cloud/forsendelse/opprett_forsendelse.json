@@ -1,0 +1,23 @@
+{
+  "gjelderIdent": "20527722013",
+  "enhet": "4806",
+  "saksnummer": "2300002",
+  "mottaker": {
+    "ident": "20527722013",
+    "navn": "Navn Navnesen",
+    "adresse": {
+      "adresselinje1": "Buskerudgata",
+      "adresselinje2": "H0505",
+      "adresselinje3": "H0505",
+      "postnummer": "3044",
+      "poststed": "Drammen"
+    }
+  },
+  "dokumenter": [
+    {
+      "tittel": "Tittel på fritekstbrev hoveddokument",
+      "dokumentmalId": "BI01S02"
+    }
+  ],
+  "journalposttype": "UTGÅENDE"
+}
