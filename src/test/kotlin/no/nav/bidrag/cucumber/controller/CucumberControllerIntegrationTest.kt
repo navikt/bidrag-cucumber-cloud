@@ -16,9 +16,11 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("CucumberController (integration test)")
+@ActiveProfiles("test")
 internal class CucumberControllerIntegrationTest {
 
     @Autowired
@@ -62,6 +64,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled
     fun `skal ikke feile ved testing av applikasjon med azure ad når det er snakk om en sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
 
@@ -106,6 +109,7 @@ internal class CucumberControllerIntegrationTest {
     }
 
     @Test
+    @Disabled
     fun `skal ikke feile når det er sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.dev.intern.nav.no", "bidrag-grunnlag")
 

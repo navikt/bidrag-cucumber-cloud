@@ -10,50 +10,27 @@ server:
 springdoc:
   packages-to-scan: no.nav.bidrag.cucumber.controller
 
+testbrukere:
+  identer:
+    BIDRAG_BASIS: Z994681
+    BIDRAG_VIKAFOSSEN: Z994687
+appscope.clients:
+  oppgave: api://${OPPGAVE_SCOPE}/.default
+  bidrag-sak: api://${SAK_SCOPE}/.default
+  bidrag-beregn-saertilskudd-rest: api://${BEREGN_SAERTILSKUDD_SCOPE}/.default
+  bidrag-beregn-forskudd-rest: api://${BEREGN_FORSKUDD_SCOPE}/.default
+  bidrag-beregn-barnebidrag-rest: api://${BEREGN_BARNEBIDRAG_SCOPE}/.default
+  bidrag-dokument-forsendelse: api://${DOKUMENT_FORSENDELSE_SCOPE}/.default
+  bidrag-dokument: api://${BIDRAG_DOKUMENT_SCOPE}/.default
+  bidrag-vedtak: api://${BIDRAG_VEDTAK_SCOPE}/.default
+  bidrag-grunnlag: api://${BIDRAG_GRUNNLAG_SCOPE}/.default
+  bidrag-stonad: api://${BIDRAG_STONAD_SCOPE}/.default
 spring:
+  application:
+    name: bidrag-cucumber-cloud
+  main:
+    allow-bean-definition-overriding: true
   main.banner-mode: "off"
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${AZURE_OPENID_CONFIG_ISSUER}
-          accepted-audience: ${AZURE_APP_CLIENT_ID}, api://${AZURE_APP_CLIENT_ID}
-      client:
-        registration:
-          oppgave:
-            provider: aad
-            client-id: ${AZURE_APP_CLIENT_ID}
-            client-secret: ${AZURE_APP_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope: api://${OPPGAVE_SCOPE}/.default
-          bidrag-sak:
-            provider: aad
-            client-id: ${AZURE_APP_CLIENT_ID}
-            client-secret: ${AZURE_APP_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope: api://${SAK_SCOPE}/.default
-          bidrag-beregn-saertilskudd-rest:
-            provider: aad
-            client-id: ${AZURE_APP_CLIENT_ID}
-            client-secret: ${AZURE_APP_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope: api://${BEREGN_SAERTILSKUDD_SCOPE}/.default
-          bidrag-beregn-forskudd-rest:
-            provider: aad
-            client-id: ${AZURE_APP_CLIENT_ID}
-            client-secret: ${AZURE_APP_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope: api://${BEREGN_FORSKUDD_SCOPE}/.default
-          bidrag-beregn-barnebidrag-rest:
-            provider: aad
-            client-id: ${AZURE_APP_CLIENT_ID}
-            client-secret: ${AZURE_APP_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-            scope: api://${BEREGN_BARNEBIDRAG_SCOPE}/.default
-        provider:
-          aad:
-            token-uri: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}
-            jwk-set-uri: ${AZURE_OPENID_CONFIG_JWKS_URI}
   kafka:
     bootstrap-servers: ${KAFKA_BROKERS}
     properties:
@@ -73,3 +50,4 @@ spring:
 
 # Dummy value in order to start local app
 TOPIC_JOURNALPOST: bidrag.journalpost
+TOPIC_DOKUMENT: bidrag.dokument

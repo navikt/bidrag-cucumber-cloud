@@ -1,6 +1,7 @@
 package no.nav.bidrag.cucumber
 
 import no.nav.bidrag.cucumber.model.FilePath
+import java.lang.Exception
 
 // constants for input via System.getProperty(...)/System.getenv(...)
 internal const val INGRESSES_FOR_APPS = "INGRESSES_FOR_APPS"
@@ -18,3 +19,7 @@ internal val ABSOLUTE_CLOUD_PATH = FilePath("cloud-features.path").findFolderPat
 internal const val CORRELATION_ID = "correlationId"
 
 internal const val FAGOMRADE_BIDRAG = "BID"
+
+
+class AzureTokenException(message: String, exception: Exception? = null): RuntimeException(message, exception)
+fun usernameNotFound(): Nothing = throw RuntimeException("Fant ikke bruker")

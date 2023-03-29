@@ -1,0 +1,866 @@
+{
+  "kilde": "MANUELT",
+  "type": "FASTSETTELSE",
+  "opprettetAv": "X000000",
+  "vedtakTidspunkt": "2023-02-01T16:22:00",
+  "enhetId": "9999",
+  "eksternReferanse": null,
+  "utsattTilDato": null,
+  "grunnlagListe": [
+    {
+      "referanse": "Delberegning_AndelUnderholdskostnad_BP_SB1_20220201",
+      "type": "BPS_ANDEL_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": "2022-04-01",
+        "grunnlagReferanseListe": [
+          "Delberegning_Underholdskostnad_BM_SB1_20220201",
+          "Mottatt_Inntekt_LTA_BM_2021_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220201"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 4923,
+        "prosent": 0.561
+      }
+    },
+    {
+      "referanse": "Delberegning_AndelUnderholdskostnad_BP_SB1_20220401",
+      "type": "BPS_ANDEL_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "datoFom": "2022-04-01",
+        "datoTil": "2022-05-01",
+        "grunnlagReferanseListe": [
+          "Delberegning_Underholdskostnad_BM_SB1_20220201",
+          "Mottatt_Inntekt_LTA_BM_2021_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220401"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 4677,
+        "prosent": 0.533
+      }
+    },
+    {
+      "referanse": "Delberegning_AndelUnderholdskostnad_BP_SB1_20220501",
+      "type": "BPS_ANDEL_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "datoFom": "2022-05-01",
+        "datoTil": "2022-06-01",
+        "grunnlagReferanseListe": [
+          "Delberegning_Underholdskostnad_BM_SB1_20220201",
+          "Mottatt_Inntekt_LTA_BM_2021_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220501"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 4703,
+        "prosent": 0.536
+      }
+    },
+    {
+      "referanse": "Delberegning_AndelUnderholdskostnad_BP_SB1_20220601",
+      "type": "BPS_ANDEL_UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "datoFom": "2022-06-01",
+        "datoTil": null,
+        "grunnlagReferanseListe": [
+          "Delberegning_Underholdskostnad_BM_SB1_20220201",
+          "Mottatt_Inntekt_LTA_BM_2021_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220601"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 5019,
+        "prosent": 0.572
+      }
+    },
+    {
+      "referanse": "Delberegning_Bidragsevne_BP_20220201",
+      "type": "BIDRAGSEVNE",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": "2022-04-01",
+        "grunnlagReferanseListe": [
+          "Mottatt_BarnIHusstand_20220201",
+          "Mottatt_Bostatus_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220201",
+          "Mottatt_Saerfradrag_20220101",
+          "Mottatt_Skatteklasse_20220201",
+          "Sjablon_BoutgiftBeløp_20220201",
+          "Sjablon_MinstefradragInntektBeløp_20220201",
+          "Sjablon_PersonfradragKlasse1Beløp_20220201",
+          "Sjablon_TrygdeavgiftProsent_20220201",
+          "Sjablon_UnderholdBeløp_20220201",
+          "Sjablon_UnderholdEgneBarnIHusstandBeløp_20220201"
+        ],
+        "belop": 4492,
+        "antallBarnDeltBosted": 0,
+        "bidragsevneBeskrivelse": "DELVIS",
+        "skatt": 59733,
+        "aarligEvne": 53909,
+        "harFlereSaker": true,
+        "harFullBidragsevne": false,
+        "25ProsentInntekt": 8028
+      }
+    },
+    {
+      "referanse": "Delberegning_Bidragsevne_BP_20220401",
+      "type": "BIDRAGSEVNE",
+      "innhold": {
+        "datoFom": "2022-04-01",
+        "datoTil": "2022-05-01",
+        "grunnlagReferanseListe": [
+          "Mottatt_BarnIHusstand_20220201",
+          "Mottatt_Bostatus_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220401",
+          "Mottatt_Saerfradrag_20220101",
+          "Mottatt_Skatteklasse_20220201",
+          "Sjablon_BoutgiftBeløp_20220201",
+          "Sjablon_MinstefradragInntektBeløp_20220201",
+          "Sjablon_PersonfradragKlasse1Beløp_20220201",
+          "Sjablon_TrygdeavgiftProsent_20220201",
+          "Sjablon_UnderholdBeløp_20220201",
+          "Sjablon_UnderholdEgneBarnIHusstandBeløp_20220201"
+        ],
+        "belop": 2281,
+        "antallBarnDeltBosted": 0,
+        "bidragsevneBeskrivelse": "DELVIS",
+        "skatt": 49281,
+        "aarligEvne": 27377,
+        "harFlereSaker": true,
+        "harFullBidragsevne": false,
+        "25ProsentInntekt": 7190
+      }
+    },
+    {
+      "referanse": "Delberegning_Bidragsevne_BP_20220501",
+      "type": "BIDRAGSEVNE",
+      "innhold": {
+        "datoFom": "2022-05-01",
+        "datoTil": "2022-06-01",
+        "grunnlagReferanseListe": [
+          "Mottatt_BarnIHusstand_20220201",
+          "Mottatt_Bostatus_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220501",
+          "Mottatt_Saerfradrag_20220101",
+          "Mottatt_Skatteklasse_20220201",
+          "Sjablon_BoutgiftBeløp_20220201",
+          "Sjablon_MinstefradragInntektBeløp_20220201",
+          "Sjablon_PersonfradragKlasse1Beløp_20220201",
+          "Sjablon_TrygdeavgiftProsent_20220501",
+          "Sjablon_UnderholdBeløp_20220201",
+          "Sjablon_UnderholdEgneBarnIHusstandBeløp_20220201"
+        ],
+        "belop": 2466,
+        "antallBarnDeltBosted": 0,
+        "bidragsevneBeskrivelse": "DELVIS",
+        "skatt": 50154,
+        "aarligEvne": 29596,
+        "harFlereSaker": true,
+        "harFullBidragsevne": false,
+        "25ProsentInntekt": 7260
+      }
+    },
+    {
+      "referanse": "Delberegning_Bidragsevne_BP_20220601",
+      "type": "BIDRAGSEVNE",
+      "innhold": {
+        "datoFom": "2022-06-01",
+        "datoTil": null,
+        "grunnlagReferanseListe": [
+          "Mottatt_BarnIHusstand_20220201",
+          "Mottatt_Bostatus_20220201",
+          "Mottatt_Inntekt_LTA_BP_2021_20220601",
+          "Mottatt_Saerfradrag_20220101",
+          "Mottatt_Skatteklasse_20220201",
+          "Sjablon_BoutgiftBeløp_20220201",
+          "Sjablon_MinstefradragInntektBeløp_20220201",
+          "Sjablon_PersonfradragKlasse1Beløp_20220201",
+          "Sjablon_TrygdeavgiftProsent_20220601",
+          "Sjablon_UnderholdBeløp_20220201",
+          "Sjablon_UnderholdEgneBarnIHusstandBeløp_20220201"
+        ],
+        "belop": 5493,
+        "antallBarnDeltBosted": 0,
+        "bidragsevneBeskrivelse": "DELVIS",
+        "skatt": 64465,
+        "aarligEvne": 65921,
+        "harFlereSaker": true,
+        "harFullBidragsevne": false,
+        "25ProsentInntekt": 8407
+      }
+    },
+    {
+      "referanse": "Delberegning_Gebyrfritak_BM",
+      "type": "GEBYRFRITAK",
+      "innhold": {
+        "soktDato": "2022-01-01",
+        "vedtakDato": "2022-06-21",
+        "innvilget": true,
+        "kode": "I",
+        "grenseBelop": 305000,
+        "rolle": "BIDRAGSMOTTAKER"
+      }
+    },
+    {
+      "referanse": "Delberegning_NettoBarnetilsyn_BM_SB1_20220201",
+      "type": "NETTO_BARNETILSYN",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "grunnlagReferanseListe": [
+          "Mottatt_FaktiskUtgift_SB1_20220201"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 0
+      }
+    },
+    {
+      "referanse": "Delberegning_Samvaersfradrag_BP_SB1_20220201",
+      "type": "SAMVAERSFRADRAG",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "grunnlagReferanseListe": [
+          "Mottatt_Samvaersklasse_SB1_20220201",
+          "Mottatt_SoknadsbarnInfo_SB1"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 0
+      }
+    },
+    {
+      "referanse": "Delberegning_SluttberegningBBM_SB1_20220201",
+      "type": "SLUTTBEREGNING_BBM",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": "2022-04-01",
+        "grunnlagReferanseListe": [
+          "Delberegning_AndelUnderholdskostnad_BP_SB1_20220201",
+          "Delberegning_Bidragsevne_BP_20220201",
+          "Delberegning_Samvaersfradrag_BP_SB1_20220201",
+          "Mottatt_Barnetillegg_BM_SB1_20220101",
+          "Mottatt_Barnetillegg_BP_SB1_20220101",
+          "Mottatt_DeltBosted_SB1_20220201",
+          "Mottatt_SoknadsbarnInfo_SB1"
+        ],
+        "soknadsbarnId": 1,
+        "beregnetBidragBelop": 4923,
+        "endeligBidragBelop": 1830,
+        "resultatKode": "6MB"
+      }
+    },
+    {
+      "referanse": "Delberegning_SluttberegningBBM_SB1_20220401",
+      "type": "SLUTTBEREGNING_BBM",
+      "innhold": {
+        "datoFom": "2022-04-01",
+        "datoTil": "2022-05-01",
+        "grunnlagReferanseListe": [
+          "Delberegning_AndelUnderholdskostnad_BP_SB1_20220401",
+          "Delberegning_Bidragsevne_BP_20220401",
+          "Delberegning_Samvaersfradrag_BP_SB1_20220201",
+          "Mottatt_Barnetillegg_BM_SB1_20220101",
+          "Mottatt_Barnetillegg_BP_SB1_20220401",
+          "Mottatt_DeltBosted_SB1_20220201",
+          "Mottatt_SoknadsbarnInfo_SB1"
+        ],
+        "soknadsbarnId": 1,
+        "beregnetBidragBelop": 4677,
+        "endeligBidragBelop": 930,
+        "resultatKode": "6MB"
+      }
+    },
+    {
+      "referanse": "Delberegning_SluttberegningBBM_SB1_20220501",
+      "type": "SLUTTBEREGNING_BBM",
+      "innhold": {
+        "datoFom": "2022-05-01",
+        "datoTil": "2022-06-01",
+        "grunnlagReferanseListe": [
+          "Delberegning_AndelUnderholdskostnad_BP_SB1_20220501",
+          "Delberegning_Bidragsevne_BP_20220501",
+          "Delberegning_Samvaersfradrag_BP_SB1_20220201",
+          "Mottatt_Barnetillegg_BM_SB1_20220101",
+          "Mottatt_Barnetillegg_BP_SB1_20220501",
+          "Mottatt_DeltBosted_SB1_20220201",
+          "Mottatt_SoknadsbarnInfo_SB1"
+        ],
+        "soknadsbarnId": 1,
+        "beregnetBidragBelop": 4703,
+        "endeligBidragBelop": 1010,
+        "resultatKode": "6MB"
+      }
+    },
+    {
+      "referanse": "Delberegning_SluttberegningBBM_SB1_20220601",
+      "type": "SLUTTBEREGNING_BBM",
+      "innhold": {
+        "datoFom": "2022-06-01",
+        "datoTil": null,
+        "grunnlagReferanseListe": [
+          "Delberegning_AndelUnderholdskostnad_BP_SB1_20220601",
+          "Delberegning_Bidragsevne_BP_20220601",
+          "Delberegning_Samvaersfradrag_BP_SB1_20220201",
+          "Mottatt_Barnetillegg_BM_SB1_20220101",
+          "Mottatt_Barnetillegg_BP_SB1_20220601",
+          "Mottatt_DeltBosted_SB1_20220201",
+          "Mottatt_SoknadsbarnInfo_SB1"
+        ],
+        "soknadsbarnId": 1,
+        "beregnetBidragBelop": 5019,
+        "endeligBidragBelop": 2230,
+        "resultatKode": "6MB"
+      }
+    },
+    {
+      "referanse": "Delberegning_Underholdskostnad_BM_SB1_20220201",
+      "type": "UNDERHOLDSKOSTNAD",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "grunnlagReferanseListe": [
+          "Delberegning_NettoBarnetilsyn_BM_SB1_20220201",
+          "Mottatt_BarnetilsynMedStonad_SB1_20220201",
+          "Mottatt_ForpleiningUtgift_SB1_20220201",
+          "Mottatt_SoknadsbarnInfo_SB1",
+          "Sjablon_BoutgifterBidragsbarnBeløp_20220201",
+          "Sjablon_Forbruksutgifter_20220201",
+          "Sjablon_OrdinærBarnetrygdBeløp_20220201"
+        ],
+        "soknadsbarnId": 1,
+        "belop": 8775,
+        "beregnetBelop": 8775,
+        "skolealderKode": "",
+        "manueltJustertSmaabarnstillegg": false,
+        "smaabarnstillegg": 0
+      }
+    },
+    {
+      "referanse": "Mottatt_BarnIHusstand_20220201",
+      "type": "BARN_I_HUSSTAND",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "antall": 0.0
+      }
+    },
+    {
+      "referanse": "Mottatt_BarnInfo_1",
+      "type": "BARN_INFO",
+      "innhold": {
+        "datoFom": "2022-01-01",
+        "datoTil": null,
+        "fnr": "11111111111",
+        "navn": "JENSEN JENS",
+        "medIBeregning": true,
+        "andelForsorget": 0.0,
+        "harSammeAdresse": false
+      }
+    },
+    {
+      "referanse": "Mottatt_BarnInfo_2",
+      "type": "BARN_INFO",
+      "innhold": {
+        "datoFom": "2022-01-01",
+        "datoTil": null,
+        "fnr": "22222222222",
+        "navn": "JENSEN JONAS",
+        "medIBeregning": true,
+        "andelForsorget": 0.0,
+        "harSammeAdresse": false
+      }
+    },
+    {
+      "referanse": "Mottatt_BarnInfo_3",
+      "type": "BARN_INFO",
+      "innhold": {
+        "datoFom": "2022-01-01",
+        "datoTil": null,
+        "fnr": "33333333333",
+        "navn": "JENSEN JENSINE",
+        "medIBeregning": true,
+        "andelForsorget": 0.0,
+        "harSammeAdresse": false
+      }
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BM_SB1_20220101",
+      "type": "BARNETILLEGG",
+      "innhold": {
+        "datoFom": "2022-01-01",
+        "datoTil": null,
+        "rolle": "BIDRAGSMOTTAKER",
+        "soknadsbarnId": 1,
+        "bruttoBelop": 585,
+        "skattProsent": 26,
+        "kilde": "MAN"
+      }
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BP_SB1_20220101",
+      "type": "BARNETILLEGG",
+      "innhold": {
+        "datoFom": "2022-01-01",
+        "datoTil": "2022-04-01",
+        "rolle": "BIDRAGSPLIKTIG",
+        "soknadsbarnId": 1,
+        "bruttoBelop": 585,
+        "skattProsent": 22,
+        "kilde": "MAN"
+      }
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BP_SB1_20220401",
+      "type": "BARNETILLEGG",
+      "innhold": {
+        "datoFom": "2022-04-01",
+        "datoTil": "2022-05-01",
+        "rolle": "BIDRAGSPLIKTIG",
+        "soknadsbarnId": 1,
+        "bruttoBelop": 446,
+        "skattProsent": 22,
+        "kilde": "MAN"
+      }
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BP_SB1_20220501",
+      "type": "BARNETILLEGG",
+      "innhold": {
+        "datoFom": "2022-05-01",
+        "datoTil": "2022-06-01",
+        "rolle": "BIDRAGSPLIKTIG",
+        "soknadsbarnId": 1,
+        "bruttoBelop": 505,
+        "skattProsent": 22,
+        "kilde": "MAN"
+      }
+    },
+    {
+      "referanse": "Mottatt_Barnetillegg_BP_SB1_20220601",
+      "type": "BARNETILLEGG",
+      "innhold": {
+        "datoFom": "2022-06-01",
+        "datoTil": null,
+        "rolle": "BIDRAGSPLIKTIG",
+        "soknadsbarnId": 1,
+        "bruttoBelop": 585,
+        "skattProsent": 22,
+        "kilde": "MAN"
+      }
+    },
+    {
+      "referanse": "Mottatt_BarnetilsynMedStonad_SB1_20220201",
+      "type": "BARNETILSYN_MED_STONAD",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "soknadsbarnId": 1,
+        "stonadType": "",
+        "tilsynType": ""
+      }
+    },
+    {
+      "referanse": "Mottatt_Bostatus_20220201",
+      "type": "BOSTATUS_BP",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "bostatusKode": "ALENE",
+        "rolle": "BIDRAGSPLIKTIG"
+      }
+    },
+    {
+      "referanse": "Mottatt_DeltBosted_SB1_20220201",
+      "type": "DELT_BOSTED",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "soknadsbarnId": 1,
+        "deltBosted": false
+      }
+    },
+    {
+      "referanse": "Mottatt_FaktiskUtgift_SB1_20220201",
+      "type": "FAKTISK_UTGIFT",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "soknadsbarnId": 1,
+        "belop": 0
+      }
+    },
+    {
+      "referanse": "Mottatt_ForpleiningUtgift_SB1_20220201",
+      "type": "FORPLEINING_UTGIFT",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "soknadsbarnId": 1,
+        "belop": 0
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_LTA_BM_2021_20220201",
+      "type": "INNTEKT",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "rolle": "BIDRAGSMOTTAKER",
+        "inntektType": "LONN_TREKK",
+        "belop": 216090,
+        "gjelderAar": "2021",
+        "valgt": false,
+        "inntekter": []
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_LTA_BP_2021_20220201",
+      "type": "INNTEKT",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": "2022-04-01",
+        "rolle": "BIDRAGSPLIKTIG",
+        "inntektType": "LONN_TREKK",
+        "belop": 260880,
+        "gjelderAar": "2021",
+        "valgt": false,
+        "inntekter": []
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_LTA_BP_2021_20220401",
+      "type": "INNTEKT",
+      "innhold": {
+        "datoFom": "2022-04-01",
+        "datoTil": "2022-05-01",
+        "rolle": "BIDRAGSPLIKTIG",
+        "inntektType": "LONN_TREKK",
+        "belop": 260880,
+        "gjelderAar": "2021",
+        "valgt": false,
+        "inntekter": []
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_LTA_BP_2021_20220501",
+      "type": "INNTEKT",
+      "innhold": {
+        "datoFom": "2022-05-01",
+        "datoTil": "2022-06-01",
+        "rolle": "BIDRAGSPLIKTIG",
+        "inntektType": "LONN_TREKK",
+        "belop": 260880,
+        "gjelderAar": "2021",
+        "valgt": false,
+        "inntekter": []
+      }
+    },
+    {
+      "referanse": "Mottatt_Inntekt_LTA_BP_2021_20220601",
+      "type": "INNTEKT",
+      "innhold": {
+        "datoFom": "2022-06-01",
+        "datoTil": null,
+        "rolle": "BIDRAGSPLIKTIG",
+        "inntektType": "LONN_TREKK",
+        "belop": 260880,
+        "gjelderAar": "2021",
+        "valgt": false,
+        "inntekter": []
+      }
+    },
+    {
+      "referanse": "Mottatt_PersonInfo_BM",
+      "type": "PERSON_INFO",
+      "innhold": {
+        "fnr": "44444444444",
+        "navn": "JENSEN JØRGINE",
+        "rolle": "BIDRAGSMOTTAKER"
+      }
+    },
+    {
+      "referanse": "Mottatt_PersonInfo_BP",
+      "type": "PERSON_INFO",
+      "innhold": {
+        "fnr": "55555555555",
+        "navn": "JENSEN JØRGEN",
+        "rolle": "BIDRAGSPLIKTIG"
+      }
+    },
+    {
+      "referanse": "Mottatt_Saerfradrag_20220101",
+      "type": "SAERFRADRAG",
+      "innhold": {
+        "datoFom": "2022-01-01",
+        "datoTil": null,
+        "saerfradragKode": "INGEN"
+      }
+    },
+    {
+      "referanse": "Mottatt_SaksbehandlerInfo",
+      "type": "SAKSBEHANDLER_INFO",
+      "innhold": {
+        "id": "X000000",
+        "navn": "SAX AGATHON"
+      }
+    },
+    {
+      "referanse": "Mottatt_Samvaersklasse_SB1_20220201",
+      "type": "SAMVAERSKLASSE",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "soknadsbarnId": 1,
+        "samvaersklasseId": "00"
+      }
+    },
+    {
+      "referanse": "Mottatt_Skatteklasse_20220201",
+      "type": "SKATTEKLASSE",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "skatteklasseId": 1
+      }
+    },
+    {
+      "referanse": "Mottatt_SoknadInfo",
+      "type": "SOKNAD_INFO",
+      "innhold": {
+        "soknadDato": "2022-01-03",
+        "soktFraDato": "2022-01-01",
+        "soknadId": "55709970"
+      }
+    },
+    {
+      "referanse": "Mottatt_SoknadsbarnInfo_SB1",
+      "type": "SOKNADSBARN_INFO",
+      "innhold": {
+        "soknadsbarnId": 1,
+        "fodselsdato": "2007-04-12",
+        "fnr": "11111111111"
+      }
+    },
+    {
+      "referanse": "Mottatt_VedtakInfo",
+      "type": "VEDTAK_INFO",
+      "innhold": {
+        "virkningDato": "2022-02-01",
+        "vedtakDato": "2023-02-01",
+        "kodeVirkningAarsak": "S"
+      }
+    },
+    {
+      "referanse": "Sjablon_BoutgiftBeløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "BoutgiftBeløp",
+        "sjablonVerdi": "10008"
+      }
+    },
+    {
+      "referanse": "Sjablon_BoutgifterBidragsbarnBeløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "BoutgifterBidragsbarnBeløp",
+        "sjablonVerdi": "2896"
+      }
+    },
+    {
+      "referanse": "Sjablon_Forbruksutgifter_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "Forbruksutgifter",
+        "sjablonVerdi": "6933"
+      }
+    },
+    {
+      "referanse": "Sjablon_MinstefradragInntektBeløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "MinstefradragInntektBeløp",
+        "sjablonVerdi": "88700"
+      }
+    },
+    {
+      "referanse": "Sjablon_OrdinærBarnetrygdBeløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "OrdinærBarnetrygdBeløp",
+        "sjablonVerdi": "1054"
+      }
+    },
+    {
+      "referanse": "Sjablon_PersonfradragKlasse1Beløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "PersonfradragKlasse1Beløp",
+        "sjablonVerdi": "52450"
+      }
+    },
+    {
+      "referanse": "Sjablon_TrygdeavgiftProsent_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": "2022-05-01",
+        "sjablonNavn": "TrygdeavgiftProsent",
+        "sjablonVerdi": "8.0"
+      }
+    },
+    {
+      "referanse": "Sjablon_TrygdeavgiftProsent_20220501",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-05-01",
+        "datoTil": "2022-06-01",
+        "sjablonNavn": "TrygdeavgiftProsent",
+        "sjablonVerdi": "7.9"
+      }
+    },
+    {
+      "referanse": "Sjablon_TrygdeavgiftProsent_20220601",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-06-01",
+        "datoTil": null,
+        "sjablonNavn": "TrygdeavgiftProsent",
+        "sjablonVerdi": "8.0"
+      }
+    },
+    {
+      "referanse": "Sjablon_UnderholdBeløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "UnderholdBeløp",
+        "sjablonVerdi": "10063"
+      }
+    },
+    {
+      "referanse": "Sjablon_UnderholdEgneBarnIHusstandBeløp_20220201",
+      "type": "SJABLON",
+      "innhold": {
+        "datoFom": "2022-02-01",
+        "datoTil": null,
+        "sjablonNavn": "UnderholdEgneBarnIHusstandBeløp",
+        "sjablonVerdi": "3811"
+      }
+    }
+  ],
+  "stonadsendringListe": [
+    {
+      "type": "BIDRAG",
+      "sakId": "0809389",
+      "skyldnerId": "55555555555",
+      "kravhaverId": "11111111111",
+      "mottakerId": "44444444444",
+      "indeksreguleringAar": "2023",
+      "innkreving": "JA",
+      "endring": true,
+      "periodeListe": [
+        {
+          "fomDato": "2022-02-01",
+          "tilDato": "2022-04-01",
+          "belop": 1830.00,
+          "valutakode": "NOK",
+          "resultatkode": "6MB",
+          "referanse": null,
+          "grunnlagReferanseListe": [
+            "Delberegning_SluttberegningBBM_SB1_20220201"
+          ]
+        },
+        {
+          "fomDato": "2022-04-01",
+          "tilDato": "2022-05-01",
+          "belop": 930.00,
+          "valutakode": "NOK",
+          "resultatkode": "6MB",
+          "referanse": null,
+          "grunnlagReferanseListe": [
+            "Delberegning_SluttberegningBBM_SB1_20220401"
+          ]
+        },
+        {
+          "fomDato": "2022-05-01",
+          "tilDato": "2022-06-01",
+          "belop": 1010.00,
+          "valutakode": "NOK",
+          "resultatkode": "6MB",
+          "referanse": null,
+          "grunnlagReferanseListe": [
+            "Delberegning_SluttberegningBBM_SB1_20220501"
+          ]
+        },
+        {
+          "fomDato": "2022-06-01",
+          "tilDato": null,
+          "belop": 2230.00,
+          "valutakode": "NOK",
+          "resultatkode": "6MB",
+          "referanse": null,
+          "grunnlagReferanseListe": [
+            "Delberegning_SluttberegningBBM_SB1_20220601"
+          ]
+        }
+      ]
+    }
+  ],
+  "engangsbelopListe": [
+    {
+      "endrerId": null,
+      "type": "GEBYR_MOTTAKER",
+      "sakId": "0809389",
+      "skyldnerId": "55555555555",
+      "kravhaverId": "NAV",
+      "mottakerId": "NAV",
+      "belop": null,
+      "valutakode": null,
+      "resultatkode": "GIFR",
+      "referanse": null,
+      "innkreving": "NEI",
+      "endring": false,
+      "grunnlagReferanseListe": [
+        "Delberegning_Gebyrfritak_BM",
+        "Mottatt_Inntekt_LTA_BM_2021_20220201"
+      ]
+    },
+    {
+      "endrerId": null,
+      "type": "GEBYR_SKYLDNER",
+      "sakId": "0809389",
+      "skyldnerId": "44444444444",
+      "kravhaverId": "NAV",
+      "mottakerId": "NAV",
+      "belop": 1223.00,
+      "valutakode": "NOK",
+      "resultatkode": "GIGI",
+      "referanse": null,
+      "innkreving": "NEI",
+      "endring": false,
+      "grunnlagReferanseListe": [
+        "Mottatt_Inntekt_LTA_BP_2021_20220201",
+        "Mottatt_Inntekt_LTA_BP_2021_20220401",
+        "Mottatt_Inntekt_LTA_BP_2021_20220501",
+        "Mottatt_Inntekt_LTA_BP_2021_20220601"
+      ]
+    }
+  ],
+  "behandlingsreferanseListe": [
+    {
+      "kilde": "BISYS_SOKNAD",
+      "referanse": "55709970"
+    }
+  ]
+}

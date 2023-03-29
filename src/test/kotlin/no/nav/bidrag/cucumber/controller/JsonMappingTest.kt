@@ -10,9 +10,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class])
 @DisplayName("Test of mapping dto from json")
+@ActiveProfiles("test")
 class JsonMappingTest {
 
     @Autowired

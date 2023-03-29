@@ -10,11 +10,13 @@ import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestsModel
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
+import no.nav.bidrag.cucumber.service.AzureTokenService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
+import org.mockito.Mockito
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.never
 import org.mockito.kotlin.any
@@ -26,16 +28,20 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.web.client.RestTemplate
 
 @DisplayName("OppgaveOgHendelseService")
 @SpringBootTest(classes = [BidragCucumberCloud::class])
+@ActiveProfiles("test")
 internal class OppgaveOgHendelseServiceTest {
 
     private val baseUrl = "https://base"
     private val journalpostHendelse = JournalpostHendelse(
         journalpostId = "BID-1010101010", fagomrade = FAGOMRADE_BIDRAG
     )
-
+    @MockBean
+    private lateinit var azureTokenService: AzureTokenService
     @MockBean
     private lateinit var hendelseProducerMock: HendelseProducer
 
@@ -44,6 +50,8 @@ internal class OppgaveOgHendelseServiceTest {
 
     @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
+        whenever(azureTokenService.generateToken(anyString(), any())).thenReturn("")
+        whenever(azureTokenService.generateToken(anyString(), Mockito.isNull())).thenReturn("")
         val naisApplikasjon = "oppgave"
         CucumberTestRun(CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon"))).initEnvironment()
         CucumberTestRun.settOppNaisAppTilTesting(naisApplikasjon)
