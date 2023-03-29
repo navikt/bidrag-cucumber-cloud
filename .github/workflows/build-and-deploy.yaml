@@ -90,15 +90,15 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_STONAD: https://bidrag-stonad.dev.intern.nav.no
-      INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
+      INGRESS_STONAD: https://bidrag-stonad.intern.dev.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_STONAD=https://bidrag-stonad-feature.dev.intern.nav.no" >> $GITHUB_ENV
-          echo "INGRESS_VEDTAK=https://bidrag-vedtak-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_STONAD=https://bidrag-stonad-feature.intern.dev.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_VEDTAK=https://bidrag-vedtak-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
@@ -125,13 +125,13 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_VEDTAK: https://bidrag-vedtak.dev.intern.nav.no
+      INGRESS_VEDTAK: https://bidrag-vedtak.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_VEDTAK=https://bidrag-vedtak-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_VEDTAK=https://bidrag-vedtak-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
@@ -149,13 +149,13 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_GRUNNLAG: https://bidrag-grunnlag.dev.intern.nav.no
+      INGRESS_GRUNNLAG: https://bidrag-grunnlag.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_GRUNNLAG=https://bidrag-grunnlag-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_GRUNNLAG=https://bidrag-grunnlag-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
@@ -173,13 +173,13 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.dev.intern.nav.no
+      INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_BEREGN_SAERTILSKUDD=https://bidrag-beregn-saertilskudd-rest-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_BEREGN_SAERTILSKUDD=https://bidrag-beregn-saertilskudd-rest-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
@@ -197,13 +197,13 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.dev.intern.nav.no
+      INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_BEREGN_FORSKUDD=https://bidrag-beregn-forskudd-rest-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_BEREGN_FORSKUDD=https://bidrag-beregn-forskudd-rest-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
@@ -221,13 +221,13 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_BEREGN_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.dev.intern.nav.no
+      INGRESS_BEREGN_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_BEREGN_BARNEBIDRAG=https://bidrag-beregn-barnebidrag-rest-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_BEREGN_BARNEBIDRAG=https://bidrag-beregn-barnebidrag-rest-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
