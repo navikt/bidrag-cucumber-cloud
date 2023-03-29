@@ -19,11 +19,12 @@
 
   <properties>
     <!-- dependency management -->
-    <apache-httpcomponenents.version>4.5.13</apache-httpcomponenents.version>
+    <apache-httpcomponenents.version>4.5.14</apache-httpcomponenents.version>
     <bidrag-commons.version>0.5.19</bidrag-commons.version>
-    <cucumber.version>7.2.3</cucumber.version>
+    <cucumber.version>7.11.0</cucumber.version>
     <json-path.version>2.7.0</json-path.version>
     <mockito-kotlin.version>4.1.0</mockito-kotlin.version>
+    <springdoc-openapi-ui.version>1.6.14</springdoc-openapi-ui.version>
     <snakeyaml.version>2.0</snakeyaml.version>
     <springdoc-openapi-ui.version>1.6.14</springdoc-openapi-ui.version>
 
@@ -40,12 +41,12 @@
     <dependency>
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
-      <version>3.1.2</version>
+      <version>3.1.5</version>
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
       <artifactId>msal4j</artifactId>
-      <version>1.13.3</version>
+      <version>1.13.5</version>
     </dependency>
     <!-- nav -->
     <dependency>
