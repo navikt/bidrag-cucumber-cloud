@@ -16,5 +16,6 @@ data class CucumberTestsApi(
 
 
 enum class SaksbehandlerType {
-    BISYS_BASIS
+    BIDRAG_BASIS,
+    BIDRAG_VIKAFOSSEN
 }

@@ -12,7 +12,8 @@ springdoc:
 
 testbrukere:
   identer:
-    BISYS_BASIS: Z994977
+    BIDRAG_BASIS: Z994681
+    BIDRAG_VIKAFOSSEN: Z994687
 appscope.clients:
   oppgave: api://${OPPGAVE_SCOPE}/.default
   bidrag-sak: api://${SAK_SCOPE}/.default
@@ -21,6 +22,9 @@ appscope.clients:
   bidrag-beregn-barnebidrag-rest: api://${BEREGN_BARNEBIDRAG_SCOPE}/.default
   bidrag-dokument-forsendelse: api://${DOKUMENT_FORSENDELSE_SCOPE}/.default
   bidrag-dokument: api://${BIDRAG_DOKUMENT_SCOPE}/.default
+  bidrag-vedtak: api://${BIDRAG_VEDTAK_SCOPE}/.default
+  bidrag-grunnlag: api://${BIDRAG_GRUNNLAG_SCOPE}/.default
+  bidrag-stonad: api://${BIDRAG_STONAD_SCOPE}/.default
 spring:
   application:
     name: bidrag-cucumber-cloud

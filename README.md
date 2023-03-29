@@ -81,7 +81,7 @@ testbruker angies.
 3. testbruker (for simulering av nav-ident, bruker med sikkerhet implementert i Azure)
 
 Hvis kjøring av denne applikasjonen gjøres lokalt (fra naisdevice) og mot en applikasjon som kjører under sikkerhet, så kan en fullstendig testkjøring
-ikke gjøres uten at azure token blir send med når testen starter. Azure Ad brukes for å lage sikkerhetstoken for testbruker. Det er derfor nødvendig
+ikke gjøres uten at azure token blir sendt med når testen starter. Azure Ad brukes for å lage sikkerhetstoken for testbruker. Det er derfor nødvendig
 med et ekstra parameter som forteller `bidrag-cucumber-cloud` at testbruker har et manuelt generert sikkerhetstoken eller kjøringen er en "sanity
 check" for å teste at den tekniske implementasjonen til cucumber er ok.
 * Vær obs på at en fullstendig kjøring fra et nais-device ikke kan gjøres (selv med manuelt token) hvis testen er designet slik at den kontakter
