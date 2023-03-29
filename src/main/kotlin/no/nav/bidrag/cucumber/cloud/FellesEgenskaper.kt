@@ -1,21 +1,15 @@
 package no.nav.bidrag.cucumber.cloud
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.jayway.jsonpath.JsonPath
 import io.cucumber.java8.No
 import no.nav.bidrag.cucumber.ABSOLUTE_CLOUD_PATH
-import no.nav.bidrag.cucumber.cloud.beregn.BeregnEgenskaper
-import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.model.Assertion
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.CucumberTestRun.Companion.hentRestTjenesteTilTesting
-import no.nav.bidrag.cucumber.model.parseJson
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import java.io.File
-import java.util.EnumSet
+import java.util.*
 
 @Suppress("unused") // brukes av cucumber
 class FellesEgenskaper : No {
@@ -72,10 +66,21 @@ class FellesEgenskaper : No {
             hentRestTjenesteTilTesting().exchangeGet(endpointUrl)
         }
 
+        Når("det gjøres et kall til {string} med testdataparameter") { endpointUrl: String ->
+            hentRestTjenesteTilTesting().exchangeGet(TestdataManager.erstattUrlMedParametereFraTestdata(endpointUrl))
+        }
+
         Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
             assertThat(hentRestTjenesteTilTesting().hentHttpStatus())
                 .`as`("HttpStatus for " + hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning())
                 .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
+        }
+
+        Og("responsen skal ikke være null") {
+            val response = hentRestTjenesteTilTesting().hentResponse()
+            if (CucumberTestRun.isNotSanityCheck) {
+                assertThat(response).isNotNull
+            }
         }
     }
 }
