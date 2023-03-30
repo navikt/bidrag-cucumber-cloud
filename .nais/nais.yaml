@@ -17,7 +17,7 @@ spec:
           - host: {{ access.outbound.bidrag-sak }}
           - host: {{ access.outbound.oppgave }}
           - host: {{ access.outbound.arbeidsflyt }}
-          - host: {{ access.outbound.dokument-forsendelse }}
+          - host: {{ access.outbound.forsendelse }}
           - host: {{ access.outbound.grunnlag }}
           - host: {{ access.outbound.vedtak }}
           - host: {{ access.outbound.stonad }}
