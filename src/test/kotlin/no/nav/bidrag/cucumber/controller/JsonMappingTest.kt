@@ -29,7 +29,7 @@ class JsonMappingTest {
             "noContextPathForApps":["oppgave"],
             "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@oppgave"]
           }
-          """.trimIndent()
+        """.trimIndent()
 
         val cucumberTestsModel = objectMapper.readValue(json, CucumberTestsModel::class.java)
 

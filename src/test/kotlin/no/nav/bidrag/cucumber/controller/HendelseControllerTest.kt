@@ -49,7 +49,8 @@ internal class HendelseControllerTest {
                   "journalpostId":"1001",
                   "brukerident":"jumbo"
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             Void::class.java
         )

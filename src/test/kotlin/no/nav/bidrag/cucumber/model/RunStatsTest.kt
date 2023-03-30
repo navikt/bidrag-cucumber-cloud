@@ -11,13 +11,12 @@ internal class RunStatsTest {
 
     @Test
     fun `skal lage feilmeldinger med riktige innrykk`() {
-
         val feilmeldinger = listOf(
             "en feil oppstod:",
             """
             det var noe skit...
             det skal ikke skje igjen
-            """.trimIndent(),
+            """.trimIndent()
         )
 
         runStats.addExceptionLogging(feilmeldinger)

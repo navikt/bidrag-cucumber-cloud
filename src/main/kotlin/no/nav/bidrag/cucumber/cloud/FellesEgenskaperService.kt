@@ -11,8 +11,8 @@ object FellesEgenskaperService {
     fun assertWhenNotSanityCheck(assertion: Assertion): Boolean {
         LOGGER.info(
             "Assertion, actual: '${assertion.value}' - (${assertion.value?.javaClass}), " +
-                    "wanted: '${assertion.expectation}' (${assertion.expectation?.javaClass}), " +
-                    "sanity check: ${CucumberTestRun.isSanityCheck}"
+                "wanted: '${assertion.expectation}' (${assertion.expectation?.javaClass}), " +
+                "sanity check: ${CucumberTestRun.isSanityCheck}"
         )
 
         if (CucumberTestRun.isNotSanityCheck) {

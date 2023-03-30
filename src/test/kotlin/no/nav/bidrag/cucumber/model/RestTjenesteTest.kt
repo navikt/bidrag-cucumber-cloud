@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager
 import org.springframework.security.oauth2.core.OAuth2AccessToken
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.util.LinkedMultiValueMap

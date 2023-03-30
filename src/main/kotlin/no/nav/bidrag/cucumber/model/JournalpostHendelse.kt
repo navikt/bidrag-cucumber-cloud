@@ -1,7 +1,6 @@
 package no.nav.bidrag.cucumber.model
 
 import no.nav.bidrag.commons.CorrelationId
-import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.dto.HendelseApi
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -12,7 +11,7 @@ data class JournalpostHendelse(
     var fnr: String? = null,
     var fagomrade: String? = null,
     var enhet: String? = null,
-    var journalstatus: String? = null,
+    var journalstatus: String? = null
 ) {
     @Suppress("unused") // brukes for sporing av data som publiseres
     var sporing: Sporingsdata = Sporingsdata(brukerident = CucumberTestRun.testUsername)
@@ -22,7 +21,7 @@ data class JournalpostHendelse(
         aktorId = hendelseApi.aktorId,
         fagomrade = hendelseApi.fagomrade,
         enhet = hendelseApi.enhet,
-        journalstatus = hendelseApi.journalstatus,
+        journalstatus = hendelseApi.journalstatus
     )
 
     internal fun hentJournalpostIdUtenPrefix() = hentJournalpostIdStrengUtenPrefix().toLong()
@@ -41,8 +40,7 @@ data class Sporingsdata(
             if (fromThread != null) {
                 correlationId = fromThread
             }
-        } catch (_: Exception){}
-
+        } catch (_: Exception) {}
     }
 }
 

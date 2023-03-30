@@ -18,7 +18,7 @@ class CucumberService(
     applicationContext: ApplicationContext,
     exceptionLogger: ExceptionLogger,
     hendelseProducer: HendelseProducer,
-    objectMapper: ObjectMapper,
+    objectMapper: ObjectMapper
 ) {
     init {
         BidragCucumberSingletons.setApplicationContext(applicationContext)
@@ -47,7 +47,11 @@ class CucumberService(
         if (tags.isBlank()) throw IllegalStateException("Ingen tags som kan brukes")
 
         return Main.run(
-            ABSOLUTE_CLOUD_PATH, "--glue", "no.nav.bidrag.cucumber.cloud", "--tags", tags
+            ABSOLUTE_CLOUD_PATH,
+            "--glue",
+            "no.nav.bidrag.cucumber.cloud",
+            "--tags",
+            tags
         )
     }
 }

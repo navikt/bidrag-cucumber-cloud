@@ -29,7 +29,6 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.web.client.RestTemplate
 
 @DisplayName("OppgaveOgHendelseService")
 @SpringBootTest(classes = [BidragCucumberCloud::class])
@@ -38,10 +37,13 @@ internal class OppgaveOgHendelseServiceTest {
 
     private val baseUrl = "https://base"
     private val journalpostHendelse = JournalpostHendelse(
-        journalpostId = "BID-1010101010", fagomrade = FAGOMRADE_BIDRAG
+        journalpostId = "BID-1010101010",
+        fagomrade = FAGOMRADE_BIDRAG
     )
+
     @MockBean
     private lateinit var azureTokenService: AzureTokenService
+
     @MockBean
     private lateinit var hendelseProducerMock: HendelseProducer
 
@@ -100,8 +102,9 @@ internal class OppgaveOgHendelseServiceTest {
 
         OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
-        @Suppress("UNCHECKED_CAST") val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
-                as ArgumentCaptor<HttpEntity<PatchStatusOppgaveRequest>>
+        @Suppress("UNCHECKED_CAST")
+        val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
+            as ArgumentCaptor<HttpEntity<PatchStatusOppgaveRequest>>
 
         verify(httpHeaderRestTemplateMock).exchange(eq("/api/v1/oppgaver/1001"), eq(HttpMethod.PATCH), httpEntityCaptor.capture(), eq(String::class.java))
 

@@ -13,12 +13,12 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 
-
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
     @Value("\${REST_AUTH_BRUKERNAVN}") val authBrukernavn: String,
-    @Value("\${REST_AUTH_PASSORD}") val authPassord: String) {
+    @Value("\${REST_AUTH_PASSORD}") val authPassord: String
+) {
 
     @Bean
     fun userDetailsService(): UserDetailsService {
@@ -28,6 +28,7 @@ class SecurityConfiguration(
             .build()
         return InMemoryUserDetailsManager(user)
     }
+
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http.sessionManagement()
@@ -45,5 +46,4 @@ class SecurityConfiguration(
             .authenticationEntryPoint(Http403ForbiddenEntryPoint())
         return http.build()
     }
-
 }

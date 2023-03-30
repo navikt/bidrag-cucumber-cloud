@@ -46,7 +46,9 @@ object OppgaveOgHendelseService {
                     oppgavetype = oppgave.oppgavetype
                 )
             )
-        } else throw IllegalStateException("Antall treff: ${sokResponse.antallTreffTotalt}, men liste i response er tom!!!")
+        } else {
+            throw IllegalStateException("Antall treff: ${sokResponse.antallTreffTotalt}, men liste i response er tom!!!")
+        }
     }
 
     fun opprettJournalpostHendelse(journalpostHendelse: JournalpostHendelse) {
@@ -78,9 +80,10 @@ object OppgaveOgHendelseService {
                     JournalpostHendelse(
                         journalpostId = journalpostIdMedPrefix,
                         journalstatus = "J",
-                        fagomrade= "BID",
+                        fagomrade = "BID",
                         enhet = "4812"
-                    ))
+                    )
+                )
             }
         }
 

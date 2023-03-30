@@ -112,7 +112,7 @@ class RestTjeneste(
                 val httpHeaderRestTemplate = BidragCucumberSingletons.hentPrototypeFraApplicationContext()
                 httpHeaderRestTemplate.uriTemplateHandler = BaseUrlTemplateHandler(applicationUrl)
 
-                if (!CucumberTestRun.skipAuth){
+                if (!CucumberTestRun.skipAuth) {
                     val tokenValue = hentToken(applicationName, CucumberTestRun.saksbehandlerType)
                     httpHeaderRestTemplate.addHeaderGenerator(HttpHeaders.AUTHORIZATION) { tokenValue.initBearerToken() }
                 }
@@ -149,7 +149,6 @@ class RestTjeneste(
     }
 
     fun exchangeGet(endpointUrl: String, failOnNotFound: Boolean = true): ResponseEntity<String?> {
-
         val header = initHttpHeadersWithCorrelationIdAndEnhet()
 
         exchange(
@@ -160,8 +159,9 @@ class RestTjeneste(
         )
 
         LOGGER.info(
-            if (responseEntity?.body != null) "response with body and status ${responseEntity!!.statusCode}"
-            else if (responseEntity == null) "no response entity (${sanityCheck()})" else "no response body with status ${responseEntity!!.statusCode}"
+            if (responseEntity?.body != null) {
+                "response with body and status ${responseEntity!!.statusCode}"
+            } else if (responseEntity == null) "no response entity (${sanityCheck()})" else "no response body with status ${responseEntity!!.statusCode}"
         )
 
         return responseEntity ?: ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build()

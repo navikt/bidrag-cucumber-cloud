@@ -24,10 +24,9 @@ import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.net.URI
 
-
 data class AzureTokenRequest(
     val app: String,
-    val saksbehandlerType: SaksbehandlerType? = null,
+    val saksbehandlerType: SaksbehandlerType? = null
 )
 
 @Component
@@ -50,7 +49,7 @@ class AzureTokenService(
     @Value("\${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}") val tokenUri: String,
     @Value("\${AZURE_APP_CLIENT_ID}") val clientId: String,
     @Value("\${AZURE_APP_CLIENT_SECRET}") val clientSecret: String
-): TokenService() {
+) : TokenService() {
 
     private lateinit var tokenCache: Cache<AzureTokenRequest, Tokens>
     private lateinit var clientAuth: ClientSecretPost
@@ -68,7 +67,7 @@ class AzureTokenService(
     }
 
     fun generateToken(request: AzureTokenRequest): Tokens {
-        if (request.saksbehandlerType != null){
+        if (request.saksbehandlerType != null) {
             return generateOnBehalfOfToken(request.app, request.saksbehandlerType)
         }
         return generateClientCredentialsToken(request.app)

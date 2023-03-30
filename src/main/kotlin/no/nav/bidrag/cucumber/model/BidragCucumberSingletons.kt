@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import no.nav.bidrag.commons.ExceptionLogger
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.BidragCucumberCloud
-import no.nav.bidrag.cucumber.SpringConfig
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import kotlin.reflect.KClass
 
@@ -49,10 +47,11 @@ internal object BidragCucumberSingletons {
     }
 
     fun mapResponseSomMap(responseEntity: ResponseEntity<String?>?): Map<String, Any> {
-        return if (responseEntity?.statusCode?.is2xxSuccessful == true && responseEntity.body != null)
+        return if (responseEntity?.statusCode?.is2xxSuccessful == true && responseEntity.body != null) {
             mapResponseSomMap(responseEntity.body!!)
-        else
+        } else {
             HashMap()
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

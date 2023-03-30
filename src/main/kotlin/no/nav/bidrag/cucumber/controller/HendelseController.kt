@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import no.nav.bidrag.cucumber.dto.HendelseApi
 import no.nav.bidrag.cucumber.hendelse.HendelseProducer
-import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity

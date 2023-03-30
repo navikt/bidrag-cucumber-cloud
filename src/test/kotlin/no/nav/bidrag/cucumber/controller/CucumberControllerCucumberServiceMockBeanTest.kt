@@ -54,7 +54,8 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                 {
                   "ingressesForApps":["ingress@tag"]
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             Void::class.java
         )
@@ -76,7 +77,8 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                 {
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             Void::class.java
         )
@@ -98,7 +100,8 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                 {
                   "securityToken":"xyz..."
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             Void::class.java
         )
@@ -116,7 +119,9 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         whenever(cucumberServiceMock.run(any())).thenThrow(TestFailedException("not ok", "test failed"))
 
         val testResponse = testRestTemplate.postForEntity(
-            "/run", HttpEntity("{}", headers), Void::class.java
+            "/run",
+            HttpEntity("{}", headers),
+            Void::class.java
         )
 
         assertAll(
@@ -136,7 +141,9 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         whenever(cucumberServiceMock.run(any())).thenThrow(IllegalStateException("something fishy happened"))
 
         val testResponse = testRestTemplate.postForEntity(
-            "/run", HttpEntity("{}", headers), Void::class.java
+            "/run",
+            HttpEntity("{}", headers),
+            Void::class.java
         )
 
         assertAll(
@@ -162,7 +169,8 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                   "testUsername":"z993902",
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             Void::class.java
         )
@@ -173,7 +181,9 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                 verify(cucumberServiceMock).run(
                     CucumberTestRun(
                         CucumberTestsModel(
-                            sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.intern.dev.nav.no@bidrag-sak")
+                            sanityCheck = true,
+                            testUsername = "z993902",
+                            ingressesForApps = listOf("https://bidrag-sak.intern.dev.nav.no@bidrag-sak")
                         )
                     )
                 )
@@ -194,8 +204,10 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                   "ingressesForApps":["https://some-ingress@some-app"],
                   "tags":["@some-tag"]
                 }
-                """.trimMargin().trim(), headers
-            ), Void::class.java
+                """.trimMargin().trim(),
+                headers
+            ),
+            Void::class.java
         )
 
         assertAll(
@@ -204,7 +216,8 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                 verify(cucumberServiceMock).run(
                     CucumberTestRun(
                         CucumberTestsModel(
-                            ingressesForApps = listOf("https://some-ingress@some-app"), tags = listOf("@some-tag")
+                            ingressesForApps = listOf("https://some-ingress@some-app"),
+                            tags = listOf("@some-tag")
                         )
                     )
                 )
