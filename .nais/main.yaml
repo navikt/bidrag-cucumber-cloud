@@ -4,7 +4,7 @@ ingresses:
   - https://bidrag-cucumber-cloud.intern.dev.nav.no
 access:
   outbound:
-    cucumber-cloud: bidrag-cucumber-cloud.ekstern.dev.nav.no
+#    cucumber-cloud: bidrag-cucumber-cloud.ekstern.dev.nav.no
     bidrag-sak: bidrag-sak.dev-fss-pub.nais.io
     oppgave: oppgave.dev-fss-pub.nais.io
     arbeidsflyt: bidrag-arbeidsflyt.intern.dev.nav.no
