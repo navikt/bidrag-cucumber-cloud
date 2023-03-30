@@ -1,12 +1,20 @@
 name: bidrag-cucumber-cloud-feature
 ingresses:
   - https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no
-  - https://bidrag-cucumber-cloud-feature.dev.intern.nav.no
   - https://bidrag-cucumber-cloud-feature.intern.dev.nav.no
 access:
   outbound:
+    cucumber-cloud: bidrag-cucumber-cloud-feature.ekstern.dev.nav.no
     bidrag-sak: bidrag-sak-feature.dev-fss-pub.nais.io
     oppgave: oppgave-q1.dev-fss-pub.nais.io
+    arbeidsflyt: bidrag-arbeidsflyt-feature.intern.dev.nav.no
+    forsendelse: bidrag-dokument-forsendelse-feature.intern.dev.nav.no
+    grunnlag: bidrag-grunnlag-feature.intern.dev.nav.no
+    vedtak: bidrag-vedtak-feature.intern.dev.nav.no
+    stonad: bidrag-stonad-feature.intern.dev.nav.no
+    barnebidrag: bidrag-beregn-barnebidrag-feature.intern.dev.nav.no
+    forskudd: bidrag-beregn-forskudd-feature.intern.dev.nav.no
+    saertilskudd: bidrag-beregn-saertilskudd-feature.intern.dev.nav.no
 kafka-topic-journalpost: bidrag.journalpost-feature
 scope:
   oppgave: dev-fss.oppgavehandtering.oppgave-q1

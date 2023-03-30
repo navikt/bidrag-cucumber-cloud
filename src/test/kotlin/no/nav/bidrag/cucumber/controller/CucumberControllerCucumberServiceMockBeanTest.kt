@@ -158,7 +158,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                  "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@bidrag-sak"],
                   "testUsername":"z993902",
                   "sanityCheck":true
                 }
@@ -173,7 +173,7 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                 verify(cucumberServiceMock).run(
                     CucumberTestRun(
                         CucumberTestsModel(
-                            sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.dev.intern.nav.no@bidrag-sak")
+                            sanityCheck = true, testUsername = "z993902", ingressesForApps = listOf("https://bidrag-sak.intern.dev.nav.no@bidrag-sak")
                         )
                     )
                 )

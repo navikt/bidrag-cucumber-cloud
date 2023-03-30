@@ -264,7 +264,7 @@ jobs:
     name: "bidrag-dokument-forsendelse"
 
     env:
-      INGRESS_DOKUMENT_FORSENDELSE: https://bidrag-dokument-forsendelse.dev.intern.nav.no
+      INGRESS_DOKUMENT_FORSENDELSE: https://bidrag-dokument-forsendelse.intern.dev.nav.no
 
     steps:
       - run: |

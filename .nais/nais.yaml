@@ -13,8 +13,17 @@ spec:
   accessPolicy:
       outbound:
         external:
-          - host: {{ access.outbound.oppgave }}
+          - host: {{ access.outbound.cucumber-cloud }}
           - host: {{ access.outbound.bidrag-sak }}
+          - host: {{ access.outbound.oppgave }}
+          - host: {{ access.outbound.arbeidsflyt }}
+          - host: {{ access.outbound.forsendelse }}
+          - host: {{ access.outbound.grunnlag }}
+          - host: {{ access.outbound.vedtak }}
+          - host: {{ access.outbound.stonad }}
+          - host: {{ access.outbound.barnebidrag }}
+          - host: {{ access.outbound.forskudd }}
+          - host: {{ access.outbound.saertilskudd }}
   envFrom:
     - secret: test-auth-z992903
     - secret: bidrag-cucumber-cloud-secrets

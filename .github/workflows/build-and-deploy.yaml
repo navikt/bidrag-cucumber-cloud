@@ -299,13 +299,13 @@ jobs:
     needs: deploy
 
     env:
-      INGRESS_DOKUMENT_FORSENDELSE: https://bidrag-dokument-forsendelse.dev.intern.nav.no
+      INGRESS_DOKUMENT_FORSENDELSE: https://bidrag-dokument-forsendelse.intern.dev.nav.no
 
     steps:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_DOKUMENT_FORSENDELSE=https://bidrag-dokument-forsendelse-feature.dev.intern.nav.no" >> $GITHUB_ENV
+          echo "INGRESS_DOKUMENT_FORSENDELSE=https://bidrag-dokument-forsendelse-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \
