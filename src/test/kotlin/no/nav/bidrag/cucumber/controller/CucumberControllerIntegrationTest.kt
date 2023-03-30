@@ -53,7 +53,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-grunnlag"]
+                  "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@tag:bidrag-grunnlag"]
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
             ),
@@ -118,7 +118,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@tag:bidrag-grunnlag"],
+                  "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@tag:bidrag-grunnlag"],
                   "sanityCheck":true
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
@@ -136,7 +136,7 @@ internal class CucumberControllerIntegrationTest {
             HttpEntity(
                 """
                 {
-                  "ingressesForApps":["https://bidrag-sak.dev.intern.nav.no@bidrag-sak"],
+                  "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@bidrag-sak"],
                   "testUsername":"ukjent","tags":["@bidrag-cucumber-cloud"]
                 }
                 """.trimMargin().trim(), initJsonAsMediaType()
