@@ -13,9 +13,9 @@ spec:
   accessPolicy:
       outbound:
         external:
-#          - host: {{ access.outbound.cucumber-cloud }}
-          - host: {{ access.outbound.oppgave }}
+          - host: {{ access.outbound.cucumber-cloud }}
           - host: {{ access.outbound.bidrag-sak }}
+          - host: {{ access.outbound.oppgave }}
           - host: {{ access.outbound.arbeidsflyt }}
           - host: {{ access.outbound.dokument-forsendelse }}
           - host: {{ access.outbound.grunnlag }}
