@@ -5,6 +5,7 @@ import java.time.LocalDate
 
 data class OppgaveSokResponse(var antallTreffTotalt: Int = 0, var oppgaver: List<Oppgave> = emptyList())
 data class Oppgave(var id: Long = -1, var versjon: String = "na", var tildeltEnhetsnr: String = "na", val oppgavetype: String? = null)
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class PatchStatusOppgaveRequest(
     override var id: Long,
@@ -13,7 +14,7 @@ data class PatchStatusOppgaveRequest(
     var versjon: Int,
     var tildeltEnhetsnr: String,
     var oppgavetype: String? = null
-): MedOppgaveId
+) : MedOppgaveId
 
 data class PostOppgaveRequest(
     var journalpostId: String,

@@ -37,12 +37,11 @@ class FellesEgenskaper : No {
 
         Når("jeg kaller endepunkt {string} med http metode {string}") { endpoint: String, metode: String ->
             val endepunktMedParametere = TestdataManager.erstattUrlMedParametereFraTestdata(endpoint)
-            when(metode.uppercase()){
-                "DELETE"-> hentRestTjenesteTilTesting().exchangeDelete(endepunktMedParametere, "{}")
-                "POST"-> hentRestTjenesteTilTesting().exchangePost(endepunktMedParametere, "{}")
-                "PATCH"-> hentRestTjenesteTilTesting().exchangePatch(endepunktMedParametere, "{}")
+            when (metode.uppercase()) {
+                "DELETE" -> hentRestTjenesteTilTesting().exchangeDelete(endepunktMedParametere, "{}")
+                "POST" -> hentRestTjenesteTilTesting().exchangePost(endepunktMedParametere, "{}")
+                "PATCH" -> hentRestTjenesteTilTesting().exchangePatch(endepunktMedParametere, "{}")
             }
-
         }
 
         Så("skal http status være {int}") { enHttpStatus: Int ->

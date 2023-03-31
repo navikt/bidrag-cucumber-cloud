@@ -14,7 +14,6 @@ data class CucumberTestsApi(
     @Schema(description = "Hvilken type saksbehandler som skal brukes ved autentiseringen") var medSaksbehandlerType: SaksbehandlerType? = null
 )
 
-
 enum class SaksbehandlerType {
     BIDRAG_BASIS,
     BIDRAG_VIKAFOSSEN

@@ -100,11 +100,12 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
             }
 
             val exceptionLog = exceptionLogger!!.logException(
-                throwable, throwable.stackTrace.first {
-                    (it.className.contains("no.nav") || it?.fileName?.contains("feature") ?: false)
-                            && !it.className.contains(CucumberTestRun::class.simpleName!!)
-                            && !it.className.contains(FellesEgenskaper::class.simpleName!!)
-                            && !it.className.contains(ScenarioManager::class.simpleName!!)
+                throwable,
+                throwable.stackTrace.first {
+                    (it.className.contains("no.nav") || it?.fileName?.contains("feature") ?: false) &&
+                        !it.className.contains(CucumberTestRun::class.simpleName!!) &&
+                        !it.className.contains(FellesEgenskaper::class.simpleName!!) &&
+                        !it.className.contains(ScenarioManager::class.simpleName!!)
                 }.className
             )
 

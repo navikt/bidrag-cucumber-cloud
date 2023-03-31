@@ -55,7 +55,8 @@ internal class CucumberControllerIntegrationTest {
                 {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@tag:bidrag-grunnlag"]
                 }
-                """.trimMargin().trim(), initJsonAsMediaType()
+                """.trimMargin().trim(),
+                initJsonAsMediaType()
             ),
             Void::class.java
         )
@@ -76,7 +77,8 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-grunnlag.intern.dev.nav.no@tag:bidrag-grunnlag"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), initJsonAsMediaType()
+                """.trimMargin().trim(),
+                initJsonAsMediaType()
             ),
             Void::class.java
         )
@@ -96,7 +98,8 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-cucumber-cloud.ekstern.dev.nav.no@tag:bidrag-cucumber-cloud"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), initJsonAsMediaType()
+                """.trimMargin().trim(),
+                initJsonAsMediaType()
             ),
             String::class.java
         )
@@ -121,7 +124,8 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@tag:bidrag-grunnlag"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(), initJsonAsMediaType()
+                """.trimMargin().trim(),
+                initJsonAsMediaType()
             ),
             String::class.java
         )
@@ -139,7 +143,8 @@ internal class CucumberControllerIntegrationTest {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@bidrag-sak"],
                   "testUsername":"ukjent","tags":["@bidrag-cucumber-cloud"]
                 }
-                """.trimMargin().trim(), initJsonAsMediaType()
+                """.trimMargin().trim(),
+                initJsonAsMediaType()
             ),
             String::class.java
         )

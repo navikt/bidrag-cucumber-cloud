@@ -20,13 +20,15 @@ import org.springframework.context.annotation.Scope
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.kafka.core.KafkaTemplate
 
-
 @Configuration
-@OpenAPIDefinition(info = io.swagger.v3.oas.annotations.info.Info(
-    title = "bidrag-cucumber-cloud",
-    description = "Funksjonelle tester for nais applikasjoner som er sikret med azure ad og bruker rest/kafka",
-    version = "v1"
-), security = [SecurityRequirement(name = "basicAuth")])
+@OpenAPIDefinition(
+    info = io.swagger.v3.oas.annotations.info.Info(
+        title = "bidrag-cucumber-cloud",
+        description = "Funksjonelle tester for nais applikasjoner som er sikret med azure ad og bruker rest/kafka",
+        version = "v1"
+    ),
+    security = [SecurityRequirement(name = "basicAuth")]
+)
 @SecurityScheme(
     name = "basicAuth",
     type = SecuritySchemeType.HTTP,
@@ -42,7 +44,9 @@ class SpringConfig {
 
     @Bean
     fun exceptionLogger() = ExceptionLogger(
-        BidragCucumberCloud::class.java.simpleName, ExceptionLoggerAspect::class.java, TestFailedAdvice::class.java
+        BidragCucumberCloud::class.java.simpleName,
+        ExceptionLoggerAspect::class.java,
+        TestFailedAdvice::class.java
     )
 
     @Bean

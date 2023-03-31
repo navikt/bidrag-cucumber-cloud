@@ -20,6 +20,5 @@ internal const val CORRELATION_ID = "correlationId"
 
 internal const val FAGOMRADE_BIDRAG = "BID"
 
-
-class AzureTokenException(message: String, exception: Exception? = null): RuntimeException(message, exception)
+class AzureTokenException(message: String, exception: Exception? = null) : RuntimeException(message, exception)
 fun usernameNotFound(): Nothing = throw RuntimeException("Fant ikke bruker")

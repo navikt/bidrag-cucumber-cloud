@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan.Filter
 import org.springframework.context.annotation.FilterType
 
 @SpringBootApplication
-@ComponentScan(excludeFilters=[Filter(pattern = ["no.nav.bidrag.commons..*", "no.nav.security..*"], type = FilterType.ASPECTJ)])
+@ComponentScan(excludeFilters = [Filter(pattern = ["no.nav.bidrag.commons..*", "no.nav.security..*"], type = FilterType.ASPECTJ)])
 class BidragCucumberCloud {
     companion object {
         @JvmStatic
@@ -16,8 +16,9 @@ class BidragCucumberCloud {
 
         @JvmStatic
         fun main(args: Array<String>) {
-
-            val profile = if (args.isEmpty()) PROFILE_LIVE else {
+            val profile = if (args.isEmpty()) {
+                PROFILE_LIVE
+            } else {
                 LOGGER.info("Starter med profil (argument): $args")
                 args[0]
             }

@@ -25,7 +25,8 @@ internal class CucumberTestsModelTest {
     @Test
     fun `skal også bruke tags som ikke er oppgitt i ingressesForApps`() {
         val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"), tags = listOf("@arbeidsflyt-endre-fagomrade")
+            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"),
+            tags = listOf("@arbeidsflyt-endre-fagomrade")
         )
 
         assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags")

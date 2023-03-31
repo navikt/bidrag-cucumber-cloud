@@ -50,7 +50,8 @@ class CucumberControllerRestTemplateMockBeanTest {
                     "https://bidrag-sak-feature.dev-fss-pub.nais.io@bidrag-sak"
                   ]
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             Void::class.java
         )
@@ -58,7 +59,10 @@ class CucumberControllerRestTemplateMockBeanTest {
         val urlCaptor = ArgumentCaptor.forClass(String::class.java)
 
         verify(httpHeaderRestTemplateMock, atLeastOnce()).exchange(
-            urlCaptor.capture(), eq(HttpMethod.GET), any(), eq(String::class.java)
+            urlCaptor.capture(),
+            eq(HttpMethod.GET),
+            any(),
+            eq(String::class.java)
         )
 
         assertAll(
@@ -82,7 +86,8 @@ class CucumberControllerRestTemplateMockBeanTest {
                     "https://bidrag-sak-feature.dev-fss-pub.nais.io@bidrag-sak"
                   ]
                 }
-                """.trimMargin().trim(), headers
+                """.trimMargin().trim(),
+                headers
             ),
             String::class.java
         )

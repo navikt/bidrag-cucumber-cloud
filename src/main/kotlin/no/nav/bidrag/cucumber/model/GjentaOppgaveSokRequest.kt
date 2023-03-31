@@ -71,19 +71,21 @@ class GjentaOppgaveSokRequest(
     }
 
     private fun assertTildeltEnhetsnummer(responseSomMap: Map<String, Any>, enhet: String) {
-        @Suppress("UNCHECKED_CAST") val tildeltEnhetsnr = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("tildeltEnhetsnr")
+        @Suppress("UNCHECKED_CAST")
+        val tildeltEnhetsnr = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("tildeltEnhetsnr")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
             Assertion(
                 message = "Oppgaven er tildelt enhet",
                 value = tildeltEnhetsnr,
-                expectation = enhet,
+                expectation = enhet
             ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
         )
     }
 
     private fun assertAktorid(responseSomMap: Map<String, Any>, aktoerId: String) {
-        @Suppress("UNCHECKED_CAST") val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("aktoerId")
+        @Suppress("UNCHECKED_CAST")
+        val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("aktoerId")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
             Assertion(
@@ -95,7 +97,8 @@ class GjentaOppgaveSokRequest(
     }
 
     private fun assertOppgavetype(responseSomMap: Map<String, Any>, oppgavetype: String) {
-        @Suppress("UNCHECKED_CAST") val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("oppgavetype")
+        @Suppress("UNCHECKED_CAST")
+        val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("oppgavetype")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
             Assertion(
