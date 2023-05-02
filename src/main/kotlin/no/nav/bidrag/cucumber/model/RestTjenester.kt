@@ -138,7 +138,8 @@ class RestTjeneste(
     internal var responseEntity: ResponseEntity<String?>? = null
 
     fun hentFullUrlMedEventuellWarning() = "$fullUrl${appendWarningWhenExists()}"
-    fun hentHttpStatus(): HttpStatus = responseEntity?.statusCode ?: HttpStatus.I_AM_A_TEAPOT
+    fun hentHttpStatus(): HttpStatus =
+        HttpStatus.valueOf(responseEntity?.statusCode?.value() ?: HttpStatus.I_AM_A_TEAPOT.value())
     fun hentResponse(): String? = responseEntity?.body
     fun hentResponseSomMap() = BidragCucumberSingletons.mapResponseSomMap(responseEntity)
 
