@@ -1,5 +1,9 @@
 package no.nav.bidrag.cucumber.cloud.arbeidsflyt
 
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import io.mockk.slot
+import io.mockk.verify
 import no.nav.bidrag.commons.CorrelationId
 import no.nav.bidrag.commons.web.HttpHeaderRestTemplate
 import no.nav.bidrag.cucumber.BidragCucumberCloud
@@ -15,16 +19,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Mockito
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.never
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
@@ -41,19 +36,19 @@ internal class OppgaveOgHendelseServiceTest {
         fagomrade = FAGOMRADE_BIDRAG
     )
 
-    @MockBean
+    @MockkBean(relaxed = true)
     private lateinit var azureTokenService: AzureTokenService
 
-    @MockBean
+    @MockkBean(relaxed = true)
     private lateinit var hendelseProducerMock: HendelseProducer
 
-    @MockBean
+    @MockkBean(relaxed = true)
     private lateinit var httpHeaderRestTemplateMock: HttpHeaderRestTemplate
 
     @BeforeEach
     fun konfigurerNaisApplikasjonForOppgave() {
-        whenever(azureTokenService.generateToken(anyString(), any())).thenReturn("")
-        whenever(azureTokenService.generateToken(anyString(), Mockito.isNull())).thenReturn("")
+        every { azureTokenService.generateToken(any(), any()) } returns ""
+        every { azureTokenService.generateToken(any(), null) } returns ""
         val naisApplikasjon = "oppgave"
         CucumberTestRun(CucumberTestsModel(ingressesForApps = listOf("$baseUrl@$naisApplikasjon"))).initEnvironment()
         CucumberTestRun.settOppNaisAppTilTesting(naisApplikasjon)
@@ -64,51 +59,59 @@ internal class OppgaveOgHendelseServiceTest {
         CorrelationId.generateTimestamped("junit-test")
         OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
 
-        verify(hendelseProducerMock).publish(
-            JournalpostHendelse(journalpostId = "BID-${journalpostHendelse.hentJournalpostIdUtenPrefix()}", fagomrade = "BID")
-        )
+        verify {
+            hendelseProducerMock.publish(
+                JournalpostHendelse(journalpostId = "BID-${journalpostHendelse.hentJournalpostIdUtenPrefix()}", fagomrade = "BID")
+            )
+        }
     }
 
     @Test
     fun `skal opprette oppgave`() {
-        whenever(httpHeaderRestTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
-            .thenReturn(ResponseEntity.ok().build())
-        whenever(httpHeaderRestTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
-            .thenReturn(ResponseEntity.ok().body("""{"antallTreffTotalt":"0"}"""))
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.POST), any(), eq(String::class.java)) } returns ResponseEntity.ok()
+            .build()
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) } returns ResponseEntity.ok()
+            .body("""{"antallTreffTotalt":"0"}""")
 
         OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
-        verify(httpHeaderRestTemplateMock).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
+        verify { httpHeaderRestTemplateMock.exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java)) }
     }
 
     @Test
     fun `skal ikke opprette oppgave når den eksisterer fra før`() {
-        whenever(httpHeaderRestTemplateMock.exchange(anyString(), eq(HttpMethod.POST), any(), eq(String::class.java)))
-            .thenReturn(ResponseEntity.ok().build())
-        whenever(httpHeaderRestTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
-            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1","versjon":"1"}]}""")
-        )
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.POST), any(), eq(String::class.java)) }
+            .returns(ResponseEntity.ok().build())
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) }
+            .returns(ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1","versjon":"1"}]}"""))
 
         OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
-        verify(httpHeaderRestTemplateMock, never()).exchange(eq("/api/v1/oppgaver"), eq(HttpMethod.POST), any(), eq(String::class.java))
+        verify(exactly = 0) {
+            httpHeaderRestTemplateMock.exchange("/api/v1/oppgaver", HttpMethod.POST, any(), String::class.java)
+        }
     }
 
     @Test
     fun `skal sette sette status til UNDER_BEHANDLING på oppgave som eksisterer fra før`() {
-        whenever(httpHeaderRestTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
-            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}""")
-        )
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) }
+            .returns(ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1"}]}"""))
 
         OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
         @Suppress("UNCHECKED_CAST")
-        val httpEntityCaptor = ArgumentCaptor.forClass(HttpEntity::class.java)
-            as ArgumentCaptor<HttpEntity<PatchStatusOppgaveRequest>>
+        val httpEntityCaptor = slot<HttpEntity<PatchStatusOppgaveRequest>>()
 
-        verify(httpHeaderRestTemplateMock).exchange(eq("/api/v1/oppgaver/1001"), eq(HttpMethod.PATCH), httpEntityCaptor.capture(), eq(String::class.java))
+        verify {
+            httpHeaderRestTemplateMock.exchange(
+                "/api/v1/oppgaver/1001",
+                HttpMethod.PATCH,
+                capture(httpEntityCaptor),
+                String::class.java
+            )
+        }
 
-        assertThat(httpEntityCaptor.value.body).isEqualTo(
+        assertThat(httpEntityCaptor.captured.body).isEqualTo(
             BidragCucumberSingletons.toJson(
                 PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = FAGOMRADE_BIDRAG, versjon = 1, tildeltEnhetsnr = "4812")
             )
@@ -117,13 +120,10 @@ internal class OppgaveOgHendelseServiceTest {
 
     @Test
     fun `skal gjenta rest-kall når det er gitt et maks antall ganger og ikke ønsket resultat fungerer`() {
-        whenever(httpHeaderRestTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java))).thenReturn(
-            ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}""")
-        ).thenReturn(
-            ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}""")
-        ).thenReturn(
-            ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1","tildeltEnhetsnr":"123"}]}""")
-        )
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) }
+            .returns(ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}"""))
+            .andThen(ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}"""))
+            .andThen(ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1","tildeltEnhetsnr":"123"}]}"""))
 
         OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(123, "BID", antallGjentakelser = 3)
         OppgaveOgHendelseService.assertThatOppgaveHar("123")
