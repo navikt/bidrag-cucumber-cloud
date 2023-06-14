@@ -3,18 +3,18 @@
   "beregnDatoTil": "2020-09-01",
   "grunnlagListe": [
     {
-      "referanse": "Mottatt_SoknadsbarnInfo_SB_1",
-      "type": "SoknadsbarnInfo",
+      "referanse": "Mottatt_SoknadsbarnInfo_SB1",
+      "type": "SOKNADSBARN_INFO",
       "innhold": {
         "id": 1,
         "fodselsdato": "2006-02-01"
       }
     },
     {
-      "referanse": "Mottatt_Inntekt_AG_20200801_SB_1",
-      "type": "Inntekt",
+      "referanse": "Mottatt_Inntekt_AG_20200801_SB1",
+      "type": "INNTEKT",
       "innhold": {
-        "rolle": "SB",
+        "rolle": "SOKNADSBARN",
         "datoFom": "2020-08-01",
         "datoTil": "2020-09-01",
         "soknadsbarnId": 1,
@@ -24,9 +24,9 @@
     },
     {
       "referanse": "Mottatt_Inntekt_AG_20200801_BM",
-      "type": "Inntekt",
+      "type": "INNTEKT",
       "innhold": {
-        "rolle": "BM",
+        "rolle": "BIDRAGSMOTTAKER",
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
         "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
@@ -37,9 +37,9 @@
     },
     {
       "referanse": "Mottatt_Inntekt_AG_20200801_BM",
-      "type": "Inntekt",
+      "type": "INNTEKT",
       "innhold": {
-        "rolle": "BM",
+        "rolle": "BIDRAGSMOTTAKER",
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
         "inntektType": "UTVIDET_BARNETRYGD",
@@ -50,9 +50,9 @@
     },
     {
       "referanse": "Mottatt_Inntekt_AG_20200801_BP",
-      "type": "Inntekt",
+      "type": "INNTEKT",
       "innhold": {
-        "rolle": "BP",
+        "rolle": "BIDRAGSPLIKTIG",
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
         "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
@@ -61,7 +61,7 @@
     },
     {
       "referanse": "Mottatt_BarnIHusstand_20200801",
-      "type": "BarnIHusstand",
+      "type": "BARN_I_HUSSTAND",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
@@ -70,7 +70,7 @@
     },
     {
       "referanse": "Mottatt_Bostatus_20200801",
-      "type": "Bostatus",
+      "type": "BOSTATUS",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
@@ -79,7 +79,7 @@
     },
     {
       "referanse": "Mottatt_Saerfradrag_20200801",
-      "type": "Saerfradrag",
+      "type": "SAERFRADRAG",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
@@ -88,7 +88,7 @@
     },
     {
       "referanse": "Mottatt_Skatteklasse_20200801",
-      "type": "Skatteklasse",
+      "type": "SKATTEKLASSE",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
@@ -97,7 +97,7 @@
     },
     {
       "referanse": "Mottatt_Netto_Saertilskudd_20200801",
-      "type": "NettoSaertilskudd",
+      "type": "NETTO_SAERTILSKUDD",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
@@ -105,8 +105,8 @@
       }
     },
     {
-      "referanse": "Mottatt_Samvaersklasse_20200801_SB_1",
-      "type": "Samvaersklasse",
+      "referanse": "Mottatt_Samvaersklasse_20200801_SB1",
+      "type": "SAMVAERSKLASSE",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
@@ -116,8 +116,8 @@
       }
     },
     {
-      "referanse": "Mottatt_LoependeBidrag_20200801_SB_1",
-      "type": "LopendeBidrag",
+      "referanse": "Mottatt_LopendeBidrag_20200801_SB1",
+      "type": "LOPENDE_BIDRAG",
       "innhold": {
         "datoFom": "2020-08-01",
         "datoTil": "2021-09-01",
