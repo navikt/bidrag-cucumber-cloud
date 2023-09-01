@@ -6,65 +6,76 @@ on:
       - '!feature/cron-fix'
 
 env:
-  IMAGE: ghcr.io/${{ github.repository }}:${{ github.sha }}
   INGRESS_CUCUMBER: https://bidrag-cucumber-cloud.ekstern.dev.nav.no
+  GITHUB_USERNAME: x-access-token
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
+    permissions:
+      contents: "read"
+      id-token: "write"
     name: Build with maven and docker
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'corretto'
+          distribution: 'temurin'
       - uses: actions/cache@v3
         with:
-          path: ~/.m2
+          path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - uses: navikt/bidrag-maven/setup@v7.0.5
+      - run: mvn -B -e --settings .m2/maven-settings.xml clean install
+      - uses: nais/docker-build-push@v0
+        id: docker-push
         with:
-          repositories: maven-central=https://repo.maven.apache.org/maven2,github-packages=https://maven.pkg.github.com/navikt/maven-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: mvn install -B -e
-      - name: Build and publish Docker image
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker image build --tag ${IMAGE} .
-          echo ${GITHUB_TOKEN} | docker login ghcr.io --username ${GITHUB_REPOSITORY} --password-stdin
-          docker image push ${IMAGE}
+          team: bidrag
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+    outputs:
+      image: ${{ steps.docker-push.outputs.image }}
+      tag: ${{ steps.docker-push.outputs.tag }}
 
-  deploy:
+  deploy-feature:
     runs-on: ubuntu-latest
-    name: Deploy bidrag-cucumber-cloud
+    name: Deploy feature
     needs: build
 
     steps:
       - uses: actions/checkout@v3
         with:
           path: deploy
-      - name: Deploy bidrag-cucumber-cloud testapplication for main branches to dev-gcp
-        if: github.ref == 'refs/heads/main'
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: deploy/.nais/nais.yaml
-          VARS: deploy/.nais/main.yaml
-      - name: Deploy bidrag-cucumber-cloud testapplication for feature branches to dev-gcp
-        if: github.ref != 'refs/heads/main'
+      - name: Deploy to dev-gcp for feature.yaml
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-gcp
           RESOURCE: deploy/.nais/nais.yaml
           VARS: deploy/.nais/feature.yaml
+          IMAGE: ${{ needs.build.outputs.image }}
+
+  deploy-main:
+    runs-on: ubuntu-latest
+    name: Deploy main
+    if: github.ref != 'refs/heads/main'
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: deploy
+      - name: Deploy to dev-gcp for feature.yaml
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: deploy/.nais/nais.yaml
+          VARS: deploy/.nais/main.yaml
+          IMAGE: ${{ needs.build.outputs.image }}
 
   run-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
