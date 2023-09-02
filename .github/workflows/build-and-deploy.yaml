@@ -80,7 +80,7 @@ jobs:
   run-tests-for-cucumber-cloud:
     runs-on: ubuntu-latest
     name: bidrag-cucumber-cloud
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     steps:
       - run: echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
@@ -98,7 +98,7 @@ jobs:
   run-tests-for-bidrag-stonad:
     runs-on: ubuntu-latest
     name: bidrag-stonad
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_STONAD: https://bidrag-stonad.intern.dev.nav.no
@@ -133,7 +133,7 @@ jobs:
   run-tests-for-bidrag-vedtak:
     runs-on: ubuntu-latest
     name: bidrag-vedtak
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_VEDTAK: https://bidrag-vedtak.intern.dev.nav.no
@@ -157,7 +157,7 @@ jobs:
   run-tests-for-bidrag-grunnlag:
     runs-on: ubuntu-latest
     name: bidrag-grunnlag
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_GRUNNLAG: https://bidrag-grunnlag.intern.dev.nav.no
@@ -181,7 +181,7 @@ jobs:
   run-tests-for-bidrag-beregn-saertilskudd:
     runs-on: ubuntu-latest
     name: bidrag-beregn-saertilskudd
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_BEREGN_SAERTILSKUDD: https://bidrag-beregn-saertilskudd-rest.intern.dev.nav.no
@@ -205,7 +205,7 @@ jobs:
   run-tests-for-bidrag-beregn-forskudd:
     runs-on: ubuntu-latest
     name: bidrag-beregn-forskudd
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_BEREGN_FORSKUDD: https://bidrag-beregn-forskudd-rest.intern.dev.nav.no
@@ -229,7 +229,7 @@ jobs:
   run-tests-for-bidrag-beregn-barnebidrag:
     runs-on: ubuntu-latest
     name: bidrag-beregn-barnebidrag
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_BEREGN_BARNEBIDRAG: https://bidrag-beregn-barnebidrag-rest.intern.dev.nav.no
@@ -253,7 +253,7 @@ jobs:
   run-tests-for-arbeidsflyt:
     runs-on: ubuntu-latest
     name: bidrag-arbeidsflyt
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_OPPGAVE: https://oppgave.dev-fss-pub.nais.io
@@ -307,7 +307,7 @@ jobs:
   run-tests-for-bidrag-dokument-forsendelse:
     runs-on: ubuntu-latest
     name: bidrag-dokument-forsendelse
-    needs: deploy
+    needs: [deploy-feature, deploy-main]
 
     env:
       INGRESS_DOKUMENT_FORSENDELSE: https://bidrag-dokument-forsendelse.intern.dev.nav.no
