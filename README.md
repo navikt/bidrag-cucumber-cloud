@@ -270,7 +270,7 @@ kubectl config use dev-gcp
 Deretter kjør følgende kommando for å importere secrets. Viktig at filen som opprettes ikke committes til git
 
 ```bash
-kubectl exec --tty deployment/bidrag-cucumber-cloud-feature printenv | grep -E 'AZURE_|_URL|SCOPE|REST_AUTH|user_password' > src/main/resources/application-lokal-nais-secrets.properties
+kubectl exec --tty deployment/bidrag-cucumber-cloud printenv | grep -E 'AZURE_|_URL|SCOPE|REST_AUTH|user_password' > src/main/resources/application-lokal-nais-secrets.properties
 ```
 
 Start opp applikasjonen ved å kjøre [BidragCucumberCloudLokalNais.kt](src/test/kotlin/no/nav/bidrag/BidragCucumberCloudLokalNais.kt).

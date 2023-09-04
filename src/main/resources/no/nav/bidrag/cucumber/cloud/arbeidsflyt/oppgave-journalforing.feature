@@ -11,6 +11,6 @@ Egenskap: en journalpost og journalføringsoppgave
     Og at det finnes en oppgave under behandling med oppgavetype 'JFR'
 
   Scenario: Arbeidsflyt skal ferdigstille oppgave med journalpostId ved hendelse
-    Når hendelsen opprettes med aktør id '2889800801806' og journalstatus 'J'
+    Når hendelsen opprettes med aktør id '2771059330991' og journalstatus 'J'
     Og jeg søker etter oppgaver på fagområde 'BID' etter behandling av hendelse
     Så skal jeg ikke finne oppgave i søkeresultatet

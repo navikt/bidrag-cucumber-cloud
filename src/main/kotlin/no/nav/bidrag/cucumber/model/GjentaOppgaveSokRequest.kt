@@ -98,7 +98,7 @@ class GjentaOppgaveSokRequest(
 
     private fun assertOppgavetype(responseSomMap: Map<String, Any>, oppgavetype: String) {
         @Suppress("UNCHECKED_CAST")
-        val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("oppgavetype")
+        val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.firstOrNull()?.get("oppgavetype")
 
         FellesEgenskaperService.assertWhenNotSanityCheck(
             Assertion(
