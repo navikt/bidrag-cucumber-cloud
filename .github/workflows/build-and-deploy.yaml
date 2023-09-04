@@ -214,7 +214,6 @@ jobs:
       - name: feature ingresses
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "INGRESS_BEREGN_FORSKUDD=https://bidrag-beregn-forskudd-rest-feature.intern.dev.nav.no" >> $GITHUB_ENV
           echo "INGRESS_CUCUMBER=https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no" >> $GITHUB_ENV
       - run: |
           curl -H "Content-Type: application/json" -i \

@@ -13,6 +13,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 
+
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
@@ -31,19 +32,14 @@ class SecurityConfiguration(
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .csrf()
-            .disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**")
-            .permitAll()
-            .anyRequest()
-            .authenticated()
-            .and()
-            .httpBasic()
-            .authenticationEntryPoint(Http403ForbiddenEntryPoint())
+
+        http
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
+                auth.anyRequest().authenticated()
+            }
+            .httpBasic { it.authenticationEntryPoint(Http403ForbiddenEntryPoint()) }
+            .csrf { it.disable() }
         return http.build()
     }
 }
