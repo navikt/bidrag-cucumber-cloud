@@ -31,7 +31,7 @@
 
     <!-- build -->
     <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-    <kotlin.version>1.8.21</kotlin.version>
+    <kotlin.version>1.9.10</kotlin.version>
     <maven-assembly-plugin.version>3.5.0</maven-assembly-plugin.version>
     <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>

@@ -1,5 +1,8 @@
 package no.nav.bidrag.cucumber.model
 
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import io.mockk.mockk
 import no.nav.bidrag.cucumber.BidragCucumberCloudLocal
 import no.nav.bidrag.cucumber.Environment
 import no.nav.bidrag.cucumber.service.AzureTokenService
@@ -7,12 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.isNull
-import org.mockito.Mockito.mock
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.whenever
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpHeaders
@@ -21,14 +19,16 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.core.OAuth2AccessToken
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class])
 @ActiveProfiles("test")
+@ExtendWith(SpringExtension::class)
 internal class RestTjenesteTest {
 
-    @MockBean
+    @MockkBean
     private lateinit var azureTokenService: AzureTokenService
 
     @BeforeEach
@@ -38,13 +38,14 @@ internal class RestTjenesteTest {
 
     @BeforeEach
     fun `stub azure security`() {
-        val oaut2AuthorizedClientMock = mock(OAuth2AuthorizedClient::class.java)
-        val oauth2AccessTokenMock = mock(OAuth2AccessToken::class.java)
+        val oaut2AuthorizedClientMock: OAuth2AuthorizedClient = mockk("OAuth2AuthorizedClient")
+        val oauth2AccessTokenMock: OAuth2AccessToken = mockk("OAuth2AccessToken")
 
-        whenever(azureTokenService.generateToken(any(), any())).thenReturn("oaut2AuthorizedClientMock")
-        whenever(azureTokenService.generateToken(anyString(), isNull())).thenReturn("")
-        whenever(oaut2AuthorizedClientMock.accessToken).thenReturn(oauth2AccessTokenMock)
-        whenever(oauth2AccessTokenMock.tokenValue).thenReturn("my secured token")
+        every {  azureTokenService.generateToken(any(), any())} returns "token"
+        every { azureTokenService.generateToken(any(), isNull()) } returns ""
+        every { azureTokenService.getToken(any(), isNull()) } returns ""
+        every {oaut2AuthorizedClientMock.accessToken } returns oauth2AccessTokenMock
+        every {oauth2AccessTokenMock.tokenValue } returns "my secured token"
     }
 
     @Test
@@ -85,11 +86,10 @@ internal class RestTjenesteTest {
 
     @Test
     fun `skal hente full url uten advarsel`() {
-        val restTemplateMock = mock(RestTemplate::class.java)
+        val restTemplateMock: RestTemplate = mockk("RestTemplate")
         val restTjeneste = RestTjeneste(ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
 
-        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
-            .thenReturn(ResponseEntity.ok().build())
+        every { restTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) } returns ResponseEntity.ok().build()
 
         restTjeneste.exchangeGet("/out/there")
 
@@ -100,12 +100,10 @@ internal class RestTjenesteTest {
 
     @Test
     fun `skal ha WARNING fra HttpHeaders når rest tjeneste sender med dette som header`() {
-        val restTemplateMock = mock(RestTemplate::class.java)
+        val restTemplateMock: RestTemplate = mockk("RestTemplate")
         val restTjeneste = RestTjeneste(ResttjenesteMedBaseUrl(restTemplateMock, "https://somewhere"))
         val headers = HttpHeaders(LinkedMultiValueMap(mapOf(HttpHeaders.WARNING to listOf("the truth will emerge!"))))
-
-        whenever(restTemplateMock.exchange(anyString(), eq(HttpMethod.GET), any(), eq(String::class.java)))
-            .thenReturn(ResponseEntity.internalServerError().headers(headers).build())
+        every { restTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) } returns ResponseEntity.internalServerError().headers(headers).build()
 
         restTjeneste.exchangeGet("/out/there")
 
