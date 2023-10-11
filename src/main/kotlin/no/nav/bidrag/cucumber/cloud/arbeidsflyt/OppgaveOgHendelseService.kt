@@ -7,6 +7,7 @@ import no.nav.bidrag.cucumber.model.GjentaOppgaveSokRequest
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
 import no.nav.bidrag.cucumber.model.PatchStatusOppgaveRequest
 import no.nav.bidrag.cucumber.model.PostOppgaveRequest
+import no.nav.bidrag.transport.dokument.JournalpostStatus
 
 /**
  * Service class in order to loosely couple logic from cucumber infrastructure
@@ -79,7 +80,7 @@ object OppgaveOgHendelseService {
                 opprettJournalpostHendelse(
                     JournalpostHendelse(
                         journalpostId = journalpostIdMedPrefix,
-                        journalstatus = "J",
+                        status = JournalpostStatus.JOURNALFØRT,
                         fagomrade = "BID",
                         enhet = "4812"
                     )
