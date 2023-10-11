@@ -5,6 +5,7 @@ import no.nav.bidrag.cucumber.cloud.FellesEgenskaperService
 import no.nav.bidrag.cucumber.model.Assertion
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 import no.nav.bidrag.cucumber.model.JournalpostHendelse
+import no.nav.bidrag.transport.dokument.JournalpostStatus
 import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 
@@ -125,18 +126,18 @@ class ArbeidsflytEgenskaper : No {
 
         Når("hendelsen opprettes med fnr {string} og journalstatus {string}") { fnr: String, journalstatus: String ->
             journalpostHendelse.fnr = fnr
-            journalpostHendelse.journalstatus = journalstatus
+            journalpostHendelse.status = JournalpostStatus.fraKode(journalstatus)
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
         Når("hendelsen opprettes med aktør id {string} og journalstatus {string}") { aktorId: String, journalstatus: String ->
             journalpostHendelse.aktorId = aktorId
-            journalpostHendelse.journalstatus = journalstatus
+            journalpostHendelse.status = JournalpostStatus.fraKode(journalstatus)
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
         Når("hendelsen opprettes uten aktør id, men med journalstatus {string}") { journalstatus: String ->
-            journalpostHendelse.journalstatus = journalstatus
+            journalpostHendelse.status = JournalpostStatus.fraKode(journalstatus)
             OppgaveOgHendelseService.opprettJournalpostHendelse(journalpostHendelse)
         }
 
