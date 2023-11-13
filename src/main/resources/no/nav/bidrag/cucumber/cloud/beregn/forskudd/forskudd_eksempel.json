@@ -1,53 +1,75 @@
 {
-  "beregnDatoFra": "2020-12-01",
-  "beregnDatoTil": "2021-01-01",
+  "periode": {
+    "fom": "2020-12",
+    "til": "2021-01"
+  },
+  "søknadsbarnReferanse": "Person_Søknadsbarn_20201201",
   "grunnlagListe": [
     {
-      "referanse": "Mottatt_BarnIHusstand_20201201",
-      "type": "BARN_I_HUSSTAND",
+      "referanse": "Person_Søknadsbarn_20201201",
+      "type": "PERSON",
+      "grunnlagsreferanseListe": [],
       "innhold": {
-        "datoFom": "2020-12-01",
-        "datoTil": "2021-01-01",
-        "antall": 1.0
+        "ident": "11111111110",
+        "navn": "Trengende Søknadsbarn",
+        "fødselsdato": "2006-02-01"
       }
     },
     {
-      "referanse": "Mottatt_Bostatus_20201201",
-      "type": "BOSTATUS",
+      "referanse": "Person_Bidragsmottaker_20201201",
+      "type": "PERSON",
+      "grunnlagsreferanseListe": [],
       "innhold": {
-        "datoFom": "2020-12-01",
-        "datoTil": "2021-01-01",
-        "rolle": "SOKNADSBARN",
-        "bostatusKode": "BOR_MED_FORELDRE"
+        "ident": "22222222222",
+        "navn": "Søkende Bidragsmottaker",
+        "fødselsdato": "1982-05-05"
       }
     },
     {
-      "referanse": "Mottatt_Inntekt_AG_20201201",
-      "type": "INNTEKT",
+      "referanse": "Bostatus_Søknadsbarn_20201201",
+      "type": "BOSTATUS_PERIODE",
+      "grunnlagsreferanseListe": [
+        "Person_Søknadsbarn_20201201"
+      ],
       "innhold": {
-        "datoFom": "2020-12-01",
-        "datoTil": "2021-01-01",
-        "rolle": "BIDRAGSMOTTAKER",
-        "inntektType": "INNTEKTSOPPLYSNINGER_ARBEIDSGIVER",
-        "belop": 290000
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "bostatus": "MED_FORELDER",
+        "manueltRegistrert": false
       }
     },
     {
-      "referanse": "Mottatt_Sivilstand_20201201",
-      "type": "SIVILSTAND",
+      "referanse": "BeregningInntektRapportering_Ainntekt_20201201",
+      "type": "BEREGNING_INNTEKT_RAPPORTERING_PERIODE",
+      "grunnlagsreferanseListe": [
+        "Person_Bidragsmottaker_20201201"
+      ],
       "innhold": {
-        "datoFom": "2020-12-01",
-        "datoTil": "2021-01-01",
-        "rolle": "BIDRAGSMOTTAKER",
-        "sivilstandKode": "GIFT"
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "inntektRapportering": "AINNTEKT",
+        "gjelderBarn": null,
+        "beløp": 290000,
+        "manueltRegistrert": false,
+        "valgt": true
       }
     },
     {
-      "referanse": "Mottatt_SoknadsbarnInfo_SB1",
-      "type": "SOKNADSBARN_INFO",
+      "referanse": "Sivilstand_20201201",
+      "type": "SIVILSTAND_PERIODE",
+      "grunnlagsreferanseListe": [
+        "Person_Bidragsmottaker_20201201"
+      ],
       "innhold": {
-        "soknadsbarnId": 1,
-        "fodselsdato": "2006-02-01"
+        "periode": {
+          "fom": "2020-12",
+          "til": "2021-01"
+        },
+        "sivilstand": "GIFT_SAMBOER"
       }
     }
   ]
