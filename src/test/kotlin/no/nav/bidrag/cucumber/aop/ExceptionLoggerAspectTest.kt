@@ -21,9 +21,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 internal class ExceptionLoggerAspectTest {
-
     @Autowired
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private lateinit var testRestTemplate: TestRestTemplate
 
     @MockkBean

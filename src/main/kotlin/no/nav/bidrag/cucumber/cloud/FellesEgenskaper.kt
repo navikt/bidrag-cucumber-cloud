@@ -9,7 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import java.io.File
-import java.util.*
+import java.util.EnumSet
 
 @Suppress("unused") // brukes av cucumber
 class FellesEgenskaper : No {
@@ -17,6 +17,7 @@ class FellesEgenskaper : No {
         @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
     }
+
     init {
         Gitt("nais applikasjon {string}") { naisApplikasjon: String -> CucumberTestRun.settOppNaisAppTilTesting(naisApplikasjon) }
 
@@ -28,7 +29,10 @@ class FellesEgenskaper : No {
         }
 
         Når("jeg bruker endpoint {string} med json:") { endpoint: String, json: String ->
-            hentRestTjenesteTilTesting().exchangePost(TestdataManager.erstattUrlMedParametereFraTestdata(endpoint), TestdataManager.erstattJsonMedParametereFraTestdata(json))
+            hentRestTjenesteTilTesting().exchangePost(
+                TestdataManager.erstattUrlMedParametereFraTestdata(endpoint),
+                TestdataManager.erstattJsonMedParametereFraTestdata(json),
+            )
         }
 
         Når("jeg kaller endepunkt {string}") { endpoint: String ->
@@ -49,8 +53,8 @@ class FellesEgenskaper : No {
                 Assertion(
                     "HttpStatus for ${hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning()}",
                     hentRestTjenesteTilTesting().hentHttpStatus(),
-                    HttpStatus.valueOf(enHttpStatus)
-                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                    HttpStatus.valueOf(enHttpStatus),
+                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
             )
         }
 
@@ -72,7 +76,9 @@ class FellesEgenskaper : No {
         Så("skal http status ikke være {int} eller {int}") { enHttpStatus: Int, enAnnenHttpStatus: Int ->
             assertThat(hentRestTjenesteTilTesting().hentHttpStatus())
                 .`as`("HttpStatus for " + hentRestTjenesteTilTesting().hentFullUrlMedEventuellWarning())
-                .isNotIn(EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)))
+                .isNotIn(
+                    EnumSet.of(HttpStatus.valueOf(enHttpStatus), HttpStatus.valueOf(enAnnenHttpStatus)),
+                )
         }
 
         Og("responsen skal ikke være null") {

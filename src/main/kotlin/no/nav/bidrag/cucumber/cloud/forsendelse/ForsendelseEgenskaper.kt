@@ -53,8 +53,8 @@ class ForsendelseEgenskaper : No {
                     Assertion(
                         message = "Dokument",
                         value = dokument?.get("status")?.asText(),
-                        expectation = status
-                    ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                        expectation = status,
+                    ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
                 )
             }
         }
@@ -71,8 +71,8 @@ class ForsendelseEgenskaper : No {
                 Assertion(
                     message = "Dokument",
                     value = dokumenter.size,
-                    expectation = antall
-                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                    expectation = antall,
+                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
             )
         }
         Og("forsendelse inneholder joark journalpostid") {
@@ -86,15 +86,20 @@ class ForsendelseEgenskaper : No {
                 Assertion(
                     message = "Dokument",
                     value = journalpostId,
-                    expectation = journalpostId
-                ) { assertThat(it.value).`as`(it.message).isNotNull() }
+                    expectation = journalpostId,
+                ) { assertThat(it.value).`as`(it.message).isNotNull() },
             )
         }
     }
 
     private fun lagreDokumentreferanserFraRespons(journalpost: JsonNode) {
         val dokumenter = journalpost.get("dokumenter").toList()
-        dokumenter.forEachIndexed { i, it -> CucumberTestRun.thisRun().testData.lagreData("dokumentreferanse${i + 1}" to it.get("dokumentreferanse").asText()) }
+        dokumenter.forEachIndexed {
+                i,
+                it,
+            ->
+            CucumberTestRun.thisRun().testData.lagreData("dokumentreferanse${i + 1}" to it.get("dokumentreferanse").asText())
+        }
     }
 
     private fun parseJson(response: String?): JsonNode? {

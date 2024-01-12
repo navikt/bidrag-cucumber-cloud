@@ -14,9 +14,8 @@ class JournalpostKafkaHendelseProducer(
     private val kafkaTemplate: KafkaTemplate<String, String>,
     private val topic: String,
     private val objectMapper: ObjectMapper,
-    private val timeoutAfterSeconds: Long = 15
+    private val timeoutAfterSeconds: Long = 15,
 ) : HendelseProducer {
-
     companion object {
         @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(JournalpostKafkaHendelseProducer::class.java)
@@ -28,7 +27,7 @@ class JournalpostKafkaHendelseProducer(
                 LOGGER.info("Publish $journalpostHendelse til topic $topic")
                 publishWithTimeout(
                     publish = Publish(journalpostHendelse.journalpostId, objectMapper.writeValueAsString(journalpostHendelse)),
-                    doSend = this::sendKafkaMelding
+                    doSend = this::sendKafkaMelding,
                 )
             } else {
                 LOGGER.info("SanityCheck - Hendelse publiseres ikke: $journalpostHendelse")
@@ -43,12 +42,16 @@ class JournalpostKafkaHendelseProducer(
         kafkaTemplate.send(topic, publish.journalpostId, publish.json)
     }
 
-    private fun publishWithTimeout(publish: Publish, doSend: (input: Publish) -> Unit) {
+    private fun publishWithTimeout(
+        publish: Publish,
+        doSend: (input: Publish) -> Unit,
+    ) {
         val start = LocalDateTime.now()
         val timeout = LocalDateTime.now().plusSeconds(timeoutAfterSeconds)
-        val future = CompletableFuture.runAsync {
-            doSend(publish)
-        }
+        val future =
+            CompletableFuture.runAsync {
+                doSend(publish)
+            }
 
         while (!future.isDone) {
             if (LocalDateTime.now().isBefore(timeout)) {

@@ -17,9 +17,12 @@ object OppgaveConsumer {
         hentRestTjenesteTilTesting().exchangePost("/api/v1/oppgaver", oppgave)
     }
 
-    fun sokOppgaver(journalpostId: Long, tema: String): OppgaveSokResponse {
+    fun sokOppgaver(
+        journalpostId: Long,
+        tema: String,
+    ): OppgaveSokResponse {
         hentRestTjenesteTilTesting().exchangeGet(
-            "/api/v1/oppgaver?journalpostId=$journalpostId&journalpostId=$tema-$journalpostId&statuskategori=AAPEN&tema=$tema"
+            "/api/v1/oppgaver?journalpostId=$journalpostId&journalpostId=$tema-$journalpostId&statuskategori=AAPEN&tema=$tema",
         )
 
         try {
@@ -31,11 +34,12 @@ object OppgaveConsumer {
                 BidragCucumberSingletons.readValue(response, OppgaveSokResponse::class.java)
             }
         } finally {
-            val oppgaveSokResponse = if (hentRestTjenesteTilTesting().responseEntity != null) {
-                "Har OppgaveSokResponse (${hentRestTjenesteTilTesting().hentResponse()})"
-            } else {
-                "Mangler OppgaveSokResponse ${if (CucumberTestRun.isSanityCheck) "og det er" else "og det er ikke"} sanity check!"
-            }
+            val oppgaveSokResponse =
+                if (hentRestTjenesteTilTesting().responseEntity != null) {
+                    "Har OppgaveSokResponse (${hentRestTjenesteTilTesting().hentResponse()})"
+                } else {
+                    "Mangler OppgaveSokResponse ${if (CucumberTestRun.isSanityCheck) "og det er" else "og det er ikke"} sanity check!"
+                }
 
             LOGGER.info("$oppgaveSokResponse med http status: ${hentRestTjenesteTilTesting().hentHttpStatus()}")
         }

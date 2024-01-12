@@ -6,7 +6,6 @@ import no.nav.bidrag.cucumber.ScenarioManager
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 
 class TestMessageBeforeLayoutHolder : LoggingEventCompositeJsonEncoder() {
-
     override fun encode(event: ILoggingEvent?): ByteArray {
         if (CucumberTestRun.isTestRunStarted) {
             val message = event?.message ?: throw IllegalStateException("ILoggingEvent should not be null!")

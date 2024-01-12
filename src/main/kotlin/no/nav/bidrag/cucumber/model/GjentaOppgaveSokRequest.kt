@@ -8,13 +8,17 @@ class GjentaOppgaveSokRequest(
     private val antallGjentakelser: Int,
     private val journalpostId: Long,
     private val tema: String,
-    private val sleepInMilleseconds: Long = 750
+    private val sleepInMilleseconds: Long = 750,
 ) {
     fun assertThatOppgaveFinnes() {
         finnOppgaveResponseMedMaksGjentakelser()
     }
 
-    fun assertThatOppgaveHar(enhet: String?, oppgavetype: String?, aktorId: String?) {
+    fun assertThatOppgaveHar(
+        enhet: String?,
+        oppgavetype: String?,
+        aktorId: String?,
+    ) {
         val responseSomMap = finnOppgaveResponseMedMaksGjentakelser()
 
         if (enhet != null) {
@@ -65,12 +69,15 @@ class GjentaOppgaveSokRequest(
             Assertion(
                 message = "Forventet å finne oppgaven",
                 value = responseSomMap["antallTreffTotalt"],
-                expectation = 1
-            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                expectation = 1,
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
         )
     }
 
-    private fun assertTildeltEnhetsnummer(responseSomMap: Map<String, Any>, enhet: String) {
+    private fun assertTildeltEnhetsnummer(
+        responseSomMap: Map<String, Any>,
+        enhet: String,
+    ) {
         @Suppress("UNCHECKED_CAST")
         val tildeltEnhetsnr = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("tildeltEnhetsnr")
 
@@ -78,12 +85,15 @@ class GjentaOppgaveSokRequest(
             Assertion(
                 message = "Oppgaven er tildelt enhet",
                 value = tildeltEnhetsnr,
-                expectation = enhet
-            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                expectation = enhet,
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
         )
     }
 
-    private fun assertAktorid(responseSomMap: Map<String, Any>, aktoerId: String) {
+    private fun assertAktorid(
+        responseSomMap: Map<String, Any>,
+        aktoerId: String,
+    ) {
         @Suppress("UNCHECKED_CAST")
         val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.first()?.get("aktoerId")
 
@@ -91,12 +101,15 @@ class GjentaOppgaveSokRequest(
             Assertion(
                 message = "Oppgaven har riktig aktoerId",
                 value = oppgavetypeFraMap,
-                expectation = aktoerId
-            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                expectation = aktoerId,
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
         )
     }
 
-    private fun assertOppgavetype(responseSomMap: Map<String, Any>, oppgavetype: String) {
+    private fun assertOppgavetype(
+        responseSomMap: Map<String, Any>,
+        oppgavetype: String,
+    ) {
         @Suppress("UNCHECKED_CAST")
         val oppgavetypeFraMap = (responseSomMap["oppgaver"] as List<Map<String, String?>>?)?.firstOrNull()?.get("oppgavetype")
 
@@ -104,18 +117,21 @@ class GjentaOppgaveSokRequest(
             Assertion(
                 message = "Oppgaven har riktig oppgavetype",
                 value = oppgavetypeFraMap,
-                expectation = oppgavetype
-            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                expectation = oppgavetype,
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
         )
     }
 
-    private fun assertThatOppgaveSokHarEtTotaltAntallTreff(responseSomMap: Map<String, Any>, antallForventet: Int) {
+    private fun assertThatOppgaveSokHarEtTotaltAntallTreff(
+        responseSomMap: Map<String, Any>,
+        antallForventet: Int,
+    ) {
         FellesEgenskaperService.assertWhenNotSanityCheck(
             Assertion(
                 message = "Forventet å finne oppgaver",
                 value = responseSomMap["antallTreffTotalt"],
-                expectation = antallForventet
-            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                expectation = antallForventet,
+            ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
         )
     }
 }

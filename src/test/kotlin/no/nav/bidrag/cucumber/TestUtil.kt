@@ -7,14 +7,17 @@ import java.time.LocalDateTime
 import java.util.concurrent.CompletableFuture
 
 object TestUtil {
-
-    fun assumeThatActuatorHealthIsRunning(ingress: String, contextPath: String) {
+    fun assumeThatActuatorHealthIsRunning(
+        ingress: String,
+        contextPath: String,
+    ) {
         val start = LocalDateTime.now()
-        val future = CompletableFuture.runAsync {
-            val response = RestTemplate().getForEntity("$ingress/$contextPath/actuator/health", String::class.java)
+        val future =
+            CompletableFuture.runAsync {
+                val response = RestTemplate().getForEntity("$ingress/$contextPath/actuator/health", String::class.java)
 
-            assumeThat(response.statusCode).isEqualTo(HttpStatus.OK)
-        }
+                assumeThat(response.statusCode).isEqualTo(HttpStatus.OK)
+            }
 
         while (!future.isDone) {
             if (start.plusSeconds(1).isAfter(LocalDateTime.now())) {

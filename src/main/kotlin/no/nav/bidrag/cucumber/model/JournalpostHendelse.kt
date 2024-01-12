@@ -12,7 +12,7 @@ data class JournalpostHendelse(
     var fnr: String? = null,
     var fagomrade: String? = null,
     var enhet: String? = null,
-    var status: JournalpostStatus? = null
+    var status: JournalpostStatus? = null,
 ) {
     @Suppress("unused") // brukes for sporing av data som publiseres
     var sporing: Sporingsdata = Sporingsdata(brukerident = CucumberTestRun.testUsername)
@@ -22,15 +22,16 @@ data class JournalpostHendelse(
         aktorId = hendelseApi.aktorId,
         fagomrade = hendelseApi.fagomrade,
         enhet = hendelseApi.enhet,
-        status = hendelseApi.journalstatus
+        status = hendelseApi.journalstatus,
     )
 
     internal fun hentJournalpostIdUtenPrefix() = hentJournalpostIdStrengUtenPrefix().toLong()
+
     fun hentJournalpostIdStrengUtenPrefix() = journalpostId.split('-')[1]
 }
 
 data class Sporingsdata(
-    var brukerident: String? = null
+    var brukerident: String? = null,
 ) {
     var correlationId: String = System.currentTimeMillis().toString()
 
@@ -41,12 +42,13 @@ data class Sporingsdata(
             if (fromThread != null) {
                 correlationId = fromThread
             }
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 }
 
 class HendelseTimeoutException(start: LocalDateTime, timeout: LocalDateTime) : RuntimeException(
-    "Hendelse med timeout! Started: ${onlyTime(start)}, timed out: ${onlyTime(timeout)}"
+    "Hendelse med timeout! Started: ${onlyTime(start)}, timed out: ${onlyTime(timeout)}",
 )
 
 private fun onlyTime(dateTime: LocalDateTime): String = dateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss,SSS"))

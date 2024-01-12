@@ -45,7 +45,6 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
     }
 
     companion object {
-
         @JvmStatic
         private val CUCUMBER_TEST_RUN = ThreadLocal<CucumberTestRun>()
 
@@ -54,15 +53,16 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
 
         @JvmStatic
         private fun initFromEnvironment(): CucumberTestRun {
-            val cucumberTestRun = CucumberTestRun(
-                CucumberTestsModel(
-                    ingressesForApps = Environment.asList(INGRESSES_FOR_APPS),
-                    noContextPathForApps = Environment.asList(NO_CONTEXT_PATH_FOR_APPS),
-                    sanityCheck = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean(),
-                    securityToken = fetchPropertyOrEnvironment(SECURITY_TOKEN),
-                    tags = Environment.asList(TAGS)
+            val cucumberTestRun =
+                CucumberTestRun(
+                    CucumberTestsModel(
+                        ingressesForApps = Environment.asList(INGRESSES_FOR_APPS),
+                        noContextPathForApps = Environment.asList(NO_CONTEXT_PATH_FOR_APPS),
+                        sanityCheck = fetchPropertyOrEnvironment(SANITY_CHECK)?.toBoolean(),
+                        securityToken = fetchPropertyOrEnvironment(SECURITY_TOKEN),
+                        tags = Environment.asList(TAGS),
+                    ),
                 )
-            )
 
             CUCUMBER_TEST_RUN.set(cucumberTestRun)
 
@@ -72,7 +72,10 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         val isNotSanityCheck: Boolean get() = !isSanityCheck
         val isSanityCheck: Boolean get() = Environment.isSanityCheck ?: thisRun().cucumberTestsModel.sanityCheck ?: false
         val isTestRunStarted: Boolean get() = CUCUMBER_TEST_RUN.get() != null
-        val isTestUserPresent: Boolean get() = fetchPropertyOrEnvironment(TEST_USER) != null || thisRun().cucumberTestsModel.testUsername != null
+        val isTestUserPresent: Boolean get() =
+            fetchPropertyOrEnvironment(
+                TEST_USER,
+            ) != null || thisRun().cucumberTestsModel.testUsername != null
         val securityToken: String? get() = thisRun().cucumberTestsModel.securityToken
         val testUsername: String? get() = thisRun().cucumberTestsModel.testUsername
         val skipAuth: Boolean get() = thisRun().cucumberTestsModel.skipAuth
@@ -81,17 +84,29 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
         private var exceptionLogger: ExceptionLogger? = null
 
         fun addToRunStats(scenario: Scenario) = thisRun().runStats.add(scenario)
+
         fun fetchIngress(applicationName: String) = thisRun().cucumberTestsModel.fetchIngress(applicationName)
+
         fun fetchTestMessagesWithRunStats() = thisRun().testMessagesHolder.fetchTestMessages() + "\n\n" + thisRun().runStats.get()
+
         fun hentRestTjenste(applicationName: String) = thisRun().restTjenester.hentRestTjeneste(applicationName)
+
         fun hentRestTjenesteTilTesting() = thisRun().restTjenester.hentRestTjenesteTilTesting()
+
         fun hold(logMessages: List<String>) = thisRun().testMessagesHolder.hold(logMessages)
+
         fun holdTestMessage(message: String) = thisRun().testMessagesHolder.hold(message)
+
         fun isApplicationConfigured(applicationName: String) = thisRun().restTjenester.isApplicationConfigured(applicationName)
+
         fun isNoContextPathForApp(applicationName: String) = thisRun().cucumberTestsModel.noContextPathForApps.contains(applicationName)
+
         fun settOppNaisApp(naisApplikasjon: String) = thisRun().restTjenester.settOppNaisApp(naisApplikasjon)
+
         fun settOppNaisAppTilTesting(naisApplikasjon: String) = thisRun().restTjenester.settOppNaisAppTilTesting(naisApplikasjon)
+
         fun sleepWhenNotSanityCheck(milliseconds: Long) = if (isNotSanityCheck) Thread.sleep(milliseconds) else Unit
+
         fun updateSecurityToken(securityToken: String?) = thisRun().cucumberTestsModel.updateSecurityToken(securityToken)
 
         fun holdExceptionForTest(throwable: Throwable) {
@@ -99,15 +114,16 @@ class CucumberTestRun(private val cucumberTestsModel: CucumberTestsModel) {
                 exceptionLogger = BidragCucumberSingletons.hentEllerInit(ExceptionLogger::class)
             }
 
-            val exceptionLog = exceptionLogger!!.logException(
-                throwable,
-                throwable.stackTrace.first {
-                    (it.className.contains("no.nav") || it?.fileName?.contains("feature") ?: false) &&
-                        !it.className.contains(CucumberTestRun::class.simpleName!!) &&
-                        !it.className.contains(FellesEgenskaper::class.simpleName!!) &&
-                        !it.className.contains(ScenarioManager::class.simpleName!!)
-                }.className
-            )
+            val exceptionLog =
+                exceptionLogger!!.logException(
+                    throwable,
+                    throwable.stackTrace.first {
+                        (it.className.contains("no.nav") || it?.fileName?.contains("feature") ?: false) &&
+                            !it.className.contains(CucumberTestRun::class.simpleName!!) &&
+                            !it.className.contains(FellesEgenskaper::class.simpleName!!) &&
+                            !it.className.contains(ScenarioManager::class.simpleName!!)
+                    }.className,
+                )
 
             val exceptionMessage = exceptionLog[0]
             val cucumberTestRun = thisRun()

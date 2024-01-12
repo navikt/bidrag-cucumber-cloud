@@ -22,14 +22,15 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("CucumberController (integration test)")
 @ActiveProfiles("test")
 internal class CucumberControllerIntegrationTest {
-
     @Autowired
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private lateinit var testRestTemplate: TestRestTemplate
 
     private val ingressIsUp: MutableMap<String, Boolean> = HashMap()
 
-    private fun assumeThatActuatorHealthIsRunningCachedException(ingress: String, app: String) {
+    private fun assumeThatActuatorHealthIsRunningCachedException(
+        ingress: String,
+        app: String,
+    ) {
         if (!ingressIsUp.contains(ingress)) {
             try {
                 assumeThatActuatorHealthIsRunning(ingress, app)
@@ -48,18 +49,19 @@ internal class CucumberControllerIntegrationTest {
     fun `skal feile ved testing av applikasjon med azure ad`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.intern.dev.nav.no", "bidrag-grunnlag")
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@tag:bidrag-grunnlag"]
                 }
-                """.trimMargin().trim(),
-                initJsonAsMediaType()
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    initJsonAsMediaType(),
+                ),
+                Void::class.java,
+            )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.NOT_ACCEPTABLE)
     }
@@ -69,40 +71,45 @@ internal class CucumberControllerIntegrationTest {
     fun `skal ikke feile ved testing av applikasjon med azure ad når det er snakk om en sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.intern.dev.nav.no", "bidrag-grunnlag")
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://bidrag-grunnlag.intern.dev.nav.no@tag:bidrag-grunnlag"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(),
-                initJsonAsMediaType()
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    initJsonAsMediaType(),
+                ),
+                Void::class.java,
+            )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
     }
 
     @Test
     fun `skal hente ut cucumber tekst fra kjøring`() {
-        assumeThatActuatorHealthIsRunningCachedException("https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no", "bidrag-cucumber-cloud")
+        assumeThatActuatorHealthIsRunningCachedException(
+            "https://bidrag-cucumber-cloud-feature.ekstern.dev.nav.no",
+            "bidrag-cucumber-cloud",
+        )
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://bidrag-cucumber-cloud.ekstern.dev.nav.no@tag:bidrag-cucumber-cloud"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(),
-                initJsonAsMediaType()
-            ),
-            String::class.java
-        )
+                    """.trimMargin().trim(),
+                    initJsonAsMediaType(),
+                ),
+                String::class.java,
+            )
 
         val softly = SoftAssertions()
         softly.assertThat(testResponse.body).`as`("body").contains("Scenarios")
@@ -116,42 +123,44 @@ internal class CucumberControllerIntegrationTest {
     fun `skal ikke feile når det er sanity check`() {
         assumeThatActuatorHealthIsRunningCachedException("https://bidrag-grunnlag.intern.dev.nav.no", "bidrag-grunnlag")
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@tag:bidrag-grunnlag"],
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(),
-                initJsonAsMediaType()
-            ),
-            String::class.java
-        )
+                    """.trimMargin().trim(),
+                    initJsonAsMediaType(),
+                ),
+                String::class.java,
+            )
 
         assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.OK)
     }
 
     @Test
     fun `skal logge eventuelle exception når det feiler under testing`() {
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@bidrag-sak"],
                   "testUsername":"ukjent","tags":["@bidrag-cucumber-cloud"]
                 }
-                """.trimMargin().trim(),
-                initJsonAsMediaType()
-            ),
-            String::class.java
-        )
+                    """.trimMargin().trim(),
+                    initJsonAsMediaType(),
+                ),
+                String::class.java,
+            )
 
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
-            { assertThat(testResponse.body).`as`("body").contains("Failure details:") }
+            { assertThat(testResponse.body).`as`("body").contains("Failure details:") },
         )
     }
 

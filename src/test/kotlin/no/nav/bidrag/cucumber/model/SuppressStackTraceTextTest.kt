@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 internal class SuppressStackTraceTextTest {
-
     private val suppressStackTraceText = SuppressStackTraceText()
 
     @Test
@@ -29,7 +28,7 @@ ${"\t"}at no.nav.bidrag.cucumber.cloud.FellesEgenskaper._init_(FellesEgenskaper.
         assertThat(stackedText).isEqualTo(
             """com.fasterxml.jackson.core.JsonParseException:
 ${"\t"}at no.nav.bidrag.cucumber.model.RestTjeneste.hentResponseSomMap(RestTjeneste.kt:32)
-${"\t"}at no.nav.bidrag.cucumber.cloud.FellesEgenskaper._init_(FellesEgenskaper.kt:41)"""
+${"\t"}at no.nav.bidrag.cucumber.cloud.FellesEgenskaper._init_(FellesEgenskaper.kt:41)""",
         )
     }
 

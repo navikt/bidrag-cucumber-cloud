@@ -21,7 +21,9 @@ class HendelseController(private val hendelseProducer: HendelseProducer) {
     @PostMapping("/hendelse/opprett")
     @Operation(summary = "Opprett en journalpost-hendelse")
     @ApiResponse(responseCode = "200", description = "ny journalpost-hendelse er publisert")
-    fun opprett(@RequestBody hendelseApi: HendelseApi): ResponseEntity<Void> {
+    fun opprett(
+        @RequestBody hendelseApi: HendelseApi,
+    ): ResponseEntity<Void> {
         LOGGER.info("publiserer $hendelseApi")
         hendelseProducer.publish(JournalpostHendelse(hendelseApi))
         return ResponseEntity.ok().build()

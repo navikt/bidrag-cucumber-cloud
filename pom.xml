@@ -31,6 +31,7 @@
     <caffeine.version>3.1.8</caffeine.version>
     <msal4j.version>1.14.2</msal4j.version>
     <awaitility-kotlin.version>4.2.0</awaitility-kotlin.version>
+    <ktlint.version>1.1.1</ktlint.version>
 
     <!-- build -->
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
@@ -317,9 +318,9 @@
         </executions>
         <dependencies>
           <dependency>
-            <groupId>com.pinterest</groupId>
-            <artifactId>ktlint</artifactId>
-            <version>0.47.1</version>
+            <groupId>com.pinterest.ktlint</groupId>
+            <artifactId>ktlint-cli</artifactId>
+            <version>${ktlint.version}</version>
           </dependency>
           <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>

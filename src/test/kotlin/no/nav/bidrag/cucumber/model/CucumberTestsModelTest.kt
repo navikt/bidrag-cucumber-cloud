@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("CucumberTestsDto")
 internal class CucumberTestsModelTest {
-
     @Test
     fun `skal ha verdien false som streng når sanityCheck er null`() {
         val cucumberTestsModel = CucumberTestsModel(sanityCheck = null)
@@ -24,10 +23,11 @@ internal class CucumberTestsModelTest {
 
     @Test
     fun `skal også bruke tags som ikke er oppgitt i ingressesForApps`() {
-        val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"),
-            tags = listOf("@arbeidsflyt-endre-fagomrade")
-        )
+        val cucumberTestsModel =
+            CucumberTestsModel(
+                ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"),
+                tags = listOf("@arbeidsflyt-endre-fagomrade"),
+            )
 
         assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags")
             .isEqualTo("(@bidrag-grunnlag or @arbeidsflyt-endre-fagomrade) and not @ignored")
@@ -60,10 +60,11 @@ internal class CucumberTestsModelTest {
 
     @Test
     fun `skal ikke hente ut tags dobbelt opp`() {
-        val cucumberTestsModel = CucumberTestsModel(
-            ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"),
-            tags = listOf("@bidrag-grunnlag")
-        )
+        val cucumberTestsModel =
+            CucumberTestsModel(
+                ingressesForApps = listOf("https://somewhere.out.there@tag:bidrag-grunnlag"),
+                tags = listOf("@bidrag-grunnlag"),
+            )
 
         assertThat(cucumberTestsModel.fetchTags()).`as`("cucumberTests.fetchTags").isEqualTo("@bidrag-grunnlag and not @ignored")
     }

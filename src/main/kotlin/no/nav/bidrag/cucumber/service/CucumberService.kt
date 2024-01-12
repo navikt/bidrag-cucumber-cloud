@@ -18,7 +18,7 @@ class CucumberService(
     applicationContext: ApplicationContext,
     exceptionLogger: ExceptionLogger,
     hendelseProducer: HendelseProducer,
-    objectMapper: ObjectMapper
+    objectMapper: ObjectMapper,
 ) {
     init {
         BidragCucumberSingletons.setApplicationContext(applicationContext)
@@ -30,9 +30,10 @@ class CucumberService(
     internal fun run(cucumberTestRun: CucumberTestRun): String {
         val result = runCucumberTests(cucumberTestRun.tags)
 
-        val suppressedStackTraceLog = suppressStackTraceText.suppress(
-            CucumberTestRun.fetchTestMessagesWithRunStats()
-        )
+        val suppressedStackTraceLog =
+            suppressStackTraceText.suppress(
+                CucumberTestRun.fetchTestMessagesWithRunStats(),
+            )
 
         CucumberTestRun.endRun()
 
@@ -51,7 +52,7 @@ class CucumberService(
             "--glue",
             "no.nav.bidrag.cucumber.cloud",
             "--tags",
-            tags
+            tags,
         )
     }
 }

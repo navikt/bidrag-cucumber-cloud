@@ -24,7 +24,9 @@ internal object BidragCucumberSingletons {
 
     @Suppress("UNCHECKED_CAST")
     fun <T> hentEllerInit(kClass: KClass<*>): T = applicationContext?.getBean(kClass.java) as T? ?: init(kClass)
+
     fun hentPrototypeFraApplicationContext() = applicationContext?.getBean(HttpHeaderRestTemplate::class.java) ?: doManualInit()
+
     private fun fetchObjectMapper() = objectMapper ?: ObjectMapper()
 
     @Suppress("UNCHECKED_CAST")
@@ -42,7 +44,7 @@ internal object BidragCucumberSingletons {
 
     fun publiserHendelse(journalpostHendelse: JournalpostHendelse) {
         hendelseProducer?.publish(journalpostHendelse) ?: LOGGER.warn(
-            "Cannot publish $journalpostHendelse when spring context is not initialized, sanity check: ${CucumberTestRun.isSanityCheck}"
+            "Cannot publish $journalpostHendelse when spring context is not initialized, sanity check: ${CucumberTestRun.isSanityCheck}",
         )
     }
 
@@ -55,16 +57,21 @@ internal object BidragCucumberSingletons {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun mapResponseSomMap(body: String): Map<String, Any> = try {
-        fetchObjectMapper().readValue(body, Map::class.java) as Map<String, Any>
-    } catch (e: Exception) {
-        CucumberTestRun.holdExceptionForTest(e)
-        throw e
-    }
+    private fun mapResponseSomMap(body: String): Map<String, Any> =
+        try {
+            fetchObjectMapper().readValue(body, Map::class.java) as Map<String, Any>
+        } catch (e: Exception) {
+            CucumberTestRun.holdExceptionForTest(e)
+            throw e
+        }
 
-    fun <T> readValue(value: String, mapClass: Class<T>): T = objectMapper?.readValue(value, mapClass) ?: throw IllegalStateException(
-        "Kunne ikke mappe: $value"
-    )
+    fun <T> readValue(
+        value: String,
+        mapClass: Class<T>,
+    ): T =
+        objectMapper?.readValue(value, mapClass) ?: throw IllegalStateException(
+            "Kunne ikke mappe: $value",
+        )
 
     fun toJson(body: Any): String = objectMapper?.writeValueAsString(body) ?: """{ "noMappingAvailable":"$body" }"""
 

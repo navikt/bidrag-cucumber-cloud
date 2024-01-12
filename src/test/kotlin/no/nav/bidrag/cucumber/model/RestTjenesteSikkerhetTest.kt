@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken
 
 @SpringBootTest(classes = [BidragCucumberCloudLocal::class])
 internal class RestTjenesteSikkerhetTest {
-
     @MockBean
     private lateinit var azureTokenServiceMock: AzureTokenService
 

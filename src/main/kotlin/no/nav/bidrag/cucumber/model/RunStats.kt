@@ -31,22 +31,31 @@ class RunStats {
             Failed   : $noOfFailed $failedScenariosAsString $failureDetailsAsString"""
     }
 
-    private fun createStringOfFailedScenarios() = if (failedScenarios.isEmpty()) {
-        ""
-    } else {
-        "\n\nFailed scenarios:\n${
-        failedScenarios.joinToString(prefix = "- ", separator = "\n- ")
-        }"
-    }
+    private fun createStringOfFailedScenarios() =
+        if (failedScenarios.isEmpty()) {
+            ""
+        } else {
+            "\n\nFailed scenarios:\n${
+                failedScenarios.joinToString(prefix = "- ", separator = "\n- ")
+            }"
+        }
 
-    internal fun createStringOfFailureDetails() = if (exceptionMessages.isEmpty()) {
-        ""
-    } else {
-        "\n\nFailure details:\n${exceptionMessages.joinToString(separator = "\n")}"
-    }
+    internal fun createStringOfFailureDetails() =
+        if (exceptionMessages.isEmpty()) {
+            ""
+        } else {
+            "\n\nFailure details:\n${exceptionMessages.joinToString(separator = "\n")}"
+        }
 
     fun addExceptionLogging(messages: List<String>) {
-        exceptionMessages.addAll(messages.mapIndexed { idx, message -> if (idx == 0) "- ${indentLines(message)}" else "  ${indentLines(message)}" })
+        exceptionMessages.addAll(
+            messages.mapIndexed {
+                    idx,
+                    message,
+                ->
+                if (idx == 0) "- ${indentLines(message)}" else "  ${indentLines(message)}"
+            },
+        )
     }
 
     private fun indentLines(message: String) = message.replace("\n", "\n  ")

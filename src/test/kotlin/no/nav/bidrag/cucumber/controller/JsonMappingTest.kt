@@ -16,20 +16,20 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("Test of mapping dto from json")
 @ActiveProfiles("test")
 class JsonMappingTest {
-
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `skal mappe en kjøring av bidrag-arberdsflyt`() {
-        val json = """
-          {
-            "tags":["@arbeidsflyt-endre-fagomrade"],
-            "testUsername":"z992903",
-            "noContextPathForApps":["oppgave"],
-            "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@oppgave"]
-          }
-        """.trimIndent()
+        val json =
+            """
+            {
+              "tags":["@arbeidsflyt-endre-fagomrade"],
+              "testUsername":"z992903",
+              "noContextPathForApps":["oppgave"],
+              "ingressesForApps":["https://oppgave-q1.dev-fss-pub.nais.io@oppgave"]
+            }
+            """.trimIndent()
 
         val cucumberTestsModel = objectMapper.readValue(json, CucumberTestsModel::class.java)
 
@@ -41,7 +41,7 @@ class JsonMappingTest {
             {
                 assertThat(cucumberTestsModel.ingressesForApps).`as`("ingressesForApps")
                     .isEqualTo(listOf("https://oppgave-q1.dev-fss-pub.nais.io@oppgave"))
-            }
+            },
         )
     }
 

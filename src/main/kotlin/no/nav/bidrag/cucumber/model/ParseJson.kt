@@ -2,7 +2,10 @@ package no.nav.bidrag.cucumber.model
 
 import com.jayway.jsonpath.JsonPath
 
-fun parseJson(response: String?, sti: String): String? {
+fun parseJson(
+    response: String?,
+    sti: String,
+): String? {
     if (response == null) {
         return null
     }

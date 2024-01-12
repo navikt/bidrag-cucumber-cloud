@@ -29,8 +29,8 @@ class BeregnEgenskaper : No {
                 Assertion(
                     message = "Resultatbeløp",
                     value = resultatBelop,
-                    expectation = belop
-                ) { assertThat(it.expectation).`as`(it.message).isEqualTo(it.value) }
+                    expectation = belop,
+                ) { assertThat(it.expectation).`as`(it.message).isEqualTo(it.value) },
             )
         }
 
@@ -42,13 +42,16 @@ class BeregnEgenskaper : No {
                 Assertion(
                     message = "Resultatkode",
                     value = resultatkode,
-                    expectation = kode
-                ) { assertThat(it.expectation).`as`(it.message).isEqualTo(it.value) }
+                    expectation = kode,
+                ) { assertThat(it.expectation).`as`(it.message).isEqualTo(it.value) },
             )
         }
     }
 
-    private fun parseJson(response: String?, sti: String): String? {
+    private fun parseJson(
+        response: String?,
+        sti: String,
+    ): String? {
         if (response == null) {
             return null
         }

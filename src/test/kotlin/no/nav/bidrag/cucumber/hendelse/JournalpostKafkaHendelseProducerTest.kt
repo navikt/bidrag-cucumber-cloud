@@ -52,12 +52,13 @@ internal class JournalpostKafkaHendelseProducerTest {
         whenever(objectMapperMock.writeValueAsString(journalpostHendelse)).thenReturn("{}")
         lenient().`when`(kafkaTemplateMock.send(eq("test.topic"), anyString(), anyString())).then { Thread.sleep(5000) }
 
-        val journalpostKafkaHendelseProducer = JournalpostKafkaHendelseProducer(
-            kafkaTemplate = kafkaTemplateMock,
-            objectMapper = objectMapperMock,
-            timeoutAfterSeconds = 1,
-            topic = "test.topic"
-        )
+        val journalpostKafkaHendelseProducer =
+            JournalpostKafkaHendelseProducer(
+                kafkaTemplate = kafkaTemplateMock,
+                objectMapper = objectMapperMock,
+                timeoutAfterSeconds = 1,
+                topic = "test.topic",
+            )
 
         assertThatExceptionOfType(HendelseTimeoutException::class.java)
             .isThrownBy { journalpostKafkaHendelseProducer.publish(journalpostHendelse) }
@@ -72,12 +73,13 @@ internal class JournalpostKafkaHendelseProducerTest {
         whenever(objectMapperMock.writeValueAsString(journalpostHendelse)).thenReturn("{}")
         lenient().`when`(kafkaTemplateMock.send(eq("test.topic"), anyString(), anyString())).then { LOGGER.info("publiserer hendelse...") }
 
-        val journalpostKafkaHendelseProducer = JournalpostKafkaHendelseProducer(
-            kafkaTemplate = kafkaTemplateMock,
-            objectMapper = objectMapperMock,
-            timeoutAfterSeconds = 10,
-            topic = "test.topic"
-        )
+        val journalpostKafkaHendelseProducer =
+            JournalpostKafkaHendelseProducer(
+                kafkaTemplate = kafkaTemplateMock,
+                objectMapper = objectMapperMock,
+                timeoutAfterSeconds = 10,
+                topic = "test.topic",
+            )
 
         journalpostKafkaHendelseProducer.publish(journalpostHendelse)
 

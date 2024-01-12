@@ -40,10 +40,13 @@ internal class RestTjenester {
     private var restTjenesteTilTesting: RestTjeneste? = null
 
     fun isApplicationConfigured(applicationName: String) = restTjenesteForNavn.contains(applicationName)
+
     fun hentRestTjenesteTilTesting() = restTjenesteTilTesting ?: throw IllegalStateException("RestTjeneste til testing er null!")
-    fun hentRestTjeneste(applicationName: String) = restTjenesteForNavn[applicationName] ?: throw IllegalStateException(
-        "RestTjeneste $applicationName er ikke funnet!"
-    )
+
+    fun hentRestTjeneste(applicationName: String) =
+        restTjenesteForNavn[applicationName] ?: throw IllegalStateException(
+            "RestTjeneste $applicationName er ikke funnet!",
+        )
 
     fun settOppNaisApp(naisApplikasjon: String): RestTjeneste {
         LOGGER.info("Setter opp $naisApplikasjon")
@@ -66,7 +69,10 @@ internal class RestTjenester {
 }
 
 internal class BaseUrlTemplateHandler(private val baseUrl: String) : UriTemplateHandler {
-    override fun expand(uriTemplate: String, uriVariables: MutableMap<String, *>): URI {
+    override fun expand(
+        uriTemplate: String,
+        uriVariables: MutableMap<String, *>,
+    ): URI {
         if (uriVariables.isNotEmpty()) {
             val queryString = StringBuilder()
             uriVariables.forEach { if (queryString.length == 1) queryString.append("$it") else queryString.append("?$it") }
@@ -77,7 +83,10 @@ internal class BaseUrlTemplateHandler(private val baseUrl: String) : UriTemplate
         return URI.create(baseUrl + uriTemplate)
     }
 
-    override fun expand(uriTemplate: String, vararg uriVariables: Any?): URI {
+    override fun expand(
+        uriTemplate: String,
+        vararg uriVariables: Any?,
+    ): URI {
         if (uriVariables.isNotEmpty() && (uriVariables.size != 1 && uriVariables.first() != null)) {
             val queryString = StringBuilder("&")
             uriVariables.forEach {
@@ -96,7 +105,7 @@ internal class BaseUrlTemplateHandler(private val baseUrl: String) : UriTemplate
 }
 
 class RestTjeneste(
-    internal val rest: ResttjenesteMedBaseUrl
+    internal val rest: ResttjenesteMedBaseUrl,
 ) {
     companion object {
         @JvmStatic
@@ -125,7 +134,10 @@ class RestTjeneste(
             }
         }
 
-        private fun hentToken(applicationName: String, saksbehandlerType: SaksbehandlerType? = null): TokenValue {
+        private fun hentToken(
+            applicationName: String,
+            saksbehandlerType: SaksbehandlerType? = null,
+        ): TokenValue {
             val tokenService: TokenService = BidragCucumberSingletons.hentEllerInit(AzureTokenService::class) ?: throw notNullTokenService()
 
             return TokenValue(tokenService.getToken(applicationName, saksbehandlerType))
@@ -138,9 +150,11 @@ class RestTjeneste(
     internal var responseEntity: ResponseEntity<String?>? = null
 
     fun hentFullUrlMedEventuellWarning() = "$fullUrl${appendWarningWhenExists()}"
-    fun hentHttpStatus(): HttpStatus =
-        HttpStatus.valueOf(responseEntity?.statusCode?.value() ?: HttpStatus.I_AM_A_TEAPOT.value())
+
+    fun hentHttpStatus(): HttpStatus = HttpStatus.valueOf(responseEntity?.statusCode?.value() ?: HttpStatus.I_AM_A_TEAPOT.value())
+
     fun hentResponse(): String? = responseEntity?.body
+
     fun hentResponseSomMap() = BidragCucumberSingletons.mapResponseSomMap(responseEntity)
 
     private fun appendWarningWhenExists(): String {
@@ -149,20 +163,27 @@ class RestTjeneste(
         return if (warnings.isNotEmpty()) " - ${warnings[0]}" else ""
     }
 
-    fun exchangeGet(endpointUrl: String, failOnNotFound: Boolean = true): ResponseEntity<String?> {
+    fun exchangeGet(
+        endpointUrl: String,
+        failOnNotFound: Boolean = true,
+    ): ResponseEntity<String?> {
         val header = initHttpHeadersWithCorrelationIdAndEnhet()
 
         exchange(
             jsonEntity = HttpEntity(null, header),
             endpointUrl = endpointUrl,
             httpMethod = HttpMethod.GET,
-            failOnNotFound = failOnNotFound
+            failOnNotFound = failOnNotFound,
         )
 
         LOGGER.info(
             if (responseEntity?.body != null) {
                 "response with body and status ${responseEntity!!.statusCode}"
-            } else if (responseEntity == null) "no response entity (${sanityCheck()})" else "no response body with status ${responseEntity!!.statusCode}"
+            } else if (responseEntity == null) {
+                "no response entity (${sanityCheck()})"
+            } else {
+                "no response body with status ${responseEntity!!.statusCode}"
+            },
         )
 
         return responseEntity ?: ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build()
@@ -180,12 +201,18 @@ class RestTjeneste(
         return headers
     }
 
-    fun exchangePost(endpointUrl: String, body: Any) {
+    fun exchangePost(
+        endpointUrl: String,
+        body: Any,
+    ) {
         val jsonEntity = httpEntity(BidragCucumberSingletons.toJson(body))
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
 
-    fun exchangePost(endpointUrl: String, body: String) {
+    fun exchangePost(
+        endpointUrl: String,
+        body: String,
+    ) {
         val jsonEntity = httpEntity(body)
         exchange(jsonEntity, endpointUrl, HttpMethod.POST)
     }
@@ -194,12 +221,18 @@ class RestTjeneste(
         exchange(httpEntity("{}"), endpointUrl, HttpMethod.POST)
     }
 
-    fun exchangeDelete(endpointUrl: String, body: String) {
+    fun exchangeDelete(
+        endpointUrl: String,
+        body: String,
+    ) {
         val jsonEntity = httpEntity(body)
         exchange(jsonEntity, endpointUrl, HttpMethod.DELETE)
     }
 
-    fun exchangePatch(endpointUrl: String, body: Any) {
+    fun exchangePatch(
+        endpointUrl: String,
+        body: Any,
+    ) {
         val jsonEntity = httpEntity(BidragCucumberSingletons.toJson(body))
         exchange(jsonEntity, endpointUrl, HttpMethod.PATCH)
     }
@@ -210,18 +243,24 @@ class RestTjeneste(
         return HttpEntity(body, headers)
     }
 
-    private fun exchange(jsonEntity: HttpEntity<*>, endpointUrl: String, httpMethod: HttpMethod, failOnNotFound: Boolean = true) {
+    private fun exchange(
+        jsonEntity: HttpEntity<*>,
+        endpointUrl: String,
+        httpMethod: HttpMethod,
+        failOnNotFound: Boolean = true,
+    ) {
         fullUrl = FullUrl(rest.baseUrl, endpointUrl)
         LOGGER.info("$httpMethod: $fullUrl")
 
         try {
             responseEntity = rest.template.exchange(endpointUrl, httpMethod, jsonEntity, String::class.java)
         } catch (e: Exception) {
-            responseEntity = if (e is HttpStatusCodeException) {
-                ResponseEntity.status(e.statusCode).body<String>(failure(jsonEntity.body, e))
-            } else {
-                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>(failure(jsonEntity.body, e))
-            }
+            responseEntity =
+                if (e is HttpStatusCodeException) {
+                    ResponseEntity.status(e.statusCode).body<String>(failure(jsonEntity.body, e))
+                } else {
+                    ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body<String>(failure(jsonEntity.body, e))
+                }
 
             if (isError(e, failOnNotFound)) {
                 ScenarioManager.errorLog(">>> $httpMethod FEILET! ($fullUrl) ${failure(jsonEntity.body, e)}", e)
@@ -233,15 +272,25 @@ class RestTjeneste(
         }
     }
 
-    private fun isError(e: Exception, failOn404: Boolean) = if (isNotFound(e)) failOn404 else true
+    private fun isError(
+        e: Exception,
+        failOn404: Boolean,
+    ) = if (isNotFound(e)) failOn404 else true
+
     private fun isNotFound(e: Exception) = e is HttpStatusCodeException && e.statusCode == HttpStatus.NOT_FOUND
-    private fun failure(body: Any?, e: Exception) = """-
-    - input body: $body
-    - exception : "${e::class.simpleName}: ${e.message}"
-    """.trimIndent()
+
+    private fun failure(
+        body: Any?,
+        e: Exception,
+    ) = """
+        -
+        - input body: $body
+        - exception : "${e::class.simpleName}: ${e.message}"
+        """.trimIndent()
 }
 
 class ResttjenesteMedBaseUrl(val template: RestTemplate, val baseUrl: String)
+
 class TokenValue(private val token: String) {
     fun initBearerToken() = "Bearer $token"
 }

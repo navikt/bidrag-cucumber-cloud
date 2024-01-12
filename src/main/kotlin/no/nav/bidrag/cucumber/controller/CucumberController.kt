@@ -27,10 +27,12 @@ class CucumberController(private val cucumberService: CucumberService) {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Angitte tester kjørt uten feil"),
-            ApiResponse(responseCode = "406", description = "Testkjøring med cucumber feilet")
-        ]
+            ApiResponse(responseCode = "406", description = "Testkjøring med cucumber feilet"),
+        ],
     )
-    fun run(@RequestBody cucumberTestsApi: CucumberTestsApi): ResponseEntity<String> {
+    fun run(
+        @RequestBody cucumberTestsApi: CucumberTestsApi,
+    ): ResponseEntity<String> {
         LOGGER.info("Running cucumber tests with $cucumberTestsApi!")
         val cucumberTestRun = CucumberTestRun(cucumberTestsApi).initEnvironment()
         return ResponseEntity(cucumberService.run(cucumberTestRun), HttpStatus.OK)

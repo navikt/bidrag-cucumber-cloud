@@ -20,8 +20,11 @@ internal object Environment {
     val testUserAuth: String get() = fetchPropertyOrEnvironment(testAuthPropName()) ?: throw unknownState(testAuthPropName())
 
     fun fetchPropertyOrEnvironment(key: String): String? = System.getProperty(key) ?: System.getenv(key)
+
     private fun testAuthPropName() = TEST_AUTH + '_' + testUsername?.uppercase()
+
     private fun unknownState(name: String) = IllegalStateException("Ukjent miljøvariabel ($name), kjente: ${listKnownVariables()}!")
+
     private fun listKnownVariables() = ArrayList(System.getenv().keys).joinToString { it }
 
     fun initCucumberEnvironment(cucumberTestsModel: CucumberTestsModel) {

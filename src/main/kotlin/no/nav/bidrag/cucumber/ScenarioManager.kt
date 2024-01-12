@@ -55,7 +55,7 @@ object ScenarioManager {
             --------------
             =|>   Starting ${scenarioMessage(scenario)} with correlationId:
             =|>   https://logs.adeo.no/app/kibana#/discover?_g=($time)&_a=($columns,$index,interval:auto,$query,$sort)
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 
@@ -64,7 +64,11 @@ object ScenarioManager {
     }
 
     fun fetchCorrelationIdForScenario() = correlationIdForScenario ?: createCorrelationIdValue("unknown")
-    fun errorLog(message: String, e: Exception) {
+
+    fun errorLog(
+        message: String,
+        e: Exception,
+    ) {
         LOGGER.error(message)
         CucumberTestRun.holdExceptionForTest(e)
     }

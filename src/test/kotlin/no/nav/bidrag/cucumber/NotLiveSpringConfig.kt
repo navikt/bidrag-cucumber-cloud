@@ -11,7 +11,6 @@ import org.springframework.kafka.core.ProducerFactory
 @Configuration
 @Profile("!$PROFILE_LIVE")
 class NotLiveSpringConfig {
-
     @Bean
     fun hendelseProducer() = mock(HendelseProducer::class.java)!!
 

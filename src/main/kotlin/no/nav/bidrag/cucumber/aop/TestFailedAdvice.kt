@@ -10,20 +10,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class TestFailedAdvice {
+    @ResponseBody
+    @ExceptionHandler
+    fun handleTestFailedException(testFailedException: TestFailedException) =
+        ResponseEntity
+            .status(HttpStatus.NOT_ACCEPTABLE)
+            .header(HttpHeaders.WARNING, warningFrom(testFailedException))
+            .body(testFailedException.suppressedStackTraceLog)
 
     @ResponseBody
     @ExceptionHandler
-    fun handleTestFailedException(testFailedException: TestFailedException) = ResponseEntity
-        .status(HttpStatus.NOT_ACCEPTABLE)
-        .header(HttpHeaders.WARNING, warningFrom(testFailedException))
-        .body(testFailedException.suppressedStackTraceLog)
-
-    @ResponseBody
-    @ExceptionHandler
-    fun handleUnknownExceptions(runtimeException: RuntimeException) = ResponseEntity
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .header(HttpHeaders.WARNING, warningFrom(runtimeException))
-        .build<Any>()
+    fun handleUnknownExceptions(runtimeException: RuntimeException) =
+        ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .header(HttpHeaders.WARNING, warningFrom(runtimeException))
+            .build<Any>()
 
     private fun warningFrom(runtimeException: RuntimeException) = "${runtimeException.javaClass.simpleName}: ${runtimeException.message}"
 }
