@@ -10,6 +10,7 @@ class TestDataEgenskaper : No {
         @JvmStatic
         private val LOGGER = LoggerFactory.getLogger(FellesEgenskaper::class.java)
     }
+
     init {
         Og("nøkkel for testdata {string}") { nokkel: String ->
             CucumberTestRun.thisRun().testData.initialiserData(nokkel)

@@ -3,7 +3,6 @@ package no.nav.bidrag.cucumber.cloud
 import no.nav.bidrag.cucumber.model.CucumberTestRun
 
 class TestdataManager {
-
     companion object {
         fun erstattUrlMedParametereFraTestdata(url: String): String {
             if (url.contains("{") && url.contains("}")) {

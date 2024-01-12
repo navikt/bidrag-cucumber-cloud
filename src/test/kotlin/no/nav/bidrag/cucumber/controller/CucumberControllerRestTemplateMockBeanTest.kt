@@ -28,7 +28,6 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("CucumberController (mocked bean: RestTemplate)")
 @ActiveProfiles("test")
 class CucumberControllerRestTemplateMockBeanTest {
-
     @Autowired
     private lateinit var testRestTemplate: TestRestTemplate
 
@@ -41,20 +40,21 @@ class CucumberControllerRestTemplateMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "testUsername":"z992903","ingressesForApps":[
                     "https://bidrag-sak-feature.dev-fss-pub.nais.io@bidrag-sak"
                   ]
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         val urlCaptor = ArgumentCaptor.forClass(String::class.java)
 
@@ -62,12 +62,12 @@ class CucumberControllerRestTemplateMockBeanTest {
             urlCaptor.capture(),
             eq(HttpMethod.GET),
             any(),
-            eq(String::class.java)
+            eq(String::class.java),
         )
 
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
-            { assertThat(urlCaptor.value).`as`("endpoint url").isEqualTo("/sak/1900000") }
+            { assertThat(urlCaptor.value).`as`("endpoint url").isEqualTo("/sak/1900000") },
         )
     }
 
@@ -77,20 +77,21 @@ class CucumberControllerRestTemplateMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "testUsername":"z992903","ingressesForApps":[
                     "https://bidrag-sak-feature.dev-fss-pub.nais.io@bidrag-sak"
                   ]
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            String::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                String::class.java,
+            )
 
         val testMessages = testResponse.body ?: "Ingen body i response: $testResponse"
 

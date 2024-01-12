@@ -22,20 +22,20 @@ import org.springframework.kafka.core.KafkaTemplate
 
 @Configuration
 @OpenAPIDefinition(
-    info = io.swagger.v3.oas.annotations.info.Info(
-        title = "bidrag-cucumber-cloud",
-        description = "Funksjonelle tester for nais applikasjoner som er sikret med azure ad og bruker rest/kafka",
-        version = "v1"
-    ),
-    security = [SecurityRequirement(name = "basicAuth")]
+    info =
+        io.swagger.v3.oas.annotations.info.Info(
+            title = "bidrag-cucumber-cloud",
+            description = "Funksjonelle tester for nais applikasjoner som er sikret med azure ad og bruker rest/kafka",
+            version = "v1",
+        ),
+    security = [SecurityRequirement(name = "basicAuth")],
 )
 @SecurityScheme(
     name = "basicAuth",
     type = SecuritySchemeType.HTTP,
-    scheme = "basic"
+    scheme = "basic",
 )
 class SpringConfig {
-
     @Bean
     fun suppressStackTraceText() = SuppressStackTraceText()
 
@@ -43,11 +43,12 @@ class SpringConfig {
     fun correlationIdFilter() = CorrelationIdFilter()
 
     @Bean
-    fun exceptionLogger() = ExceptionLogger(
-        BidragCucumberCloud::class.java.simpleName,
-        ExceptionLoggerAspect::class.java,
-        TestFailedAdvice::class.java
-    )
+    fun exceptionLogger() =
+        ExceptionLogger(
+            BidragCucumberCloud::class.java.simpleName,
+            ExceptionLoggerAspect::class.java,
+            TestFailedAdvice::class.java,
+        )
 
     @Bean
     @Scope("prototype")
@@ -59,11 +60,10 @@ class SpringConfig {
 @Configuration
 @Profile(PROFILE_LIVE)
 class LiveSpringConfig {
-
     @Bean
     fun jornalpostKafkaHendelseProducer(
         kafkaTemplate: KafkaTemplate<String, String>,
         @Value("\${TOPIC_JOURNALPOST}") topic: String,
-        objectMapper: ObjectMapper
+        objectMapper: ObjectMapper,
     ) = JournalpostKafkaHendelseProducer(kafkaTemplate = kafkaTemplate, topic = topic, objectMapper = objectMapper)
 }

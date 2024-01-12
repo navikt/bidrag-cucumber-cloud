@@ -12,7 +12,7 @@ object FellesEgenskaperService {
         LOGGER.info(
             "Assertion, actual: '${assertion.value}' - (${assertion.value?.javaClass}), " +
                 "wanted: '${assertion.expectation}' (${assertion.expectation?.javaClass}), " +
-                "sanity check: ${CucumberTestRun.isSanityCheck}"
+                "sanity check: ${CucumberTestRun.isSanityCheck}",
         )
 
         if (CucumberTestRun.isNotSanityCheck) {

@@ -29,12 +29,12 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest(classes = [BidragCucumberCloud::class])
 @ActiveProfiles("test")
 internal class OppgaveOgHendelseServiceTest {
-
     private val baseUrl = "https://base"
-    private val journalpostHendelse = JournalpostHendelse(
-        journalpostId = "BID-1010101010",
-        fagomrade = FAGOMRADE_BIDRAG
-    )
+    private val journalpostHendelse =
+        JournalpostHendelse(
+            journalpostId = "BID-1010101010",
+            fagomrade = FAGOMRADE_BIDRAG,
+        )
 
     @MockkBean(relaxed = true)
     private lateinit var azureTokenService: AzureTokenService
@@ -61,17 +61,19 @@ internal class OppgaveOgHendelseServiceTest {
 
         verify {
             hendelseProducerMock.publish(
-                JournalpostHendelse(journalpostId = "BID-${journalpostHendelse.hentJournalpostIdUtenPrefix()}", fagomrade = "BID")
+                JournalpostHendelse(journalpostId = "BID-${journalpostHendelse.hentJournalpostIdUtenPrefix()}", fagomrade = "BID"),
             )
         }
     }
 
     @Test
     fun `skal opprette oppgave`() {
-        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.POST), any(), eq(String::class.java)) } returns ResponseEntity.ok()
-            .build()
-        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) } returns ResponseEntity.ok()
-            .body("""{"antallTreffTotalt":"0"}""")
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.POST), any(), eq(String::class.java)) } returns
+            ResponseEntity.ok()
+                .build()
+        every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) } returns
+            ResponseEntity.ok()
+                .body("""{"antallTreffTotalt":"0"}""")
 
         OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
@@ -99,7 +101,6 @@ internal class OppgaveOgHendelseServiceTest {
 
         OppgaveOgHendelseService.tilbyOppgave(journalpostHendelse)
 
-        @Suppress("UNCHECKED_CAST")
         val httpEntityCaptor = slot<HttpEntity<PatchStatusOppgaveRequest>>()
 
         verify {
@@ -107,14 +108,20 @@ internal class OppgaveOgHendelseServiceTest {
                 "/api/v1/oppgaver/1001",
                 HttpMethod.PATCH,
                 capture(httpEntityCaptor),
-                String::class.java
+                String::class.java,
             )
         }
 
         assertThat(httpEntityCaptor.captured.body).isEqualTo(
             BidragCucumberSingletons.toJson(
-                PatchStatusOppgaveRequest(id = 1001, status = "UNDER_BEHANDLING", tema = FAGOMRADE_BIDRAG, versjon = 1, tildeltEnhetsnr = "4812")
-            )
+                PatchStatusOppgaveRequest(
+                    id = 1001,
+                    status = "UNDER_BEHANDLING",
+                    tema = FAGOMRADE_BIDRAG,
+                    versjon = 1,
+                    tildeltEnhetsnr = "4812",
+                ),
+            ),
         )
     }
 
@@ -123,7 +130,9 @@ internal class OppgaveOgHendelseServiceTest {
         every { httpHeaderRestTemplateMock.exchange(any<String>(), eq(HttpMethod.GET), any(), eq(String::class.java)) }
             .returns(ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}"""))
             .andThen(ResponseEntity.ok().body("""{"antallTreffTotalt":"0","oppgaver":[]}"""))
-            .andThen(ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1","tildeltEnhetsnr":"123"}]}"""))
+            .andThen(
+                ResponseEntity.ok().body("""{"antallTreffTotalt":"1","oppgaver":[{"id":"1001","versjon":"1","tildeltEnhetsnr":"123"}]}"""),
+            )
 
         OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(123, "BID", antallGjentakelser = 3)
         OppgaveOgHendelseService.assertThatOppgaveHar("123")

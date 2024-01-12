@@ -10,5 +10,5 @@ data class HendelseApi(
     @Schema(description = "Brukerident som kan brukes til sporing av hendelsen") val brukerident: String? = null,
     @Schema(description = "Fagområdet som journalposten tilhører") var fagomrade: String? = null,
     @Schema(description = "Enheten som journalposten tilhører") var enhet: String? = null,
-    @Schema(description = "Journalposten journalstatus") var journalstatus: JournalpostStatus? = null
+    @Schema(description = "Journalposten journalstatus") var journalstatus: JournalpostStatus? = null,
 )

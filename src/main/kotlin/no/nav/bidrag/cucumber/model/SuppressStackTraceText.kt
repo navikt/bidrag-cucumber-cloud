@@ -2,9 +2,10 @@ package no.nav.bidrag.cucumber.model
 
 class SuppressStackTraceText {
     fun suppress(text: String): String {
-        val lines = text
-            .split('\n')
-            .filter { doNotSuppress(it) }
+        val lines =
+            text
+                .split('\n')
+                .filter { doNotSuppress(it) }
 
         return lines.joinToString(separator = "\n")
     }

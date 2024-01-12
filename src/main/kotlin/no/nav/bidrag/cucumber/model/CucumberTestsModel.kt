@@ -16,16 +16,20 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
         private val LOGGER = LoggerFactory.getLogger(CucumberTestsModel::class.java)
 
         @JvmStatic
-        private val FEATURE_FILES = File(ABSOLUTE_CLOUD_PATH)
-            .walkBottomUp()
-            .filter { it.isFile }
-            .filter { it.name.endsWith(".feature") }
-            .toList()
+        private val FEATURE_FILES =
+            File(ABSOLUTE_CLOUD_PATH)
+                .walkBottomUp()
+                .filter { it.isFile }
+                .filter { it.name.endsWith(".feature") }
+                .toList()
 
         @JvmStatic
         private val NAMES_OF_FEATURE_FILES = FEATURE_FILES.joinToString(separator = ", ") { it.name }
 
-        private fun isTagPresent(file: File, tag: String): Boolean {
+        private fun isTagPresent(
+            file: File,
+            tag: String,
+        ): Boolean {
             val inputStream: InputStream = file.inputStream()
             return inputStream.bufferedReader().use { it.readText() }
                 .contains(tag)
@@ -47,7 +51,7 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
         sanityCheck: Boolean? = false,
         securityToken: String? = null,
         tags: List<String> = emptyList(),
-        testUsername: String? = null
+        testUsername: String? = null,
     ) : this(
         CucumberTestsApi(
             ingressesForApps = ingressesForApps,
@@ -55,24 +59,25 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
             sanityCheck = sanityCheck,
             securityToken = securityToken,
             tags = tags,
-            testUsername = testUsername
-        )
+            testUsername = testUsername,
+        ),
     )
 
     fun getSanityCheck() = sanityCheck?.toString() ?: "false"
 
     fun fetchTags(): String {
-        val collectTags = ingressesForApps
-            .filter { it.contains("@tag:") }
-            .map { it.split("@tag:")[1] }
-            .map { "@$it" } as MutableList<String>
+        val collectTags =
+            ingressesForApps
+                .filter { it.contains("@tag:") }
+                .map { it.split("@tag:")[1] }
+                .map { "@$it" } as MutableList<String>
 
         collectTags.addAll(tags)
         val tagsAsStrings = transformAssertedTagsToString(collectTags)
 
         if (tagsAsStrings.isEmpty()) {
             throw IllegalStateException(
-                "Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser som har prefiksen 'tag:' etter @"
+                "Ingen tags er oppgitt. Bruk liste med tags eller liste med ingresser som har prefiksen 'tag:' etter @",
             )
         }
 
@@ -115,9 +120,10 @@ data class CucumberTestsModel(internal val cucumberTestsApi: CucumberTestsApi) {
         }
     }
 
-    private fun isNotTagPresentInFeatureFile(tag: String) = FEATURE_FILES.stream()
-        .filter { file: File -> isTagPresent(file, tag) }
-        .findFirst().isEmpty
+    private fun isNotTagPresentInFeatureFile(tag: String) =
+        FEATURE_FILES.stream()
+            .filter { file: File -> isTagPresent(file, tag) }
+            .findFirst().isEmpty
 
     internal fun initCucumberEnvironment(): CucumberTestsModel {
         Environment.initCucumberEnvironment(this)

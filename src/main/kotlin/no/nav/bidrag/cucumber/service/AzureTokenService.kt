@@ -26,7 +26,7 @@ import java.net.URI
 
 data class AzureTokenRequest(
     val app: String,
-    val saksbehandlerType: SaksbehandlerType? = null
+    val saksbehandlerType: SaksbehandlerType? = null,
 )
 
 @Component
@@ -48,9 +48,8 @@ class AzureTokenService(
     val scopes: AppScopes,
     @Value("\${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}") val tokenUri: String,
     @Value("\${AZURE_APP_CLIENT_ID}") val clientId: String,
-    @Value("\${AZURE_APP_CLIENT_SECRET}") val clientSecret: String
+    @Value("\${AZURE_APP_CLIENT_SECRET}") val clientSecret: String,
 ) : TokenService() {
-
     private lateinit var tokenCache: Cache<AzureTokenRequest, Tokens>
     private lateinit var clientAuth: ClientSecretPost
 
@@ -61,7 +60,10 @@ class AzureTokenService(
         tokenCache = AzureTokenCache.accessTokenResponseCache(1000, 10)
     }
 
-    override fun generateToken(application: String, saksbehandlerType: SaksbehandlerType?): String {
+    override fun generateToken(
+        application: String,
+        saksbehandlerType: SaksbehandlerType?,
+    ): String {
         val request = AzureTokenRequest(application, saksbehandlerType)
         return tokenCache.get(request) { s: AzureTokenRequest? -> generateToken(request) }!!.accessToken.value
     }
@@ -72,7 +74,11 @@ class AzureTokenService(
         }
         return generateClientCredentialsToken(request.app)
     }
-    private fun generateOnBehalfOfToken(appName: String, saksbehandlerType: SaksbehandlerType): Tokens {
+
+    private fun generateOnBehalfOfToken(
+        appName: String,
+        saksbehandlerType: SaksbehandlerType,
+    ): Tokens {
         val appScope = scopes.clients[appName]
         val userId = testusers.identer[saksbehandlerType] ?: usernameNotFound()
         val usertoken = getUserToken(userId)
@@ -83,7 +89,15 @@ class AzureTokenService(
             val customParams: MutableMap<String, List<String>> = HashMap()
             customParams["requested_token_use"] = listOf("on_behalf_of")
             customParams["client_assertion_type"] = listOf("urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-            val request = TokenRequest(tokenEndpoint, clientAuth, JWTBearerGrant(SignedJWT.parse(usertoken.accessToken.value)), scope, null, customParams)
+            val request =
+                TokenRequest(
+                    tokenEndpoint,
+                    clientAuth,
+                    JWTBearerGrant(SignedJWT.parse(usertoken.accessToken.value)),
+                    scope,
+                    null,
+                    customParams,
+                )
             doTokenRequest(request)
         } catch (e: Exception) {
             LOGGER.error("Det skjedde en feil ved henting av on-behalf-of token fra Azure", e)
@@ -109,7 +123,13 @@ class AzureTokenService(
         return try {
             val scope = Scope("openid offline_access $clientId/.default")
             val tokenEndpoint = URI(tokenUri)
-            val request = TokenRequest(tokenEndpoint, clientAuth, ResourceOwnerPasswordCredentialsGrant("f_$userId.e_$userId@trygdeetaten.no", Secret(user_password)), scope)
+            val request =
+                TokenRequest(
+                    tokenEndpoint,
+                    clientAuth,
+                    ResourceOwnerPasswordCredentialsGrant("f_$userId.e_$userId@trygdeetaten.no", Secret(user_password)),
+                    scope,
+                )
             doTokenRequest(request)
         } catch (e: Exception) {
             LOGGER.error("Det skjedde en feil ved henting av client-credentials token fra Azure", e)
@@ -124,13 +144,14 @@ class AzureTokenService(
             if (!response.indicatesSuccess()) {
                 // We got an error response...
                 val errorObject: ErrorObject = response.toErrorResponse().errorObject
-                val errorMessage = String.format(
-                    "Det skjedde en feil ved henting av token fra Azure - code: %s, description: %s, uri: %s, statusCode: %s",
-                    errorObject.code,
-                    errorObject.description,
-                    errorObject.uri,
-                    errorObject.httpStatusCode
-                )
+                val errorMessage =
+                    String.format(
+                        "Det skjedde en feil ved henting av token fra Azure - code: %s, description: %s, uri: %s, statusCode: %s",
+                        errorObject.code,
+                        errorObject.description,
+                        errorObject.uri,
+                        errorObject.httpStatusCode,
+                    )
                 LOGGER.error(errorMessage)
                 throw AzureTokenException(errorMessage)
             }

@@ -16,12 +16,13 @@ class BidragCucumberCloud {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            val profile = if (args.isEmpty()) {
-                PROFILE_LIVE
-            } else {
-                LOGGER.info("Starter med profil (argument): $args")
-                args[0]
-            }
+            val profile =
+                if (args.isEmpty()) {
+                    PROFILE_LIVE
+                } else {
+                    LOGGER.info("Starter med profil (argument): $args")
+                    args[0]
+                }
 
             val app = SpringApplication(BidragCucumberCloud::class.java)
 

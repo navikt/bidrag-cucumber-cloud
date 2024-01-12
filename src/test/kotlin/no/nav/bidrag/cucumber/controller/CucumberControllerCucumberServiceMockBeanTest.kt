@@ -27,9 +27,7 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("CucumberController (mocked bean: CucumberService)")
 @ActiveProfiles("test")
 internal class CucumberControllerCucumberServiceMockBeanTest {
-
     @Autowired
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private lateinit var testRestTemplate: TestRestTemplate
 
     @MockBean
@@ -47,18 +45,19 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["ingress@tag"]
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
@@ -70,18 +69,19 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
@@ -93,18 +93,19 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "securityToken":"xyz..."
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 
@@ -118,18 +119,19 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         whenever(cucumberServiceMock.run(any())).thenThrow(TestFailedException("not ok", "test failed"))
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity("{}", headers),
-            Void::class.java
-        )
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity("{}", headers),
+                Void::class.java,
+            )
 
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.NOT_ACCEPTABLE) },
             {
                 val warning = testResponse.headers[HttpHeaders.WARNING]?.first() ?: fail("fant ingen feilmelding fra WARNING-header")
                 assertThat(warning).`as`("warning").isEqualTo("TestFailedException: not ok")
-            }
+            },
         )
     }
 
@@ -140,18 +142,19 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
 
         whenever(cucumberServiceMock.run(any())).thenThrow(IllegalStateException("something fishy happened"))
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity("{}", headers),
-            Void::class.java
-        )
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity("{}", headers),
+                Void::class.java,
+            )
 
         assertAll(
             { assertThat(testResponse.statusCode).`as`("status code").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR) },
             {
                 val warning = testResponse.headers[HttpHeaders.WARNING]?.first() ?: fail("fant ingen feilmelding fra WARNING-header")
                 assertThat(warning).`as`("warning").isEqualTo("IllegalStateException: something fishy happened")
-            }
+            },
         )
     }
 
@@ -160,20 +163,21 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://bidrag-sak.intern.dev.nav.no@bidrag-sak"],
                   "testUsername":"z993902",
                   "sanityCheck":true
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         assertAll(
             { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
@@ -183,11 +187,11 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                         CucumberTestsModel(
                             sanityCheck = true,
                             testUsername = "z993902",
-                            ingressesForApps = listOf("https://bidrag-sak.intern.dev.nav.no@bidrag-sak")
-                        )
-                    )
+                            ingressesForApps = listOf("https://bidrag-sak.intern.dev.nav.no@bidrag-sak"),
+                        ),
+                    ),
                 )
-            }
+            },
         )
     }
 
@@ -196,19 +200,20 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/run",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/run",
+                HttpEntity(
+                    """
                 {
                   "ingressesForApps":["https://some-ingress@some-app"],
                   "tags":["@some-tag"]
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         assertAll(
             { assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK) },
@@ -217,11 +222,11 @@ internal class CucumberControllerCucumberServiceMockBeanTest {
                     CucumberTestRun(
                         CucumberTestsModel(
                             ingressesForApps = listOf("https://some-ingress@some-app"),
-                            tags = listOf("@some-tag")
-                        )
-                    )
+                            tags = listOf("@some-tag"),
+                        ),
+                    ),
                 )
-            }
+            },
         )
     }
 }

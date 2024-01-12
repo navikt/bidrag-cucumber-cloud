@@ -23,9 +23,7 @@ import org.springframework.test.context.ActiveProfiles
 @DisplayName("HendelseController (mocked HendelseProducer)")
 @ActiveProfiles("test")
 internal class HendelseControllerTest {
-
     @Autowired
-    @Suppress("SpringJavaInjectionPointsAutowiringInspection")
     private lateinit var testRestTemplate: TestRestTemplate
 
     @MockBean
@@ -41,19 +39,20 @@ internal class HendelseControllerTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
-        val testResponse = testRestTemplate.postForEntity(
-            "/hendelse/opprett",
-            HttpEntity(
-                """
+        val testResponse =
+            testRestTemplate.postForEntity(
+                "/hendelse/opprett",
+                HttpEntity(
+                    """
                 {
                   "journalpostId":"1001",
                   "brukerident":"jumbo"
                 }
-                """.trimMargin().trim(),
-                headers
-            ),
-            Void::class.java
-        )
+                    """.trimMargin().trim(),
+                    headers,
+                ),
+                Void::class.java,
+            )
 
         assertThat(testResponse.statusCode).isEqualTo(HttpStatus.OK)
 

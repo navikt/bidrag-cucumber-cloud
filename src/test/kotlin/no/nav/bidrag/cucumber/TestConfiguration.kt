@@ -10,7 +10,7 @@ class TestConfiguration {
     @Bean
     fun restTemplateBuilder(
         @Value("\${REST_AUTH_BRUKERNAVN}") authBrukernavn: String,
-        @Value("\${REST_AUTH_PASSORD}") authPassord: String
+        @Value("\${REST_AUTH_PASSORD}") authPassord: String,
     ): RestTemplateBuilder {
         return RestTemplateBuilder().basicAuthentication(authBrukernavn, authPassord)
     }

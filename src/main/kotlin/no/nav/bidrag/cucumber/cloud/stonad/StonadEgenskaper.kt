@@ -24,7 +24,9 @@ class StonadEgenskaper : No {
         }
 
         Og("responsen under stien {string} skal være maks {long} sekunder gammel") { sti: String, antallSekunder: Long ->
-            LOGGER.info("Sjekker at vedtak-hendelsen har oppdatert endretTidspunkt på stønaden og at denne er maks $antallSekunder sekunder gammel")
+            LOGGER.info(
+                "Sjekker at vedtak-hendelsen har oppdatert endretTidspunkt på stønaden og at denne er maks $antallSekunder sekunder gammel",
+            )
             val response = hentRestTjenesteTilTesting().hentResponse()
             val endretTidspunkt = LocalDateTime.parse(parseJson(response, sti)) ?: LocalDateTime.MIN
             val naaTidspunkt = LocalDateTime.now()

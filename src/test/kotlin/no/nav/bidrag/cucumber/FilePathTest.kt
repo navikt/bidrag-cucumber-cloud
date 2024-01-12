@@ -17,7 +17,7 @@ internal class FilePathTest {
             {
                 assertThat(filePath.findFolderPath()).`as`("folder path")
                     .isEqualTo(File("src/main/resources/no/nav/bidrag/cucumber/cloud").absolutePath)
-            }
+            },
         )
     }
 }

@@ -20,11 +20,12 @@ class ArbeidsflytEgenskaper : No {
 
     init {
         Og("en journalpostHendelse med journalpostId {long} og fagområde {string}") { journalpostId: Long, fagomrade: String ->
-            journalpostHendelse = JournalpostHendelse(
-                journalpostId = "$fagomrade-$journalpostId",
-                enhet = "4812",
-                fagomrade = fagomrade
-            )
+            journalpostHendelse =
+                JournalpostHendelse(
+                    journalpostId = "$fagomrade-$journalpostId",
+                    enhet = "4812",
+                    fagomrade = fagomrade,
+                )
         }
 
         Og("at det finnes en oppgave under behandling") {
@@ -49,7 +50,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.sokOppgaverEtterBehandlingAvHendelse(
                 hendelse = journalpostHendelse,
                 tema = journalpostHendelse.fagomrade ?: throw IllegalStateException("Cucumber test må sørge for at fagområde er satt!"),
-                sleepInMilliseconds = 4000
+                sleepInMilliseconds = 4000,
             )
         }
 
@@ -62,7 +63,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.sokOppgaverEtterBehandlingAvHendelse(
                 hendelse = journalpostHendelse,
                 tema = fagomrade,
-                sleepInMilliseconds = 4000
+                sleepInMilliseconds = 4000,
             )
         }
 
@@ -70,7 +71,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
                 journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
                 tema = fagomrade,
-                antallGjentakelser = 1
+                antallGjentakelser = 1,
             )
         }
 
@@ -78,7 +79,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.sokOpprettetOppgaveForHendelse(
                 journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
                 tema = fagomrade,
-                antallGjentakelser = antallGanger
+                antallGjentakelser = antallGanger,
             )
         }
 
@@ -107,8 +108,8 @@ class ArbeidsflytEgenskaper : No {
                 Assertion(
                     message = "Forventet ikke å finne oppgaven",
                     value = CucumberTestRun.hentRestTjenesteTilTesting().hentResponseSomMap()["antallTreffTotalt"],
-                    expectation = 0
-                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) }
+                    expectation = 0,
+                ) { assertThat(it.value).`as`(it.message).isEqualTo(it.expectation) },
             )
         }
 
@@ -116,7 +117,7 @@ class ArbeidsflytEgenskaper : No {
             OppgaveOgHendelseService.ferdigstillEventuellOppgave(
                 journalpostIdMedPrefix = journalpostHendelse.journalpostId,
                 journalpostId = journalpostHendelse.hentJournalpostIdUtenPrefix(),
-                tema = journalpostHendelse.fagomrade!!
+                tema = journalpostHendelse.fagomrade!!,
             )
         }
 

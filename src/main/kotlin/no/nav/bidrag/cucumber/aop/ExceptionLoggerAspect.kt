@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component
 @Aspect
 @Component
 class ExceptionLoggerAspect(private val exceptionLogger: ExceptionLogger) {
-
     @AfterThrowing(pointcut = "within (no.nav.bidrag.cucumber.controller..*)", throwing = "exception")
-    fun logException(joinPoint: JoinPoint, exception: Exception) {
+    fun logException(
+        joinPoint: JoinPoint,
+        exception: Exception,
+    ) {
         val logMessages = exceptionLogger.logException(exception, joinPoint.sourceLocation.withinType.toString())
         CucumberTestRun.hold(logMessages)
     }
