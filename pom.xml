@@ -23,7 +23,7 @@
     <apache-httpcomponenents.version>5.3</apache-httpcomponenents.version>
     <bidrag-felles.version>2024.0111.144947</bidrag-felles.version>
     <cucumber.version>7.15.0</cucumber.version>
-    <json-path.version>2.8.0</json-path.version>
+    <json-path.version>2.9.0</json-path.version>
     <mockito-kotlin.version>5.2.1</mockito-kotlin.version>
     <mockk.version>4.0.2</mockk.version>
     <springdoc-openapi-ui.version>2.3.0</springdoc-openapi-ui.version>
