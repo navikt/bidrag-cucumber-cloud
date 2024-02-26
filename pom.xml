@@ -29,7 +29,7 @@
     <springdoc-openapi-ui.version>2.3.0</springdoc-openapi-ui.version>
     <snakeyaml.version>2.2</snakeyaml.version>
     <caffeine.version>3.1.8</caffeine.version>
-    <msal4j.version>1.14.2</msal4j.version>
+    <msal4j.version>1.14.3</msal4j.version>
     <awaitility-kotlin.version>4.2.0</awaitility-kotlin.version>
     <ktlint.version>1.1.1</ktlint.version>
 
