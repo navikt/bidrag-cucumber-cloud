@@ -17,9 +17,6 @@ testbrukere:
 appscope.clients:
   oppgave: api://${OPPGAVE_SCOPE}/.default
   bidrag-sak: api://${SAK_SCOPE}/.default
-  bidrag-beregn-saertilskudd-rest: api://${BEREGN_SAERTILSKUDD_SCOPE}/.default
-  bidrag-beregn-forskudd-rest: api://${BEREGN_FORSKUDD_SCOPE}/.default
-  bidrag-beregn-barnebidrag-rest: api://${BEREGN_BARNEBIDRAG_SCOPE}/.default
   bidrag-dokument-forsendelse: api://${DOKUMENT_FORSENDELSE_SCOPE}/.default
   bidrag-dokument: api://${BIDRAG_DOKUMENT_SCOPE}/.default
   bidrag-vedtak: api://${BIDRAG_VEDTAK_SCOPE}/.default

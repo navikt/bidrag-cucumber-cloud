@@ -12,16 +12,10 @@ access:
     grunnlag: bidrag-grunnlag-feature.intern.dev.nav.no
     vedtak: bidrag-vedtak-feature.intern.dev.nav.no
     stonad: bidrag-stonad-feature.intern.dev.nav.no
-    barnebidrag: bidrag-beregn-barnebidrag.intern.dev.nav.no
-    forskudd: bidrag-beregn-forskudd.intern.dev.nav.no
-    saertilskudd: bidrag-beregn-saertilskudd.intern.dev.nav.no
 kafka-topic-journalpost: bidrag.journalpost-feature
 scope:
   oppgave: dev-fss.oppgavehandtering.oppgave-q1
   sak: dev-fss.bidrag.bidrag-sak-feature
-  beregn_saertilskudd: dev-gcp.bidrag.bidrag-beregn-saertilskudd-rest
-  beregn_forskudd: dev-gcp.bidrag.bidrag-beregn-forskudd-rest
-  beregn_barnebidrag: dev-gcp.bidrag.bidrag-beregn-barnebidrag-rest
   dokument_forsendelse: dev-gcp.bidrag.bidrag-dokument-forsendelse-feature
   bidrag_vedtak: dev-gcp.bidrag.bidrag-vedtak-feature
   bidrag_grunnlag: dev-gcp.bidrag.bidrag-grunnlag-feature
